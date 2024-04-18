@@ -1,0 +1,141 @@
+@import 'src/styles/mixins';
+
+.content {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  padding: 60px 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+
+  color: #39393b;
+
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    gap: 8px;
+  }
+}
+
+.col {
+  display: flex;
+  align-items: center;
+  column-gap: 32px;
+
+  @include mobile {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.colSet {
+  display: flex;
+  align-items: center;
+
+  @include mobile {
+    column-gap: 8px;
+  }
+}
+
+.count {
+  @include mobile {
+    font-size: 14px;
+    line-height: 16px;
+  }
+}
+
+.controlBtn {
+  padding: 4px 12px;
+
+  border-radius: 5px;
+  color: #39393b;
+  font-size: 16px;
+
+  @include mobile {
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16px;
+
+    span {
+      display: none;
+    }
+  }
+
+  &:hover {
+    background: linear-gradient(97deg, #081623 0%, #36555c 100%);
+    color: #fff;
+  }
+
+  &:active {
+    background: linear-gradient(97deg, #081623 0%, #36555c 100%);
+    color: #fff;
+  }
+
+  span {
+    margin-left: 10px;
+  }
+
+  svg {
+    g path {
+      stroke: #39393b;
+    }
+  }
+}
+
+.profiles {
+  display: grid;
+
+  margin-bottom: 24px;
+
+  gap: 32px 20px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+
+  margin-bottom: 24px;
+
+  row-gap: 20px;
+
+  @include mobile {
+    row-gap: 12px;
+  }
+}
+
+.item {
+  display: flex;
+  overflow-wrap: break-word;
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.itemIcon {
+  margin-right: 8px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  column-gap: 12px;
+}

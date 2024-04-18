@@ -1,0 +1,52 @@
+@import 'src/styles/variables';
+@import 'src/styles/mixins';
+
+.paginationContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: start;
+    justify-content: unset;
+  }
+}
+
+.flexEnd {
+  justify-content: flex-end;
+}
+
+.footer {
+  @include mobile {
+    flex-direction: column-reverse;
+    row-gap: 38px;
+  }
+}
+
+.selectContainer {
+  display: flex;
+  align-items: center;
+}
+
+.select {
+  margin: 0 8px;
+}
+
+.labelRowsPerPage {
+  color: #39393b;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.tableTitle {
+  color: #6b798f;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+
+  @include mobile {
+    margin-bottom: 28px;
+  }
+}

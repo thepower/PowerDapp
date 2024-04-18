@@ -1,0 +1,91 @@
+@import 'variables';
+
+@mixin border-gradient($gradient: $powerdapp-gradient, $border-radius: 5px) {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    z-index: 200;
+    padding: 1px;
+    border-radius: $border-radius;
+    background: $gradient;
+    content: '';
+    inset: 0;
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: $mobile) {
+    @content;
+  }
+}
+
+@mixin notebook {
+  @media (max-width: $notebook) {
+    @content;
+  }
+}
+
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin text-multiline($number-of-lines) {
+  /* stylelint-disable-next-line value-no-vendor-prefix */
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $number-of-lines;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+@mixin text-gradient($gradient: $powerdapp-gradient, $opacity: 1) {
+  background: $gradient;
+  background-clip: text;
+  opacity: $opacity;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+}
+
+@mixin border-gradient-background($background, $gradient: $powerdapp-gradient) {
+  border: 1px solid #0000;
+  border-radius: 5px;
+  background:
+    linear-gradient($background, $background) padding-box,
+    $gradient border-box;
+}
+
+@mixin icon-colors($class,
+  $defaultColor: #6b798f,
+  $hoverColor: url('#hover'),
+  $activeColor: url('#pressed'),
+  $disabledColor: #79789d) {
+  @each $property in 'stroke', 'fill' {
+    #{$class} :global(.#{$property}) {
+      #{$property}: $defaultColor;
+    }
+
+    #{$class}:hover :global(.#{$property}) {
+      #{$property}: $hoverColor;
+    }
+
+    #{$class}[aria-current="page"] :global(.#{$property}),
+    #{$class}[aria-selected="true"] :global(.#{$property}),
+    #{$class}[aria-pressed="true"] :global(.#{$property}),
+    #{$class}:active :global(.#{$property}) {
+      #{$property}: $activeColor;
+    }
+
+    #{$class}[aria-disabled="true"] :global(.#{$property}),
+    #{$class}:disabled :global(.#{$property}) {
+      #{$property}: $disabledColor;
+    }
+  }
+}

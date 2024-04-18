@@ -1,0 +1,39 @@
+@import 'src/styles/variables';
+@import 'src/styles/mixins';
+
+.footer {
+  display: grid;
+  height: 100%;
+  align-content: center;
+  justify-content: center;
+  padding: 0 32px;
+  gap: 16px 20px;
+  grid-template-columns: repeat(3, max-content);
+  grid-template-rows: max-content max-content;
+  justify-items: center;
+
+  @include mobile {
+    padding: 0 10px;
+  }
+}
+
+.link {
+  color: #9c9c9c;
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.text {
+  color: #9c9c9c;
+  font-size: 12px;
+  font-weight: 700;
+
+  grid-column: 1/-1;
+}

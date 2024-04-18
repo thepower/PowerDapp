@@ -1,0 +1,76 @@
+@import 'src/styles/utils';
+@import 'src/styles/mixins';
+
+.content {
+  display: flex;
+  max-width: 620px;
+  height: 520px;
+  flex-direction: column;
+  padding: 40px 60px;
+  border-radius: 15px;
+
+  margin: auto;
+
+  background: #f3f8ff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.24);
+
+  @include mobile {
+    height: auto;
+    padding: 16px 16px 28px;
+  }
+}
+
+.title {
+  margin-bottom: 32px;
+
+  color: #2c67ff;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 48px;
+
+  @include mobile {
+
+    margin-bottom: 20px;
+    font-size: 20px;
+    line-height: 24px;
+  }
+}
+
+.text {
+  margin-bottom: 32px;
+
+  color: #6b798f;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 28px;
+
+  @include mobile {
+    margin-bottom: 24px;
+
+    font-size: 14px;
+    line-height: 16px;
+
+    p:not(:last-child) {
+      margin-bottom: 12px;
+    }
+  }
+
+  p:not(:last-child) {
+    margin-bottom: 8px;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  row-gap: 24px;
+
+  @include mobile {
+    flex-direction: column;
+    row-gap: 16px;
+
+    button {
+      width: 100%;
+    }
+  }
+}

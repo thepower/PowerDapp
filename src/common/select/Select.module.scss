@@ -1,0 +1,22 @@
+@import 'src/styles/variables';
+@import 'src/styles/mixins';
+
+.menuPaper {
+
+  max-height: 264px;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 100px;
+    background-color: #2e3642;
+  }
+}
+
+.icon {
+  top: 12px;
+  right: 8px;
+}

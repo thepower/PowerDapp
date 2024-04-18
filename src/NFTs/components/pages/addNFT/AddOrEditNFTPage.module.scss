@@ -1,0 +1,271 @@
+@import 'src/styles/mixins';
+
+.content {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  padding: 60px 0;
+
+  @include mobile {
+    // padding: 224px 0 0;
+  }
+}
+
+.form {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.formFields {
+  display: flex;
+  width: 100%;
+
+  margin-bottom: 32px;
+  gap: 32px;
+
+  @include mobile {
+    flex-direction: column;
+  }
+}
+
+.imageDropZone {
+  display: flex;
+  width: 280px;
+  height: 280px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  background: linear-gradient(299deg, #00f0ff -15.4%, #1768e5 100.3%);
+  color: #fff;
+
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+
+  @include mobile {
+    // position: absolute;
+    // top: 0;
+    // right: 0;
+    // left: 0;
+    width: 100%;
+    height: 216px;
+  }
+}
+
+.imagePreview {
+  width: 280px;
+  height: 280px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #081623 0.98%, #36555c 100.74%);
+  object-fit: scale-down;
+
+  @include mobile {
+    width: 100%;
+    height: 216px;
+  }
+}
+
+.imagePreviewClear {
+  position: absolute;
+  top: 0;
+
+  right: 0;
+  width: 40px;
+  height: 40px;
+}
+
+.imageDropZoneIcon {
+  margin-bottom: 22px;
+}
+
+.leftColumn {
+  position: relative;
+  display: flex;
+  width: 280px;
+  flex-direction: column;
+  gap: 32px;
+
+  @include mobile {
+    width: auto;
+    gap: 16px;
+  }
+}
+
+.themeRow {
+  display: flex;
+  justify-content: space-between;
+
+  column-gap: 24px;
+}
+
+.closeButton {
+  @include mobile {
+    display: none;
+  }
+}
+
+.rightColumn {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 32px;
+
+  @include mobile {
+    gap: 16px;
+  }
+}
+
+.limitedWidth {
+  width: max-content;
+  min-width: 384px;
+
+  @include mobile {
+    width: 100%;
+    min-width: 100%;
+  }
+}
+
+.connectButton {
+  flex-grow: 1;
+}
+
+.submitButton {
+  min-width: 333px;
+
+  @include mobile {
+    min-width: 100%;
+    margin-left: unset;
+  }
+}
+
+.filesDropZone {
+  display: flex;
+  align-content: center;
+  color: #ff912c;
+
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+}
+
+.attachedFiles {
+  display: flex;
+  overflow-wrap: break-word;
+}
+
+.filesDropZoneIcon {
+  margin-right: 8px;
+}
+
+.files {
+  display: grid;
+
+  gap: 20px;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  @include mobile {
+    gap: 16px;
+    grid-template-columns: 1fr;
+  }
+}
+
+.file {
+  display: flex;
+  align-items: center;
+
+  font-weight: 500;
+}
+
+.fileRow {
+  display: flex;
+  align-items: center;
+
+  cursor: pointer;
+}
+
+.fileIcon {
+  margin-right: 8px;
+}
+
+.fileClear {
+  width: 24px;
+  height: 24px;
+
+  margin-left: 8px;
+}
+
+.attachFilesLabel {
+  margin-bottom: 18px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.addressRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  column-gap: 16px;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: normal;
+    row-gap: 16px;
+  }
+}
+
+.address {
+  display: grid;
+
+  flex-grow: 1;
+
+  gap: 8px 20px;
+  grid-template-columns: 1fr;
+}
+
+.addressLabel {
+  color: #ececff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.addressValue {
+  @include ellipsis;
+  position: relative;
+
+  height: 48px;
+
+  padding: 15px 32px 15px 16px;
+  border-radius: 5px;
+
+  background: rgba(125, 192, 255, 0.8);
+
+  color: #f5f5f7;
+  font-size: 16px;
+
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.disconnect {
+  position: absolute;
+  top: 12px;
+  right: 8px;
+  padding: 0;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+
+  @include mobile {
+    flex-direction: column;
+    gap: 16px;
+  }
+}

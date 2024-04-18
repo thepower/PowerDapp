@@ -1,0 +1,82 @@
+@import 'src/styles/mixins';
+@import 'src/styles/variables';
+
+.filter {
+  padding: 4px 12px;
+
+  border-radius: 5px;
+  color: #39393b;
+  font-size: 16px;
+
+  @include mobile {
+    padding: 12px;
+
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16px;
+
+    span {
+      display: none;
+    }
+  }
+
+  &:hover {
+    background: linear-gradient(299deg, #00F0FF -15.4%, #1768E5 100.3%);
+    color: #fff;
+  }
+
+  &:active {
+    background: linear-gradient(299deg, #00F0FF -15.4%, #1768E5 100.3%);
+    color: #fff;
+  }
+
+  span {
+    margin-left: 10px;
+  }
+
+  svg {
+    g path {
+      stroke: #f5f5f7;
+    }
+  }
+}
+
+.filterActive {
+  background: $powerdapp-gradient;
+  box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.24);
+  color: #fff;
+}
+
+.popoverPaper {
+  padding: 10px 16px;
+  border-radius: 5px;
+  background: $powerdapp-gradient;
+  box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.24);
+
+  gap: 8px;
+}
+
+.formControlLabel {
+  color: #f5f5f7;
+}
+
+.radio {
+  color: #f5f5f7;
+}
+
+.radioChecked {
+  color: #1768E5 !important;
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: none;
+  width: 20px;
+  height: 20px;
+
+  @include mobile {
+    display: block;
+  }
+}

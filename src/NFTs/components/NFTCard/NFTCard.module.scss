@@ -1,0 +1,123 @@
+@import 'src/styles/mixins';
+
+.card {
+  display: flex;
+  width: 100%;
+  height: 340px;
+  justify-content: space-between;
+
+  padding: 30px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+
+  border-radius: 15px;
+  backdrop-filter: blur(16px);
+  background: linear-gradient(129deg, #f3f3f3 0%, #f9fff9 100%);
+  box-shadow: 0 0 8px 0 rgba(1, 21, 48, 0.12);
+  column-gap: 24px;
+
+  @include mobile {
+    height: auto;
+
+    flex-direction: column;
+
+    padding: 12px 8px;
+    border-radius: 10px;
+    row-gap: 16px;
+  }
+}
+
+.img {
+  width: 280px;
+  min-width: 280px;
+  height: 280px;
+  border-radius: 5px;
+
+  object-fit: cover;
+
+  @include mobile {
+    width: 100%;
+    min-width: 100%;
+    height: 100%;
+    border-radius: 10px;
+  }
+}
+
+.secondCol {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+
+  row-gap: 20px;
+}
+
+
+
+.colSet {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+
+  gap: 16px;
+
+  @include mobile {
+    flex-direction: column;
+  }
+}
+
+.col {
+  display: flex;
+  align-items: center;
+}
+
+.colIcon {
+  margin-right: 8px;
+}
+
+.colText {
+  color: #86868b;
+
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  text-decoration: none;
+  word-break: break-word;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+
+.title {
+  display: block;
+
+  color: #175675;
+  font-size: 20px;
+  font-weight: 700;
+
+  grid-column: 1/-1;
+  line-height: 24px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+
+.description {
+  @include text-multiline(6);
+
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+}
+
+.like {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}

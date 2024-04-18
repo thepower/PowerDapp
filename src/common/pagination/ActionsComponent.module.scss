@@ -1,0 +1,73 @@
+@import 'src/styles/variables';
+
+.actionsComponent {
+  display: flex;
+  align-items: center;
+}
+
+.buttonRoot {
+  width: 48px;
+  min-width: 48px;
+  height: 16px;
+  padding: 0;
+  color: #d5d5d5;
+  text-transform: none;
+
+  &:hover {
+    background-color: transparent;
+    color: #1768E5;
+  }
+
+  &:active {
+    color: #1768E5;
+  }
+}
+
+.buttonDisabled {
+  color: #cbcbcc !important;
+}
+
+.iconButtonRoot {
+  width: 44px;
+  min-width: 44px;
+  height: 16px;
+  padding: 0;
+
+  svg g path {
+    fill: #d5d5d5;
+    transition: 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+
+  &:hover {
+    background-color: transparent;
+
+    svg g path {
+      fill: #1768E5 !important;
+    }
+  }
+
+  &:active {
+    svg g path {
+      fill: #1768E5 !important;
+    }
+  }
+}
+
+.iconButtonDisabled {
+  path {
+    fill: #cbcbcc !important;
+  }
+}
+
+.displayedRows {
+  min-width: 80px;
+  color: #cbcbcc;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: center;
+
+  span {
+    color: #39393b;
+  }
+}

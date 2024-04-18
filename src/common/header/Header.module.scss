@@ -1,0 +1,70 @@
+@import 'src/styles/variables';
+@import 'src/styles/mixins';
+
+.header {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  margin: 0 auto;
+
+  @include mobile {
+    padding: 0 10px;
+  }
+}
+
+.title {
+  color: #1768e5;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 29px;
+  text-decoration: none;
+
+  @include mobile {
+    font-size: 20px;
+  }
+}
+
+.login {
+  display: flex;
+  align-items: center;
+}
+
+.col {
+  display: flex;
+}
+
+.walletAddress {
+  color: #6b798f;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.navNFTs {
+  display: flex;
+
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.navNFTsSeparator {
+  margin: 0 8px;
+  color: #6b798f;
+}
+
+.navLink {
+  color: #4e5e70;
+  text-decoration: none;
+
+  &:hover {
+    color: #6b798f;
+  }
+}
+
+.navLinkActive {
+  color: #1768e5;
+  text-decoration: none;
+}

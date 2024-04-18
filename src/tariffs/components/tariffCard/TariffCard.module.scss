@@ -1,0 +1,91 @@
+.tariffCard {
+  flex-basis: calc(100% / 3);
+  flex-grow: 1;
+  padding: 24px 20px;
+  border: 2px solid #345259;
+  border-radius: 15px;
+  background: linear-gradient(129deg, #175675 0%, #607460 100%);
+  box-shadow: 0 0 20px 0 #314d55;
+
+  &__isActive {
+    @extend .tariffCard;
+    border: unset;
+    backdrop-filter: blur(16px);
+
+    background: linear-gradient(129deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.08) 100%);
+    box-shadow: 0 0 8px 0 rgba(1, 21, 48, 0.25);
+  }
+}
+
+.title {
+  margin-bottom: 10px;
+  color: #1d1d1f;
+  font-size: 20px;
+  font-weight: 700;
+
+  &__isActive {
+    @extend .title;
+    color: #f5f5f7;
+  }
+}
+
+.text {
+  min-height: 150px;
+
+  margin-bottom: 32px;
+  color: #1d1d1f;
+
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  &__isActive {
+    @extend .text;
+    color: #f5f5f7;
+  }
+}
+
+.price {
+  margin-bottom: 32px;
+  color: #f4c650;
+
+  font-size: 25px;
+  font-weight: 600;
+
+  span {
+    color: #f5f5f5;
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+.button {
+  margin-bottom: 20px;
+}
+
+.list {
+  display: grid;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.listItem {
+  display: flex;
+  column-gap: 10px;
+
+  svg {
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+  }
+
+  &__isActive {
+    @extend .listItem;
+    color: #f5f5f7;
+
+    svg g path {
+      fill: #f5f5f7;
+    }
+  }
+}

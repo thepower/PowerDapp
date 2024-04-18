@@ -1,0 +1,6 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.addMissingImports": "never",
+    "source.fixAll": "explicit"
+  },
+}

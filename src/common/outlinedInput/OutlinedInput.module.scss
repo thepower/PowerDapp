@@ -1,0 +1,43 @@
+@import 'src/styles/variables';
+
+.multiline {
+  padding: 7px 12px;
+}
+
+.label {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.labelColor_primary {
+  padding-bottom: 2px;
+  color: #1d1d1f;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.labelColor_secondary {
+  color: #fff;
+}
+
+.sizeSmall {
+  height: 48px;
+}
+
+.multiline {
+  min-height: 40px;
+}
+
+.notchedOutline {
+  border: transparent;
+}
+
+.primaryErrorColor {
+  color: #ff9ba7;
+}
+
+.secondaryErrorColor {
+  color: #ff9ba7;
+}

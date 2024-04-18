@@ -1,0 +1,43 @@
+@import 'src/styles/mixins';
+
+.content {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  padding: 32px 0;
+
+  // @include mobile {
+  // }
+}
+
+.title {
+
+  margin-bottom: 10px;
+  color: #332224;
+  font-size: 24px;
+  font-weight: 700;
+
+  text-align: center;
+}
+
+.text {
+
+  margin-bottom: 60px;
+  color: #36555c;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: center;
+  white-space: pre-wrap;
+}
+
+.tariffCards {
+  display: flex;
+  justify-content: center;
+  column-gap: 40px;
+
+  @include mobile {
+    flex-direction: column;
+    column-gap: 0;
+    row-gap: 16px;
+  }
+}

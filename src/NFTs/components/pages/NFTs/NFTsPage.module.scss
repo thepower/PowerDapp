@@ -1,0 +1,299 @@
+@import 'src/styles/mixins';
+
+.content {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  padding: 28px 0;
+
+  @include mobile {
+    padding: 28px 0 52px;
+  }
+}
+
+.org {
+  display: grid;
+  width: 100%;
+  padding: 0 24px;
+
+  margin: 22px 0 50px;
+
+  column-gap: 24px;
+  grid-template-columns: 280px 1fr;
+
+  @include mobile {
+    display: flex;
+    height: auto;
+    flex-direction: column;
+
+    padding: 0 8px;
+    border-radius: 10px;
+    margin: 10px 0 24px;
+    row-gap: 16px;
+  }
+}
+
+.orgImg {
+  width: 276px;
+  min-width: 276px;
+  height: 276px;
+  border-radius: 5px;
+
+  object-fit: scale-down;
+}
+
+.orgCol {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.orgTitle {
+  color: #1d1d1f;
+
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.orgDescription {
+  color: #1d1d1f;
+
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.profile {
+  display: grid;
+  width: 100%;
+  padding: 0 24px;
+
+  margin: 22px 0 50px;
+
+  column-gap: 24px;
+  grid-template-columns: 280px 1fr;
+
+  @include mobile {
+    display: flex;
+    height: auto;
+    flex-direction: column;
+
+    padding: 0 8px;
+    border-radius: 10px;
+    margin: 10px 0 24px;
+    row-gap: 16px;
+  }
+}
+
+.headCol {
+  display: flex;
+  flex-direction: column;
+  row-gap: 24px;
+
+  @include mobile {
+    align-items: center;
+  }
+}
+
+.profileImageBlock {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #fff;
+
+  border-radius: 5px;
+  box-shadow: 0 0 8px 0 rgba(11, 14, 19, 0.25);
+}
+
+.profileImg {
+  width: 276px;
+  min-width: 276px;
+  height: 276px;
+  border-radius: 5px 5px 0 0;
+
+  object-fit: scale-down;
+}
+
+.profileEditButton {
+  padding: 0;
+  color: #1d1d1f;
+
+  column-gap: 8px;
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.profileButtons {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.profileColSet {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+
+  margin-bottom: 28px;
+
+  gap: 16px;
+}
+
+.profileCol {
+  display: flex;
+  align-items: flex-start;
+}
+
+.profileColIcon {
+  margin-right: 8px;
+}
+
+.profileColText {
+  max-width: 250px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  overflow-wrap: break-word;
+
+  &__email {
+    @extend .profileColText;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+
+
+.profileUserTariffLevel {
+  width: 100%;
+
+  padding: 20px 40px;
+
+  border-radius: 0 0 5px 5px;
+
+  background: linear-gradient(92deg, #cddee6 0%, #c5d6c5 99.54%);
+
+  color: #1d1d1f;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 24px;
+
+  margin-bottom: 24px;
+
+  color: #39393b;
+
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+
+  @include mobile {
+    padding: 0 8px;
+  }
+}
+
+.col {
+  display: flex;
+  align-items: center;
+  column-gap: 32px;
+
+  @include mobile {
+    column-gap: 8px;
+  }
+}
+
+.colSet {
+  display: flex;
+  align-items: center;
+}
+
+.count {
+  @include mobile {
+    display: none;
+  }
+}
+
+.controlBtn {
+  padding: 4px 12px;
+
+  border-radius: 5px;
+  color: #39393b;
+  font-size: 16px;
+
+  @include mobile {
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16px;
+
+    span {
+      display: none;
+    }
+  }
+
+  &:hover {
+    background: linear-gradient(299deg, #00f0ff -15.4%, #1768e5 100.3%);
+    color: #fff;
+  }
+
+  &:active {
+    background: linear-gradient(299deg, #00f0ff -15.4%, #1768e5 100.3%);
+    color: #fff;
+  }
+
+  span {
+    margin-left: 10px;
+  }
+
+  svg {
+    g path {
+      stroke: #39393b;
+    }
+  }
+}
+
+.NFTs {
+  display: flex;
+
+  width: 100%;
+  flex-wrap: wrap;
+  align-content: flex-start;
+
+  margin-bottom: 24px;
+  row-gap: 20px;
+
+  @include mobile {
+    row-gap: 12px;
+  }
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+
+  margin-bottom: 24px;
+
+  row-gap: 20px;
+
+  @include mobile {
+    row-gap: 12px;
+  }
+}
+
+.noNFTs {
+  margin: 100px auto;
+}
