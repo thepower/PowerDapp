@@ -98,6 +98,7 @@
     "enterLanguage": "Введите язык",
     "enterTheme": "Введите заголовок",
     "enterCategory": "Введите категорию",
+    "enterNameOfDAO": "Введите DAO",
     "describeInDetail": "Введите описание",
     "toPostAnNFTYouNeedToGenerate": "Для размещения NFT вам необходимо сгенерировать NFT токен (Non-fungible token). \n\nПосле вы сможете сохранить NFT и отправить ее редактору.",
     "mintNFTNft": "Создать NFT",
@@ -147,6 +148,6 @@
     "displayPublished": "Опубликованные",
     "displayDraft": "Черновики",
     "youDontHaveAnyNFTsYet": "У вас пока еще нет NFTs",
-    "nameOfDAOSlug": "Организация"
+    "nameOfDAOSlug": "имя DAO"
   }
 }

@@ -11,7 +11,7 @@
   }
 }
 
-.org {
+.dao {
   display: grid;
   width: 100%;
   padding: 0 24px;
@@ -33,7 +33,7 @@
   }
 }
 
-.orgImg {
+.daoImg {
   width: 276px;
   min-width: 276px;
   height: 276px;
@@ -42,13 +42,13 @@
   object-fit: scale-down;
 }
 
-.orgCol {
+.daoCol {
   display: flex;
   flex-direction: column;
   row-gap: 16px;
 }
 
-.orgTitle {
+.daoTitle {
   color: #1d1d1f;
 
   font-size: 20px;
@@ -56,7 +56,7 @@
   line-height: 24px;
 }
 
-.orgDescription {
+.daoDescription {
   color: #1d1d1f;
 
   font-size: 16px;

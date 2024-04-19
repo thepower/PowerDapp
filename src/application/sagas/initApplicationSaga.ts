@@ -27,7 +27,6 @@ export function* reInitApis({ payload }: { payload: number }) {
 
 export function* initApplicationSaga() {
   yield* reInitApis({ payload: defaultChain });
-  // let subChain = -1;
   let address = '';
 
   const chains: number[] = yield NetworkApi.getNetworkChains(CURRENT_NETWORK);

@@ -8,7 +8,7 @@ export enum RoutesEnum {
   map = '/map',
   add = '/add',
   edit = '/edit',
-  org = '/org',
+  dao = '/dao',
   root = '/',
   sso = '/sso',
 }

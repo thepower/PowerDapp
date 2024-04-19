@@ -52,7 +52,7 @@ import { loadProfileTrigger } from '../../../../profiles/slice/profilesSlice';
 
 type OwnProps = RouteComponentProps<{
   walletAddress?: string;
-  orgSlug?: string;
+  daoSlug?: string;
 }>;
 
 const mapDispatchToProps = {
@@ -62,7 +62,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state: RootState, props: OwnProps) => ({
-  orgSlugParam: props?.match?.params?.orgSlug,
+  daoSlugParam: props?.match?.params?.daoSlug,
   walletAddressParam: props?.match?.params?.walletAddress,
   walletAddress: getWalletAddress(state),
   NFTs: getNFTs(state),
@@ -88,7 +88,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
   isGetNFTssLoading,
   loadNFTsTrigger,
   walletAddressParam,
-  orgSlugParam,
+  daoSlugParam,
   walletAddress,
   profile,
   loadProfileTrigger,
@@ -127,7 +127,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
       isReversed,
       status: moderationStatus,
       category,
-      nameOfDAOSlug: orgSlugParam || nameOfDAO,
+      nameOfDAOSlug: daoSlugParam || nameOfDAO,
       walletAddress: walletAddressParam,
       isDraft: isDraftBool,
     });
@@ -141,7 +141,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
     isDraft,
     loadNFTsTrigger,
     nameOfDAO,
-    orgSlugParam,
+    daoSlugParam,
     isDraftBool,
   ]);
 
@@ -178,22 +178,22 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
     profile?.photoHash
   }`;
 
-  const renderOrg = useCallback(() => {
-    const dao = daos?.find((dao) => dao.slug === orgSlugParam);
-    const orgImgUrl = `${getLoadDataUrl('')}/${
+  const renderDao = useCallback(() => {
+    const dao = daos?.find((dao) => dao.slug === daoSlugParam);
+    const daoImgUrl = `${getLoadDataUrl('')}/${
       dao?.img
     }`;
 
     return (
-      <div className={styles.org}>
-        <img className={styles.orgImg} src={orgImgUrl} alt="" />
-        <div className={styles.orgCol}>
-          <div className={styles.orgTitle}>{dao?.name}</div>
-          <div className={styles.orgDescription}>{dao?.description}</div>
+      <div className={styles.dao}>
+        <img className={styles.daoImg} src={daoImgUrl} alt="" />
+        <div className={styles.daoCol}>
+          <div className={styles.daoTitle}>{dao?.name}</div>
+          <div className={styles.daoDescription}>{dao?.description}</div>
         </div>
       </div>
     );
-  }, [orgSlugParam]);
+  }, [daoSlugParam]);
 
   const renderProfile = useCallback(() => {
     const email = isShowEmail ? profile?.email : t('clickToShow');
@@ -278,14 +278,14 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
   ]);
 
   const renderHead = useCallback(() => {
-    if (orgSlugParam) {
-      return renderOrg();
+    if (daoSlugParam) {
+      return renderDao();
     }
     if (walletAddressParam) {
       return renderProfile();
     }
     return null;
-  }, [renderProfile, walletAddressParam, renderOrg, orgSlugParam]);
+  }, [renderProfile, walletAddressParam, renderDao, daoSlugParam]);
 
   const onClickCategory = (category: string) => {
     setCategory(category);
@@ -417,7 +417,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
                   ...nftCategoriesForSelect(t),
                 ]}
               />
-              {!orgSlugParam && (
+              {!daoSlugParam && (
                 <Filter
                   label={t('DAO')}
                   value={nameOfDAO}

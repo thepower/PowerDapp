@@ -98,6 +98,7 @@
     "enterLanguage": "Enter language",
     "enterTheme": "Enter theme",
     "enterCategory": "Enter category",
+    "enterNameOfDAO": "Enter DAO",
     "describeInDetail": "Enter description",
     "toPostAnNFTYouNeedToGenerate": "To post an NFT, you need to generate an NFT token (Non-fungible token). \n\nAfter that you can save the NFT and send it to the editor.",
     "mintNFTNft": "Create NFT NFT",
@@ -108,15 +109,15 @@
     "byChoosingSubscription": "By choosing a subscription, you will always have access to advanced features and get published.",
     "tariff1Title": "Member",
     "tariff1Price": "Free",
-    "tariff1Description": "This tariff is ideal for authors, researchers, and press service representatives of scientific organizations who wish to share their discoveries with the scientific community and are ready to distribute their texts independently.",
+    "tariff1Description": "tariff1Description",
     "tariff1List": "Creation and submission of NFTs for moderation\nAccess to the basic set of editing tools\nAbility to receive feedback from moderators\nPublication of NFTs on the platform in your own blog\nAccess to platform materials and resources",
     "tariff2Title": "Author",
-    "tariff2Price": "5000 RUB",
-    "tariff2Description": "Designed for active members of the scientific community who want to use additional tools to promote information about their research and developments. Suitable for active scientific groups and startups.",
+    "tariff2Price": "5000 USD",
+    "tariff2Description": "tariff2Description",
     "tariff2List": "Includes all the benefits of the 'Member' tariff",
     "tariff3Title": "Author Plus",
-    "tariff3Price": "10000 RUB",
-    "tariff3Description": "Suitable for everyone who wants to maximize their presence in the scientific world but is not ready to independently write popular texts. This tariff offers exclusive support and maximum visibility of your publications.",
+    "tariff3Price": "10000 USD",
+    "tariff3Description": "tariff3Description",
     "tariff3List": "Includes all the benefits of the 'Author' tariff",
     "cancelSubscription": "Cancel subscription",
     "chooseSubscription": "Choose subscription",
@@ -147,6 +148,6 @@
     "displayPublished": "Published",
     "displayDraft": "Drafts",
     "youDontHaveAnyNFTsYet": "You don't have any NFTs yet",
-    "nameOfDAOSlug": "Institution"
+    "nameOfDAOSlug": "DAO name"
   }
 }

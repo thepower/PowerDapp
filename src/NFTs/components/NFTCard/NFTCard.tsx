@@ -53,7 +53,7 @@ const NFTCardComponent: React.FC<NFTCardProps> = memo(
               <div className={styles.col}>
                 <MarkerIcon className={styles.colIcon} />
                 <Link
-                  to={`${RoutesEnum.org}/${NFT?.nameOfDAOSlug}`}
+                  to={`${RoutesEnum.dao}/${NFT?.nameOfDAOSlug}`}
                   className={styles.colText}
                 >
                   {nameOfDAO}

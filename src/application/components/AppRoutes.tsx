@@ -63,7 +63,7 @@ const AppRoutesComponent: React.FC = () => {
       />
       <Route
         exact
-        path={`${RoutesEnum.org}/:orgSlug`}
+        path={`${RoutesEnum.dao}/:daoSlug`}
         render={(props) => <NFTsPage {...props} />}
       />
       {isModerator && <Route

@@ -126,14 +126,19 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
   const [openedMessages, setOpenedMessages] = useState<string[]>([]);
   const { t } = useTranslation();
 
+  const NFTID = useMemo(
+    () => (isDraft ? NFT?.id : NFT?.originTokenId),
+    [NFT?.id, NFT?.originTokenId, isDraft],
+  );
+
   useEffect(() => {
     if (id) {
       loadNFTTrigger({ id, isDraft });
     }
-    if (id) {
-      loadMessagesTrigger({ NFTID: +id });
+    if (NFTID) {
+      loadMessagesTrigger({ NFTID });
     }
-  }, [id, isDraft, loadNFTTrigger, loadMessagesTrigger]);
+  }, [id, isDraft, loadNFTTrigger, loadMessagesTrigger, NFTID]);
 
   const nameOfDAO = useMemo(
     () => daos?.find(
@@ -153,14 +158,14 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
     { message }: InitialValues,
     formikHelpers: FormikHelpers<InitialValues>,
   ) => {
-    if (message) {
+    if (message && NFTID) {
       postMessageTrigger({
-        NFTID: NFT!.id,
+        NFTID,
         message,
         additionalActionOnSuccess: () => {
           formikHelpers.resetForm();
-          if (id) {
-            loadMessagesTrigger({ NFTID: +id });
+          if (NFTID) {
+            loadMessagesTrigger({ NFTID });
           }
         },
       });
@@ -174,11 +179,10 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
   });
 
   const imgUrl = useMemo(() => {
-    const link = isDraft
-      ? `${getLoadDataUrl(NFT?.id.toString())}/${NFT?.imageHash}`
-      : `${getLoadDataUrl(NFT?.originTokenId?.toString())}/${NFT?.imageHash}`;
+    const link = `${getLoadDataUrl(NFTID?.toString())}/${NFT?.imageHash}`;
+
     return link;
-  }, [NFT?.id, NFT?.imageHash, NFT?.originTokenId, isDraft]);
+  }, [NFT?.imageHash, NFTID]);
 
   const renderForm = () => {
     const messageLength = formik.values.message.length;
@@ -238,7 +242,7 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
         <MarkerIcon />
         <Link
           className={styles.link}
-          to={`${RoutesEnum.org}/${NFT?.nameOfDAOSlug}`}
+          to={`${RoutesEnum.dao}/${NFT?.nameOfDAOSlug}`}
         >
           {nameOfDAO}
         </Link>
