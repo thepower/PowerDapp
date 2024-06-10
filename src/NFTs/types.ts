@@ -44,7 +44,7 @@ export type LoadNFTsPayload = {
   isReversed: boolean
   status: string;
   category: string;
-  nameOfDAOSlug: string;
+  nameOfDAOSlug?: string;
   isDraft?: boolean;
 };
 

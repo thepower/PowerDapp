@@ -18,8 +18,8 @@ import appEnvs from 'appEnvs';
 import { getWalletNativeTokensAmountByID } from 'myAssets/selectors/walletSelectors';
 import { getIsVerified } from 'profiles/selectors/rolesSelectors';
 import { getLoadDataUrl } from 'api/openResty';
-import { getProfile } from 'profiles/selectors/profilesSelectors';
-import { loadProfileTrigger } from 'profiles/slice/profilesSlice';
+import { getUserProfile } from 'profiles/selectors/profilesSelectors';
+import { loadUserProfileTrigger } from 'profiles/slice/profilesSlice';
 import styles from './AccountDropdown.module.scss';
 
 type AccountDropdownProps = {
@@ -32,16 +32,16 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({ className }) =
 
   const walletAddress = useAppSelector(getWalletAddress);
   const isAuthor = useAppSelector(getIsVerified);
-  const profile = useAppSelector(getProfile);
+  const userProfile = useAppSelector(getUserProfile);
   const SKAmount = useAppSelector((state) => getWalletNativeTokensAmountByID(state, 'SK'));
 
   const [dropdown, setDropdown] = React.useState<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     if (walletAddress) {
-      dispatch(loadProfileTrigger(walletAddress));
+      dispatch(loadUserProfileTrigger(walletAddress));
     }
-  }, [loadProfileTrigger, walletAddress]);
+  }, [loadUserProfileTrigger, walletAddress]);
 
   useEffect(() => {
     if (walletAddress) dispatch(loadBalanceTrigger());
@@ -67,7 +67,7 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({ className }) =
   };
 
   const profileImgUrl = `${getLoadDataUrl(appEnvs.OPEN_RESTY_PROFILE_BUCKET)}/${
-    profile?.photoHash
+    userProfile?.photoHash
   }`;
 
   return (
@@ -105,13 +105,13 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({ className }) =
         }}
       >
         <List>
-          {profile && <ListItem disablePadding>
+          {userProfile && <ListItem disablePadding>
             <ListItemButton disableRipple className={styles.listButton} target="_blank" href={appEnvs.WALLET_THEPOWER_URL}>
               <ListItemIcon className={styles.listIcon}>
                 <img src={profileImgUrl} alt="profileImg" className={styles.profileImg} />
               </ListItemIcon>
               <div className={styles.profileInfo}>
-                {`${profile?.firstName} ${profile?.lastName}`}
+                {`${userProfile?.firstName} ${userProfile?.lastName}`}
                 <br />
                 <span>{walletAddress}</span>
               </div>

@@ -7,17 +7,14 @@ import React, {
 
 import { RootState } from 'application/store';
 import { ConnectedProps, connect } from 'react-redux';
-import { loadNFTsTrigger } from 'NFTs/slice/NFTsSlice';
-import {
-  getNFTs,
-  getNFTsCount,
-} from 'NFTs/selectors/NFTsSelectors';
+import { loadNFTTrigger, loadNFTsTrigger } from 'NFTs/slice/NFTsSlice';
+import { getNFTs, getNFTsCount } from 'NFTs/selectors/NFTsSelectors';
 import { checkIfLoading } from 'network/selectors';
 import { SelectChangeEvent, Skeleton, IconButton } from '@mui/material';
 import { range } from 'lodash';
 import { isMobile } from 'application/components/App';
 import {
-  SortIcon,
+  EditProfileIcon, SortIcon, UserIcon, WalletIcon,
 } from 'assets/icons';
 import { RoutesEnum } from 'application/typings/routes';
 import { useTranslation } from 'react-i18next';
@@ -29,54 +26,67 @@ import {
 } from 'NFTs/types';
 import { push } from 'connected-react-router';
 import { RouteComponentProps } from 'react-router';
+import { getLoadDataUrl } from 'api/openResty';
+import { getProfile } from 'profiles/selectors/profilesSelectors';
+import appEnvs from 'appEnvs';
 import {
   getIsVerified,
   getIsModerator,
   getIsRegistered,
 } from 'profiles/selectors/rolesSelectors';
 import { getWalletAddress } from 'account/selectors/accountSelectors';
-import {
-  nftCategoriesForSelect,
-} from 'NFTs/constants';
+import { nftCategoriesForSelect, userTariffLevelMap } from 'NFTs/constants';
+import { getTariffLevel } from 'tariffs/selectors/tariffsSelectors';
 import { daosForSelect } from 'application/constants';
 import { toast } from 'react-toastify';
-import styles from './NFTsPage.module.scss';
+import { AlternateEmail } from '@mui/icons-material';
+import { loadTariffLevelTrigger } from 'tariffs/slice/tariffSlice';
+import styles from './AuthorNFTsPage.module.scss';
 import { NFTCard } from '../../NFTCard/NFTCard';
+import { loadProfileTrigger } from '../../../../profiles/slice/profilesSlice';
 
 type OwnProps = RouteComponentProps<{
   walletAddress?: string;
-  daoSlug?: string;
 }>;
 
 const mapDispatchToProps = {
   loadNFTsTrigger,
   routeTo: push,
+  loadProfileTrigger,
+  loadTariffLevelTrigger,
 };
 
 const mapStateToProps = (state: RootState, props: OwnProps) => ({
+  walletAddressParam: props?.match?.params?.walletAddress,
   walletAddress: getWalletAddress(state),
   NFTs: getNFTs(state),
   NFTsCount: getNFTsCount(state),
-  isGetNFTssLoading: checkIfLoading(state, loadNFTsTrigger.type),
+  isGetNFTsLoading: checkIfLoading(state, loadNFTTrigger.type),
+  isProfileLoading: checkIfLoading(state, loadProfileTrigger.type),
+  profile: getProfile(state),
   isRegistered: getIsRegistered(state),
   isModerator: getIsModerator(state),
   isAuthor: getIsVerified(state),
+  tariffLevel: getTariffLevel(state),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type NFTsPageComponentProps = ConnectedProps<typeof connector> & {
-  isDraft?: boolean;
-};
+type AuthorNFTsPageComponentProps = ConnectedProps<typeof connector>;
 
-const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
+const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
   NFTs,
   NFTsCount,
-  isGetNFTssLoading,
+  isGetNFTsLoading,
   loadNFTsTrigger,
+  walletAddressParam,
   walletAddress,
-  isDraft,
+  profile,
+  loadProfileTrigger,
+  loadTariffLevelTrigger,
   isModerator,
+  isProfileLoading,
   isAuthor,
+  tariffLevel,
   isRegistered,
   routeTo,
 }) => {
@@ -86,16 +96,12 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
   const [isReversed, setIsReversed] = useState(true);
   const [moderationStatus, setModerationStatus] =
     useState<FilterModerationStatus>('all');
-  const [NFTStatus, setNFTsStatus] =
-    useState<FilterNFTStatus>('published');
+  const [NFTStatus, setNFTStatus] = useState<FilterNFTStatus>('published');
   const [category, setCategory] = useState<FilterCategory>('all');
-  const [nameOfDAO, setNameOfDAO] =
-    useState<FilterNameOfDAO>('all');
+  const [nameOfDAOSlug, setNameOfDAOSlug] = useState<FilterNameOfDAO>('all');
+  const [isShowEmail, setIsShowEmail] = useState<boolean>(false);
 
-  const isDraftBool = useMemo(
-    () => (NFTStatus === 'draft'),
-    [NFTStatus],
-  );
+  const isDraftBool = useMemo(() => NFTStatus === 'draft', [NFTStatus]);
 
   useEffect(() => {
     loadNFTsTrigger({
@@ -104,7 +110,8 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
       isReversed,
       status: moderationStatus,
       category,
-      nameOfDAOSlug: nameOfDAO,
+      nameOfDAOSlug,
+      walletAddress: walletAddressParam,
       isDraft: isDraftBool,
     });
   }, [
@@ -113,11 +120,18 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
     isReversed,
     moderationStatus,
     category,
-    isDraft,
-    loadNFTsTrigger,
-    nameOfDAO,
+    walletAddressParam,
+    nameOfDAOSlug,
     isDraftBool,
+    loadNFTsTrigger,
   ]);
+
+  useEffect(() => {
+    if (walletAddressParam) {
+      loadProfileTrigger(walletAddressParam);
+      loadTariffLevelTrigger(walletAddressParam);
+    }
+  }, [loadProfileTrigger, loadTariffLevelTrigger, walletAddressParam]);
 
   useEffect(() => {
     setPage(0);
@@ -139,7 +153,98 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
     setIsReversed(!isReversed);
   };
 
-  const isLoading = isGetNFTssLoading || !NFTs.length;
+  const isLoading = isGetNFTsLoading || !NFTs.length;
+
+  const authorName = `${profile?.firstName} ${profile?.lastName}`;
+  const profileImgUrl = `${getLoadDataUrl(appEnvs.OPEN_RESTY_PROFILE_BUCKET)}/${
+    profile?.photoHash
+  }`;
+
+  const renderProfile = useCallback(() => {
+    const email = isShowEmail ? profile?.email : t('clickToShow');
+    const emailClassName = isShowEmail
+      ? styles.profileColText
+      : styles.profileColText__email;
+    if (isProfileLoading) {
+      return (
+        <Skeleton
+          height={isMobile ? 285.33 : 380}
+          sx={{
+            transform: 'none',
+            transformOrigin: 'unset',
+            borderRadius: '5px',
+            margin: '50px 0 22px 0',
+          }}
+        />
+      );
+    }
+    return (
+      <div className={styles.profile}>
+        <div className={styles.headCol}>
+          <div className={styles.profileImageBlock}>
+            <img className={styles.profileImg} src={profileImgUrl} alt="" />
+            <div className={styles.profileUserTariffLevel}>
+              {t(userTariffLevelMap?.[tariffLevel?.foundLevel || 0])}
+            </div>
+          </div>
+          {((walletAddress === profile?.walletAddress && isAuthor) ||
+            isModerator) && (
+            <IconButton
+              href={`${RoutesEnum.editProfile}/${walletAddressParam}`}
+              disableRipple
+              className={styles.profileEditButton}
+            >
+              <EditProfileIcon />
+              {t('editProfile')}
+            </IconButton>
+          )}
+        </div>
+        <div>
+          <div className={styles.profileColSet}>
+            <div className={styles.profileCol}>
+              <UserIcon className={styles.profileColIcon} />
+              <div className={styles.profileColText}>{authorName}</div>
+            </div>
+            <div className={styles.profileCol}>
+              <WalletIcon className={styles.profileColIcon} />
+              <div className={styles.profileColText}>
+                {profile?.walletAddress}
+              </div>
+            </div>
+            {profile?.email && (
+              <div className={styles.profileCol}>
+                <AlternateEmail
+                  className={styles.profileColIcon}
+                  sx={{ color: '#86868B' }}
+                />
+                <div
+                  className={emailClassName}
+                  onClick={() => setIsShowEmail(true)}
+                >
+                  {email}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }, [
+    isProfileLoading,
+    profileImgUrl,
+    t,
+    tariffLevel?.foundLevel,
+    walletAddress,
+    profile?.walletAddress,
+    profile?.email,
+    isAuthor,
+    isModerator,
+    walletAddressParam,
+    authorName,
+    isShowEmail,
+  ]);
+
+  const renderHead = useCallback(() => renderProfile(), [renderProfile]);
 
   const onClickCategory = (category: string) => {
     setCategory(category);
@@ -163,11 +268,9 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
         </div>
       );
     }
-    if (!NFTs.length) {
+    if (!NFTs.length && walletAddress === profile?.walletAddress) {
       return (
-        <div className={styles.noNFTs}>
-          {t('youDontHaveAnyNFTssYet')}
-        </div>
+        <div className={styles.noNFTs}>{t('youDontHaveAnyNFTssYet')}</div>
       );
     }
     return (
@@ -185,6 +288,8 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
   }, [
     isLoading,
     NFTs,
+    walletAddress,
+    profile?.walletAddress,
     pageSize,
     isDraftBool,
     t,
@@ -201,6 +306,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
   return (
     <Layout>
       <div className={styles.content}>
+        {renderHead()}
         <div className={styles.row}>
           <div className={styles.col}>
             {isRegistered && (
@@ -243,11 +349,12 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
                   ]}
                 />
               )}
-              {isModerator && (
+              {(isModerator ||
+                (isAuthor && walletAddress === profile?.walletAddress)) && (
                 <Filter
                   label={t('NFTStatus')}
                   value={NFTStatus}
-                  onChange={(_e, v) => setNFTsStatus(v as FilterNFTStatus)}
+                  onChange={(_e, v) => setNFTStatus(v as FilterNFTStatus)}
                   items={[
                     { label: t('displayPublished'), value: 'published' },
                     { label: t('displayDraft'), value: 'draft' },
@@ -264,9 +371,9 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
                 ]}
               />
               <Filter
-                label={t('DAO')}
-                value={nameOfDAO}
-                onChange={(_e, v) => setNameOfDAO(v as FilterNameOfDAO)}
+                label={t('organization')}
+                value={nameOfDAOSlug}
+                onChange={(_e, v) => setNameOfDAOSlug(v as FilterNameOfDAO)}
                 items={[
                   { label: t('displayAll'), value: 'all' },
                   ...daosForSelect,
@@ -281,7 +388,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
           count={NFTsCount || 0}
           pageSize={pageSize}
           page={page}
-          loading={isGetNFTssLoading}
+          loading={isGetNFTsLoading}
           onPageChange={handleChangePage}
           handleChangePageSize={handleChangePageSize}
         />
@@ -290,4 +397,4 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
   );
 };
 
-export const NFTsPage = connector(NFTsPageComponent);
+export const AuthorNFTsPage = connector(AuthorNFTsPageComponent);

@@ -19,17 +19,16 @@ import { push } from 'connected-react-router';
 import { isMobile } from 'application/components/App';
 import { useTranslation } from 'react-i18next';
 import { RoutesEnum } from 'application/typings/routes';
-import { createOrEditProfileTrigger } from 'profiles/slice/profilesSlice';
+import { createOrEditProfileTrigger, loadUserProfileTrigger } from 'profiles/slice/profilesSlice';
 import { checkIfLoading } from 'network/selectors';
 import { getWalletAddress } from 'account/selectors/accountSelectors';
-import { getProfile } from 'profiles/selectors/profilesSelectors';
+import { getUserProfile } from 'profiles/selectors/profilesSelectors';
 import { Clear as ClearIcon } from '@mui/icons-material';
 import { downloadFile } from 'api/openResty';
 import appEnvs from 'appEnvs';
 import { RouteComponentProps } from 'react-router';
 import { toast } from 'react-toastify';
 import styles from './EditProfilePage.module.scss';
-import { loadProfileTrigger } from '../../../slice/profilesSlice';
 
 type OwnProps = RouteComponentProps<{ walletAddress?: string }>;
 
@@ -42,15 +41,15 @@ type InitialValues = {
 const mapDispatchToProps = {
   routeTo: push,
   createOrEditProfileTrigger,
-  loadProfileTrigger,
+  loadUserProfileTrigger,
 };
 
 const mapStateToProps = (state: RootState, props: OwnProps) => ({
-  isLoading: checkIfLoading(state, loadProfileTrigger.type),
+  isLoading: checkIfLoading(state, loadUserProfileTrigger.type),
   editedWalletAddress: props?.match?.params?.walletAddress,
   isSubmitLoading: checkIfLoading(state, createOrEditProfileTrigger.type),
   walletAddress: getWalletAddress(state),
-  profile: getProfile(state),
+  profile: getUserProfile(state),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -60,7 +59,7 @@ const EditProfilePageComponent: React.FC<EditProfilePageComponentProps> = ({
   profile,
   routeTo,
   createOrEditProfileTrigger,
-  loadProfileTrigger,
+  loadUserProfileTrigger,
   isSubmitLoading,
   isLoading,
   walletAddress,
@@ -77,8 +76,8 @@ const EditProfilePageComponent: React.FC<EditProfilePageComponentProps> = ({
   const [images, setImages] = useState<File[]>([]);
 
   useEffect(() => {
-    if (editedWalletAddress || walletAddress) loadProfileTrigger(editedWalletAddress || walletAddress);
-  }, [walletAddress, editedWalletAddress]);
+    if (editedWalletAddress || walletAddress) loadUserProfileTrigger(editedWalletAddress || walletAddress);
+  }, [walletAddress, editedWalletAddress, loadUserProfileTrigger]);
 
   const validationSchema = useMemo(
     () => yup.object({

@@ -16,7 +16,7 @@ import { toast } from 'react-toastify';
 
 import { getWalletAddress } from 'account/selectors/accountSelectors';
 import {
-  createOrEditProfileTrigger, loadProfileTrigger, loadProfilesTrigger, setProfile, setProfiles, setProfilesCount,
+  createOrEditProfileTrigger, loadProfileTrigger, loadProfilesTrigger, loadUserProfileTrigger, setProfile, setProfiles, setProfilesCount, setUserProfile,
 } from 'profiles/slice/profilesSlice';
 import { getNetworkApi } from 'application/selectors';
 import {
@@ -216,11 +216,20 @@ export function* loadProfile(walletAddressOrId: string | number) {
 export function* loadProfileSaga({
   payload: walletAddress,
 }: ReturnType<typeof loadProfileTrigger>) {
-  const profileWalletAddress = walletAddress || (yield* select(getWalletAddress));
-
-  const profile = yield* loadProfile(profileWalletAddress);
+  const profile = yield* loadProfile(walletAddress);
   if (profile) {
     yield put(setProfile(profile));
+  } else {
+    console.error('!profile');
+  }
+}
+
+export function* loadUserProfileSaga({
+  payload: walletAddress,
+}: ReturnType<typeof loadUserProfileTrigger>) {
+  const profile = yield* loadProfile(walletAddress);
+  if (profile) {
+    yield put(setUserProfile(profile));
   } else {
     console.error('!profile');
   }

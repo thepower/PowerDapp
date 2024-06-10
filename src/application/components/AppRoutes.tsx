@@ -14,6 +14,8 @@ import { EditProfilePage } from 'profiles/components/pages/editProfilePage/EditP
 import { ProfilesPage } from 'profiles/components/pages/profilesPage/ProfilesPage';
 import { getIsModerator } from 'profiles/selectors/rolesSelectors';
 import { PricingPage } from 'tariffs/components/pages/PricingPage';
+import { AuthorNFTsPage } from 'NFTs/components/pages/authorNFTs/AuthorNFTsPage';
+import { DAONFTsPage } from 'NFTs/components/pages/orgNFTs/DAONFTsPage';
 import { initApplication } from '../slice/applicationSlice';
 import { RoutesEnum } from '../typings/routes';
 import { useAppDispatch, useAppSelector } from '../store';
@@ -59,12 +61,12 @@ const AppRoutesComponent: React.FC = () => {
       <Route
         exact
         path={`/:walletAddress(${walletAddressRegExp})`}
-        render={(props) => <NFTsPage isDraft isMyNftsPage {...props} />}
+        render={(props) => <AuthorNFTsPage {...props} />}
       />
       <Route
         exact
         path={`${RoutesEnum.dao}/:daoSlug`}
-        render={(props) => <NFTsPage {...props} />}
+        render={(props) => <DAONFTsPage {...props} />}
       />
       {isModerator && <Route
         exact

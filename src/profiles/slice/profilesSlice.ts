@@ -13,6 +13,7 @@ export const profilesAdapter = createEntityAdapter<Profile>({
 
 interface ProfilesState {
   items: ReturnType<typeof profilesAdapter.getInitialState>;
+  userProfile?: Profile
   profile?: Profile
   profilesCount?: number;
   profileRoles: string[]
@@ -20,6 +21,7 @@ interface ProfilesState {
 
 const initialState: ProfilesState = {
   items: profilesAdapter.getInitialState(),
+  userProfile: undefined,
   profile: undefined,
   profilesCount: undefined,
   profileRoles: [],
@@ -38,6 +40,9 @@ const profilesSlice = createSlice({
     setProfile: (state: ProfilesState, { payload }: PayloadAction<Profile>) => {
       state.profile = payload;
     },
+    setUserProfile: (state: ProfilesState, { payload }: PayloadAction<Profile>) => {
+      state.userProfile = payload;
+    },
     setProfilesCount: (state: ProfilesState, { payload }: PayloadAction<number>) => {
       state.profilesCount = payload;
     },
@@ -49,7 +54,8 @@ const profilesSlice = createSlice({
 
 export const createOrEditProfileTrigger = createAction<CreateProfilePayload>('createProfile');
 export const loadProfilesTrigger = createAction<LoadProfilesPayload>('loadProfiles');
-export const loadProfileTrigger = createAction<string | undefined>('loadProfile');
+export const loadProfileTrigger = createAction<string>('loadProfile');
+export const loadUserProfileTrigger = createAction<string>('loadUserProfile');
 
 export const grantRoleTrigger = createAction<AddActionOnSuccessAndErrorType<GrantRolePayload>>('grantRole');
 export const revokeRoleTrigger = createAction<AddActionOnSuccessAndErrorType<RevokeRolePayload>>('revokeRole');
@@ -57,6 +63,7 @@ export const revokeRoleTrigger = createAction<AddActionOnSuccessAndErrorType<Rev
 export const {
   actions: {
     setProfiles,
+    setUserProfile,
     setProfile,
     setProfilesCount,
     setProfilesRoles,

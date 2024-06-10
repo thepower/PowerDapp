@@ -15,9 +15,33 @@ import { getNetworkApi } from 'application/selectors';
 import { put, select } from 'typed-redux-saga';
 import i18n from 'locales/initLocales';
 import { UserLevelResponse } from 'tariffs/types';
-import { payTariffTrigger, setBillData, setUserTariffLevel } from 'tariffs/slice/tariffSlice';
+import {
+  loadTariffLevelTrigger, payTariffTrigger, setBillData, setTariffLevel, setUserTariffLevel,
+} from 'tariffs/slice/tariffSlice';
 import { createBill } from 'api/paygate';
 import { grantRoleTrigger } from 'profiles/slice/profilesSlice';
+
+export function* loadTariffLevelSaga({ payload: walletAddress }: ReturnType<typeof loadTariffLevelTrigger>) {
+  try {
+    const networkApi = (yield* select(getNetworkApi))!;
+
+    const { foundLevel, foundExpire, foundTokenId }: UserLevelResponse = yield networkApi.executeCall(
+      AddressApi.textAddressToHex(abis.tariff.address),
+      'user_level',
+      [AddressApi.textAddressToEvmAddress(walletAddress)],
+      abis.tariff.abi,
+    );
+
+    yield put(setTariffLevel({
+      foundLevel: Number(foundLevel),
+      foundExpire: Number(foundExpire),
+      foundTokenId: Number(foundTokenId),
+    }));
+  } catch (error: any) {
+    console.error(error);
+    toast.error(error);
+  }
+}
 
 export function* loadUserTariffLevel({ walletAddress }: { walletAddress: string }) {
   try {

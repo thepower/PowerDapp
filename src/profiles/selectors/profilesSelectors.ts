@@ -16,3 +16,4 @@ export const getProfilesCount = createSelector(
 export const getProfileById = createSelector(selectById, (profile) => profile);
 
 export const getProfile = createSelector(getProfileState, (state) => state.profile);
+export const getUserProfile = createSelector(getProfileState, (state) => state.userProfile);

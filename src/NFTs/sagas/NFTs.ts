@@ -538,7 +538,8 @@ export function* loadNFTsSaga({
   const filters = [];
 
   if (category !== 'all') filters.push([NftField.category, toBytes(category)]);
-  if (nameOfDAOSlug !== 'all') {
+
+  if (nameOfDAOSlug && nameOfDAOSlug !== 'all') {
     filters.push([
       NftField.nameOfDAOSlug,
       toBytes(nameOfDAOSlug),
