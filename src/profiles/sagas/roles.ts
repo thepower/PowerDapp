@@ -1,6 +1,6 @@
 import { AddressApi } from '@thepowereco/tssdk';
 import { encodeFunction } from '@thepowereco/tssdk/dist/helpers/abi.helper';
-import { sighTxWithPopup } from 'api/popup';
+import { signTxWithPopup } from 'api/popup';
 import appEnvs from 'appEnvs';
 import { grantRoleTrigger, revokeRoleTrigger, setProfilesRoles } from 'profiles/slice/profilesSlice';
 import { objectToString } from 'sso/utils';
@@ -93,7 +93,7 @@ export function* grantRoleSaga({
       body,
     });
 
-    const grantRoleRes = yield* sighTxWithPopup({ data, action: grantRoleTrigger.type, description: i18n.t('grantRole') });
+    const grantRoleRes = yield* signTxWithPopup({ data, action: grantRoleTrigger.type, description: i18n.t('grantRole') });
 
     if (!grantRoleRes?.txId) throw new Error('!grantRoleRes?.txId');
 
@@ -136,7 +136,7 @@ export function* revokeRoleSaga({
       body,
     });
 
-    const revokeRoleRes = yield* sighTxWithPopup({ data, action: revokeRoleTrigger.type });
+    const revokeRoleRes = yield* signTxWithPopup({ data, action: revokeRoleTrigger.type });
 
     if (!revokeRoleRes?.txId) throw new Error('!revokeRoleRes?.txId');
 

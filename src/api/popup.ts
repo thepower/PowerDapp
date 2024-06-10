@@ -3,7 +3,7 @@ import { stringToObject } from 'sso/utils';
 import { put } from 'typed-redux-saga';
 import { setPopupData } from 'walletSign/slices/walletSign';
 
-export function* sighTxWithPopup<T>({
+export function* signTxWithPopup<T>({
   data,
   action,
   description,

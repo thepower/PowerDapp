@@ -10,7 +10,7 @@ import abis from 'contractAbis';
 import { toast } from 'react-toastify';
 
 import { encodeFunction } from '@thepowereco/tssdk/dist/helpers/abi.helper';
-import { sighTxWithPopup } from 'api/popup';
+import { signTxWithPopup } from 'api/popup';
 import { getNetworkApi } from 'application/selectors';
 import { put, select } from 'typed-redux-saga';
 import i18n from 'locales/initLocales';
@@ -70,7 +70,7 @@ export function* activeFreeTariff({ walletAddress }: { walletAddress: string }) 
       body,
     });
 
-    const createProfileResponse = yield* sighTxWithPopup({ data, action: grantRoleTrigger.type, description: i18n.t('mintFreeTariffNFT') });
+    const createProfileResponse = yield* signTxWithPopup({ data, action: grantRoleTrigger.type, description: i18n.t('mintFreeTariffNFT') });
 
     if (!createProfileResponse.txId) throw new Error('!activeFreeTariff.txId');
 

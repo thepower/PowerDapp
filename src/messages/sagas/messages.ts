@@ -21,7 +21,7 @@ import {
   objectToString,
   stringToObject,
 } from 'sso/utils';
-import { sighTxWithPopup } from 'api/popup';
+import { signTxWithPopup } from 'api/popup';
 import appEnvs from 'appEnvs';
 import { encodeFunction } from '@thepowereco/tssdk/dist/helpers/abi.helper';
 import { toBeHex } from 'ethers';
@@ -92,7 +92,7 @@ export function* postMessageSaga({
       body,
     });
 
-    const registerMessageRes = yield* sighTxWithPopup({ data, action: postMessageTrigger.type, description: i18n.t('sendMessage') });
+    const registerMessageRes = yield* signTxWithPopup({ data, action: postMessageTrigger.type, description: i18n.t('sendMessage') });
 
     if (!registerMessageRes.txId) {
       additionalActionOnError?.();

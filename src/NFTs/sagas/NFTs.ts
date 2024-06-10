@@ -31,7 +31,7 @@ import {
   stringToBytes,
   toBytes,
 } from 'viem';
-import { sighTxWithPopup } from 'api/popup';
+import { signTxWithPopup } from 'api/popup';
 import { uploadFile } from 'api/openResty';
 import { encodeFunction } from '@thepowereco/tssdk/dist/helpers/abi.helper';
 import { loadProfile } from 'profiles/sagas/profiles';
@@ -87,7 +87,7 @@ export function* mintNftSaga({
       body,
     });
 
-    const mintRes = yield* sighTxWithPopup<MintTxResponse>({
+    const mintRes = yield* signTxWithPopup<MintTxResponse>({
       data,
       description: i18n.t('mintNft'),
       action: mintNftTrigger.type,
@@ -235,7 +235,7 @@ export function* saveNFTDataSaga({
         body,
       });
 
-      const setDataRes = yield* sighTxWithPopup({
+      const setDataRes = yield* signTxWithPopup({
         data,
         action: saveNFTDataTrigger.type,
         description: i18n.t('saveNFT'),
@@ -310,7 +310,7 @@ export function* editNFTSaga({
         body,
       });
 
-      const setDataRes = yield* sighTxWithPopup({
+      const setDataRes = yield* signTxWithPopup({
         data,
         action: editNFTTrigger.type,
         description: i18n.t('editNFT'),
@@ -367,7 +367,7 @@ export function* approveOrRejectNFTSaga({
       body,
     });
 
-    const setDataRes = yield* sighTxWithPopup({
+    const setDataRes = yield* signTxWithPopup({
       data,
       action: approveOrRejectNFTTrigger.type,
       description: isApproved
@@ -495,7 +495,7 @@ export function* publishNFTSaga({
       body,
     });
 
-    const indexMintRes = yield* sighTxWithPopup({
+    const indexMintRes = yield* signTxWithPopup({
       data,
       action: publishNFTTrigger.type,
       description: i18n.t('publishNFT'),

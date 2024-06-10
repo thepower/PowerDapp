@@ -39,10 +39,8 @@ const LogInPageComponent:FC<LogInPageComponentProps> = ({ routeTo, walletAddress
         `${window.location.origin}/`,
       returnUrl: `${window.location.origin}${RoutesEnum.editProfile}`,
       chainID: defaultChain,
-      isShowSeedAfterRegistration: false,
-      isAutoDownloadSeed: true,
     });
-    window.location.replace(`${appEnvs.WALLET_THEPOWER_URL}/registration-for-apps/${stringData}`);
+    window.location.replace(`${appEnvs.WALLET_THEPOWER_URL}/signup/${stringData}`);
   };
 
   const onClickLogin = () => {
@@ -50,6 +48,7 @@ const LogInPageComponent:FC<LogInPageComponentProps> = ({ routeTo, walletAddress
       callbackUrl:
         `${window.location.origin}/`,
       returnUrl: window.location.href,
+      chainID: defaultChain,
     });
     window.location.replace(`${appEnvs.WALLET_THEPOWER_URL}${RoutesEnum.sso}/${stringData}`);
   };

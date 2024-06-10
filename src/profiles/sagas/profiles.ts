@@ -28,7 +28,7 @@ import { uploadFile } from 'api/openResty';
 import {
   compact,
 } from 'lodash';
-import { sighTxWithPopup } from 'api/popup';
+import { signTxWithPopup } from 'api/popup';
 import i18n from 'locales/initLocales';
 import { push } from 'connected-react-router';
 import { hexToString, numberToBytes, stringToBytes } from 'viem';
@@ -118,7 +118,7 @@ export function* createOrEditProfileSaga({
       body,
     });
 
-    const createProfileResponse = yield* sighTxWithPopup({
+    const createProfileResponse = yield* signTxWithPopup({
       data,
       action: createOrEditProfileTrigger.type,
       description: isRegistered ? i18n.t('editProfile') : i18n.t('saveProfile'),

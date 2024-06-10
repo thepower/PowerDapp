@@ -66,7 +66,7 @@ const WalletSignModalComponent: React.FC<ModalPropsComponentProps> = ({
               height: 600,
               width: 357,
               title: 'Wallet',
-              url: `${appEnvs.WALLET_THEPOWER_URL}/my-assets/sign-and-send/${popupData?.requestUrlData}`,
+              url: `${appEnvs.WALLET_THEPOWER_URL}/sign-and-send/${popupData?.requestUrlData}`,
             });
             setPopupData(null);
           }}
