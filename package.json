@@ -16,9 +16,9 @@
     "eject": "react-scripts eject",
     "cm": "git add . && git commit",
     "buildsc": "yarn solcjs ./contracts/*.sol -o buildsc --bin --optimize --abi",
-    "deploy": "tsx src/utils/deploySc.ts",
-    "register": "tsx src/utils/register.ts",
-    "call": "tsx src/utils/callScTx.ts"
+    "deploy": "tsx utils/deploySc.ts",
+    "register": "tsx utils/register.ts",
+    "call": "tsx utils/callScTx.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix",

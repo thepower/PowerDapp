@@ -15,7 +15,7 @@ async function main() {
   const password = '111';
   const hint = 'three one';
   const exportedData = walletApi.getExportData(acc.wif, acc.address, password, hint);
-  writeFileSync(`src/utils/power_wallet_${acc.chain}_${acc.address}.pem`, exportedData);
+  writeFileSync(`utils/power_wallet_${acc.chain}_${acc.address}.pem`, exportedData);
 }
 
 main();

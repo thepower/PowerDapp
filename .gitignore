@@ -64,4 +64,4 @@ build/IERC721Receiver*
 build/Math*
 build/SignedMath*
 build/Strings*
-src/utils/power_wallet_*
+utils/power_wallet_*
