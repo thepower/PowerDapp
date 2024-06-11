@@ -122,13 +122,14 @@ contract IndexArticles2 is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
             uint256[] memory x = new uint256[](amount);
 
             uint i=start;
+            if(start==0) start=1;
             uint found=0;
             while(found<amount){
+                if(i==0 && reverse) break;
                 if(_ownerOf(i) != address(0) && _match(i,filters)){
                     x[found]=i;
                     found++;
                 }
-                if(i==0 && reverse) break;
                 if(i>=maxId && !reverse) break;
                 if(reverse) i--; else i++;
             }
