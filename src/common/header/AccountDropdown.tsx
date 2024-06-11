@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
 import {
-  IconButton, Popover, List, ListItem, ListItemIcon, ListItemButton,
+  IconButton,
+  Popover,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemButton,
 } from '@mui/material';
-import {
-  UserIcon, LogInIcon, CoinsStackedIcon,
-} from 'assets/icons';
+import { UserIcon, LogInIcon, CoinsStackedIcon } from 'assets/icons';
 
 import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +29,9 @@ type AccountDropdownProps = {
   className?: string;
 };
 
-export const AccountDropdown: React.FC<AccountDropdownProps> = ({ className }) => {
+export const AccountDropdown: React.FC<AccountDropdownProps> = ({
+  className,
+}) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
@@ -35,7 +40,9 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({ className }) =
   const userProfile = useAppSelector(getUserProfile);
   const SKAmount = useAppSelector((state) => getWalletNativeTokensAmountByID(state, 'SK'));
 
-  const [dropdown, setDropdown] = React.useState<HTMLButtonElement | null>(null);
+  const [dropdown, setDropdown] = React.useState<HTMLButtonElement | null>(
+    null,
+  );
 
   useEffect(() => {
     if (walletAddress) {
@@ -69,21 +76,28 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({ className }) =
   const profileImgUrl = `${getLoadDataUrl(appEnvs.OPEN_RESTY_PROFILE_BUCKET)}/${
     userProfile?.photoHash
   }`;
-
   return (
     <div className={className}>
       {walletAddress ? (
         <IconButton
           disableRipple
           aria-describedby={id}
-          className={cn(styles.accountDropdown, open && styles.accountDropdownActive)}
+          className={cn(
+            styles.accountDropdown,
+            open && styles.accountDropdownActive,
+          )}
           onClick={handleClick}
           size="large"
         >
           <UserIcon />
         </IconButton>
       ) : (
-        <IconButton className={styles.accountDropdown} onClick={onClickLogin} disableRipple size="large">
+        <IconButton
+          className={styles.accountDropdown}
+          onClick={onClickLogin}
+          disableRipple
+          size="large"
+        >
           <LogInIcon />
         </IconButton>
       )}
@@ -105,44 +119,74 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({ className }) =
         }}
       >
         <List>
-          {userProfile && <ListItem disablePadding>
-            <ListItemButton disableRipple className={styles.listButton} target="_blank" href={appEnvs.WALLET_THEPOWER_URL}>
-              <ListItemIcon className={styles.listIcon}>
-                <img src={profileImgUrl} alt="profileImg" className={styles.profileImg} />
-              </ListItemIcon>
-              <div className={styles.profileInfo}>
-                {`${userProfile?.firstName} ${userProfile?.lastName}`}
-                <br />
-                <span>{walletAddress}</span>
-              </div>
-            </ListItemButton>
-          </ListItem>}
-          {walletAddress && <ListItem disablePadding>
-            <ListItemButton disableRipple className={styles.listButton} target="_blank" href={appEnvs.WALLET_THEPOWER_URL}>
-              <ListItemIcon className={styles.listIcon}>
-                <CoinsStackedIcon />
-              </ListItemIcon>
-              {SKAmount || 0}
-              {' '}
-              SK
-            </ListItemButton>
-          </ListItem>}
-          {(walletAddress && isAuthor) && <ListItem disablePadding>
-            <ListItemButton className={styles.listButton} href={`${RoutesEnum.root}${walletAddress}`}>
-              <ListItemIcon className={styles.listIcon}>
-                <UserIcon />
-              </ListItemIcon>
-              {t('profile')}
-            </ListItemButton>
-          </ListItem>}
-          {(walletAddress && isAuthor) && <ListItem disablePadding>
-            <ListItemButton className={styles.listButton} href={RoutesEnum.editProfile}>
-              <ListItemIcon className={styles.listIcon}>
-                <UserIcon />
-              </ListItemIcon>
-              {t('editProfile')}
-            </ListItemButton>
-          </ListItem>}
+          {(userProfile && userProfile?.firstName && userProfile?.lastName) && (
+            <ListItem disablePadding>
+              <ListItemButton
+                disableRipple
+                className={styles.listButton}
+                target="_blank"
+                href={appEnvs.WALLET_THEPOWER_URL}
+              >
+                {userProfile?.photoHash && (
+                  <ListItemIcon className={styles.listIcon}>
+                    <img
+                      src={profileImgUrl}
+                      alt="profileImg"
+                      className={styles.profileImg}
+                    />
+                  </ListItemIcon>
+                )}
+                <div className={styles.profileInfo}>
+                  {`${userProfile?.firstName} ${userProfile?.lastName}`}
+                  <br />
+                  <span>{walletAddress}</span>
+                </div>
+              </ListItemButton>
+            </ListItem>
+          )}
+          {walletAddress && (
+            <ListItem disablePadding>
+              <ListItemButton
+                disableRipple
+                className={styles.listButton}
+                target="_blank"
+                href={appEnvs.WALLET_THEPOWER_URL}
+              >
+                <ListItemIcon className={styles.listIcon}>
+                  <CoinsStackedIcon />
+                </ListItemIcon>
+                {SKAmount || 0}
+                {' '}
+                SK
+              </ListItemButton>
+            </ListItem>
+          )}
+          {walletAddress && isAuthor && (
+            <ListItem disablePadding>
+              <ListItemButton
+                className={styles.listButton}
+                href={`${RoutesEnum.root}${walletAddress}`}
+              >
+                <ListItemIcon className={styles.listIcon}>
+                  <UserIcon />
+                </ListItemIcon>
+                {t('profile')}
+              </ListItemButton>
+            </ListItem>
+          )}
+          {walletAddress && isAuthor && (
+            <ListItem disablePadding>
+              <ListItemButton
+                className={styles.listButton}
+                href={RoutesEnum.editProfile}
+              >
+                <ListItemIcon className={styles.listIcon}>
+                  <UserIcon />
+                </ListItemIcon>
+                {t('editProfile')}
+              </ListItemButton>
+            </ListItem>
+          )}
           <ListItem disablePadding onClick={onClickPowerLogOut}>
             <ListItemButton className={styles.secondaryListButton}>
               <ListItemIcon className={styles.secondaryListIcon}>
