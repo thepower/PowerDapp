@@ -1,5 +1,5 @@
 {
-  "name": "PowerDApp",
+  "name": "@thepower.io/powerdapp",
   "version": "0.0.1",
   "description": "Web3 DApp for Power DCloud",
   "author": "thepower.io",
@@ -14,7 +14,11 @@
     "prepare": "yarn run build && husky install",
     "serve": "serve -s build",
     "eject": "react-scripts eject",
-    "cm": "git add . && git commit"
+    "cm": "git add . && git commit",
+    "buildsc": "yarn solcjs ./contracts/*.sol -o buildsc --bin --optimize --abi",
+    "deploy": "node utils/deploySc.js",
+    "register": "node utils/register.js",
+    "call": "node utils/callScTx.js"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix",
