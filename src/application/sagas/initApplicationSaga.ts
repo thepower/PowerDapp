@@ -16,7 +16,7 @@ export const defaultChain = appEnvs.CHAIN_ID;
 
 export function* reInitApis({ payload }: { payload: number }) {
   const networkApi = new NetworkApi(payload || defaultChain);
-  yield networkApi.bootstrap(true);
+  yield networkApi.bootstrap();
 
   const walletApi = new WalletApi(networkApi);
 

@@ -2,6 +2,7 @@
 node_modules
 dump.rdb
 /build
+/buildsc
 /dist
 /uploads
 tp-cli.json
@@ -63,4 +64,4 @@ build/IERC721Receiver*
 build/Math*
 build/SignedMath*
 build/Strings*
-
+src/utils/power_wallet_*

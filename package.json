@@ -16,9 +16,9 @@
     "eject": "react-scripts eject",
     "cm": "git add . && git commit",
     "buildsc": "yarn solcjs ./contracts/*.sol -o buildsc --bin --optimize --abi",
-    "deploy": "node utils/deploySc.js",
-    "register": "node utils/register.js",
-    "call": "node utils/callScTx.js"
+    "deploy": "tsx src/utils/deploySc.ts",
+    "register": "tsx src/utils/register.ts",
+    "call": "tsx src/utils/callScTx.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix",
@@ -33,7 +33,7 @@
     "@mui/styles": "^5.6.2",
     "@reduxjs/toolkit": "^1.8.6",
     "@thepowereco/msgpack": "^1.5.3",
-    "@thepowereco/tssdk": "^1.15.33",
+    "@thepowereco/tssdk": "^2.1.0",
     "@types/classnames": "^2.3.1",
     "@types/create-hash": "^1.2.2",
     "@types/date-fns": "^2.6.0",
@@ -109,6 +109,7 @@
     "sass": "^1.50.1",
     "sass-loader": "^12.6.0",
     "stream-browserify": "^3.0.0",
+    "tsx": "^4.15.2",
     "typescript": "^5.3.2",
     "vm-browserify": "^1.1.2"
   },

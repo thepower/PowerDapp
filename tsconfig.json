@@ -26,7 +26,4 @@
     "src",
     "config-overrides.js"
   ],
-  "exclude": [
-    "utils"
-  ]
 }

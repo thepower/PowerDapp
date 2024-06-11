@@ -14,7 +14,7 @@ import { SelectChangeEvent, Skeleton, IconButton } from '@mui/material';
 import { range } from 'lodash';
 import { isMobile } from 'application/components/App';
 import {
-  EditProfileIcon, SortIcon, UserIcon, WalletIcon,
+  EditProfileIcon, UserIcon, WalletIcon,
 } from 'assets/icons';
 import { RoutesEnum } from 'application/typings/routes';
 import { useTranslation } from 'react-i18next';
@@ -93,7 +93,7 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [isReversed, setIsReversed] = useState(true);
+  const [isReversed] = useState(false);
   const [moderationStatus, setModerationStatus] =
     useState<FilterModerationStatus>('all');
   const [NFTStatus, setNFTStatus] = useState<FilterNFTStatus>('published');
@@ -149,9 +149,9 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
     setPage(0);
   };
 
-  const handleClickSortButton = () => {
-    setIsReversed(!isReversed);
-  };
+  // const handleClickSortButton = () => {
+  //   setIsReversed(!isReversed);
+  // };
 
   const isLoading = isGetNFTsLoading || !NFTs.length;
 
@@ -324,7 +324,7 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
           </div>
           <div className={styles.col}>
             <div className={styles.colSet}>
-              <IconButton
+              {/* <IconButton
                 disableRipple
                 className={styles.controlBtn}
                 onClick={handleClickSortButton}
@@ -335,7 +335,7 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
                 <span>
                   {isReversed ? t('firstNewOnes') : t('firstOldOnes')}
                 </span>
-              </IconButton>
+              </IconButton> */}
               {isModerator && (
                 <Filter
                   label={t('moderationStatus')}
