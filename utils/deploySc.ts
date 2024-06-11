@@ -1,9 +1,17 @@
 import {
-  NetworkApi, WalletApi, TransactionsApi, AddressApi,
+  NetworkApi,
+  WalletApi,
+  TransactionsApi,
+  AddressApi,
 } from '@thepowereco/tssdk';
 import { readFileSync } from 'fs';
 
-async function deployFile(binPath: string, abiPath: string, keyFile: string, initParams: any[]) {
+async function deployFile(
+  binPath: string,
+  abiPath: string,
+  keyFile: string,
+  initParams: any[],
+) {
   // load ABI and binary code of smart-contract
   const abi = JSON.parse(readFileSync(abiPath, 'utf-8'));
   const code = readFileSync(binPath, 'utf-8');
@@ -25,7 +33,9 @@ async function deployFile(binPath: string, abiPath: string, keyFile: string, ini
   const accountData = await importWalletApi.loadBalance(importedWallet.address);
   console.log('accountData', accountData);
 
-  const newInitParms = initParams.map((param) => (AddressApi.isTextAddressValid(param) ? AddressApi.textAddressToEvmAddress(param) : param));
+  const newInitParms = initParams.map((param) => (AddressApi.isTextAddressValid(param)
+    ? AddressApi.textAddressToEvmAddress(param)
+    : param));
 
   // deploy smart-contract
   const deployTX = TransactionsApi.composeDeployTX({

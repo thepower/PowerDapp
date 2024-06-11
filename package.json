@@ -16,6 +16,7 @@
     "eject": "react-scripts eject",
     "cm": "git add . && git commit",
     "buildsc": "yarn solcjs ./contracts/*.sol -o buildsc --bin --optimize --abi",
+    "rainSK": "tsx utils/rainSK.ts",
     "deploy": "tsx utils/deploySc.ts",
     "register": "tsx utils/register.ts",
     "call": "tsx utils/callScTx.ts"
