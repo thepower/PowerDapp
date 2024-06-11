@@ -1,0 +1,43 @@
+[
+   {
+      "account": "power_wallet_1_AA100000001677745698.pem",
+      "bin": "buildsc/contracts_Profiles_sol_Profiles.bin",
+      "abi": "buildsc/contracts_Profiles_sol_Profiles.abi"
+   },
+   {
+      "account": "power_wallet_1_AA100000001677746197.pem",
+      "bin": "buildsc/contracts_Sponsor_sol_Sponsor.bin",
+      "abi": "buildsc/contracts_Sponsor_sol_Sponsor.abi"
+   },
+   {
+      "account": "power_wallet_1_AA100000001677745870.pem",
+      "bin": "buildsc/contracts_Chat_sol_Chat.bin",
+      "abi": "buildsc/contracts_Chat_sol_Chat.abi"
+   },
+   {
+      "account": "power_wallet_1_AA100000001677746023.pem",
+      "bin": "buildsc/contracts_NFTs_sol_Article.bin",
+      "abi": "buildsc/contracts_NFTs_sol_Article.abi",
+      "params": [
+         "AA100000001677745698"
+      ]
+   },
+   {
+      "account": "power_wallet_1_AA100000001677746295.pem",
+      "bin": "buildsc/contracts_NFTs_sol_IndexArticles2.bin",
+      "abi": "buildsc/contracts_NFTs_sol_IndexArticles2.abi",
+      "params": [
+         "AA100000001677745698",
+         "0x90a35201266eb0940289e6e07530d0e97fef65e6e17cf6cb02721063f5be4b51"
+      ]
+   },
+   {
+      "account": "power_wallet_1_AA100000001677746325.pem",
+      "bin": "buildsc/contracts_Membership_sol_Membership.bin",
+      "abi": "buildsc/contracts_Membership_sol_Membership.abi",
+      "params": [
+         "AA100000001677745698",
+         "0x87c06c5ed5bb77b5aa1cfb1942ec198ae26b599618c73edf72eaf080a11deca1"
+      ]
+   }
+]

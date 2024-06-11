@@ -25,5 +25,8 @@
   "include": [
     "src",
     "config-overrides.js"
+  ],
+  "exclude": [
+    "utils"
   ]
 }
