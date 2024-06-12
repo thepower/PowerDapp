@@ -19,7 +19,7 @@
     "rainSK": "tsx utils/rainSK.ts",
     "deploy": "tsx utils/deploySc.ts",
     "register": "tsx utils/register.ts",
-    "call": "tsx utils/callScTx.ts"
+    "grantRole": "tsx utils/grantRole.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix",
