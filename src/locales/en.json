@@ -20,7 +20,7 @@
     "date": "Date",
     "name": "Name",
     "address": "Address",
-    "description": "Shord Description",
+    "description": "Short Description",
     "firstOldOnes": "Oldest",
     "firstNewOnes": "Newest",
     "successfulSendingOfHelp": "Successful Help Sent",

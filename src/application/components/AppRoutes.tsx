@@ -44,25 +44,32 @@ const AppRoutesComponent: React.FC = () => {
 
   return (
     <Switch>
+      {/*  // Login or register via SSO */}
       <Route path={`${RoutesEnum.sso}/:data`} component={SSOPage} />
       <Route exact path={RoutesEnum.login} component={LogInPage} />
+
+      {/* Edit profile by wallet address or current user (without address) */}
       <Route
         exact
         path={`${RoutesEnum.editProfile}/:walletAddress(${walletAddressRegExp})?`}
         component={EditProfilePage}
       />
+      {/* Add or edit NFT by wallet address and id */}
       <Route exact path={`${RoutesEnum.add}`} component={AddOrEditNFTPage} />
+      {/* Edit NFT by wallet address and id and slug */}
       <Route
         exact
         path={`/:walletAddress(${walletAddressRegExp})/:idAndSlug(${idAndSlugRegExp})${RoutesEnum.edit}`}
         component={AddOrEditNFTPage}
       />
       {isModerator && <Route exact path={`${RoutesEnum.authors}`} component={ProfilesPage} />}
+      {/* View author NFT page by wallet address and id and slug */}
       <Route
         exact
         path={`/:walletAddress(${walletAddressRegExp})`}
         render={(props) => <AuthorNFTsPage {...props} />}
       />
+      {/* View DAO NFT page by DAO slug */}
       <Route
         exact
         path={`${RoutesEnum.dao}/:daoSlug`}
@@ -73,16 +80,19 @@ const AppRoutesComponent: React.FC = () => {
         path={`${RoutesEnum.draft}`}
         render={(props) => <NFTsPage isDraft {...props} />}
       />}
+      {/* View tariffs page */}
       <Route
         exact
         path={`${RoutesEnum.pricing}`}
         component={PricingPage}
       />
+      {/* View about page */}
       <Route
         exact
         path={`${RoutesEnum.about}`}
         component={AboutPage}
       />
+      {/* View NFT page */}
       <Route
         exact
         path={`/:walletAddress(${walletAddressRegExp})/:draft?/:idAndSlug(${idAndSlugRegExp})`}

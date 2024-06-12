@@ -462,6 +462,7 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
           <div className={styles.title}>{NFT?.theme}</div>
           {renderBasicInfo()}
           {id && <img className={styles.image} src={imgUrl} alt="" />}
+          <div className={styles.description}>{NFT?.description}</div>
           {renderMessagesBlock()}
         </div>
       </div>
