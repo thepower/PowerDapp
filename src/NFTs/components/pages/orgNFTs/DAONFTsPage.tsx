@@ -13,12 +13,12 @@ import {
   getNFTsCount,
 } from 'NFTs/selectors/NFTsSelectors';
 import { checkIfLoading } from 'network/selectors';
-import { SelectChangeEvent, Skeleton, IconButton } from '@mui/material';
+import { SelectChangeEvent, Skeleton } from '@mui/material';
 import { range } from 'lodash';
 import { isMobile } from 'application/components/App';
-import {
-  SortIcon,
-} from 'assets/icons';
+// import {
+//   SortIcon,
+// } from 'assets/icons';
 import { useTranslation } from 'react-i18next';
 import {
   FilterModerationStatus,
@@ -68,7 +68,7 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [isReversed, setIsReversed] = useState(true);
+  const [isReversed] = useState(false);
   const [moderationStatus, setModerationStatus] =
     useState<FilterModerationStatus>('all');
   const [NFTStatus, setNFTStatus] =
@@ -119,9 +119,9 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
     setPage(0);
   };
 
-  const handleClickSortButton = () => {
-    setIsReversed(!isReversed);
-  };
+  // const handleClickSortButton = () => {
+  //   setIsReversed(!isReversed);
+  // };
 
   const isLoading = isGetNFTsLoading || !NFTs.length;
 
@@ -201,7 +201,7 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
           </div>
           <div className={styles.col}>
             <div className={styles.colSet}>
-              <IconButton
+              {/* <IconButton
                 disableRipple
                 className={styles.controlBtn}
                 onClick={handleClickSortButton}
@@ -212,7 +212,7 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
                 <span>
                   {isReversed ? t('firstNewOnes') : t('firstOldOnes')}
                 </span>
-              </IconButton>
+              </IconButton> */}
               {isModerator && (
                 <Filter
                   label={t('moderationStatus')}
