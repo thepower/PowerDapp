@@ -13,12 +13,12 @@ import {
   getNFTsCount,
 } from 'NFTs/selectors/NFTsSelectors';
 import { checkIfLoading } from 'network/selectors';
-import { SelectChangeEvent, Skeleton, IconButton } from '@mui/material';
+import { SelectChangeEvent, Skeleton } from '@mui/material';
 import { range } from 'lodash';
 import { isMobile } from 'application/components/App';
-import {
-  SortIcon,
-} from 'assets/icons';
+// import {
+//   SortIcon,
+// } from 'assets/icons';
 import { RoutesEnum } from 'application/typings/routes';
 import { useTranslation } from 'react-i18next';
 import {
@@ -83,7 +83,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [isReversed, setIsReversed] = useState(true);
+  const [isReversed] = useState(false);
   const [moderationStatus, setModerationStatus] =
     useState<FilterModerationStatus>('all');
   const [NFTStatus, setNFTsStatus] =
@@ -135,9 +135,9 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
     setPage(0);
   };
 
-  const handleClickSortButton = () => {
-    setIsReversed(!isReversed);
-  };
+  // const handleClickSortButton = () => {
+  //   setIsReversed(!isReversed);
+  // };
 
   const isLoading = isGetNFTssLoading || !NFTs.length;
 
@@ -218,7 +218,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
           </div>
           <div className={styles.col}>
             <div className={styles.colSet}>
-              <IconButton
+              {/* <IconButton
                 disableRipple
                 className={styles.controlBtn}
                 onClick={handleClickSortButton}
@@ -229,7 +229,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
                 <span>
                   {isReversed ? t('firstNewOnes') : t('firstOldOnes')}
                 </span>
-              </IconButton>
+              </IconButton> */}
               {isModerator && (
                 <Filter
                   label={t('moderationStatus')}

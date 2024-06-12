@@ -21,7 +21,7 @@ import {
   ClockThreeIcon,
   CubeIcon,
   MarkerIcon,
-  SortIcon,
+  // SortIcon,
   UserIcon,
 } from 'assets/icons';
 import { RootState } from 'application/store';
@@ -47,7 +47,7 @@ import {
   postMessageTrigger,
   loadMessagesTrigger,
 } from 'messages/slice/messagesSlice';
-import { Divider, IconButton as MUIIconButton, Skeleton } from '@mui/material';
+import { Divider, Skeleton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { reverse, xor } from 'lodash';
 import createHash from 'create-hash';
@@ -122,7 +122,7 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
   isDraft,
   isAuthor,
 }) => {
-  const [isReversed, setIsReversed] = useState(false);
+  const [isReversed] = useState(false);
   const [openedMessages, setOpenedMessages] = useState<string[]>([]);
   const { t } = useTranslation();
 
@@ -310,9 +310,9 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
     [JSON.stringify(sortedMessages), t, openedMessages],
   );
 
-  const handleClickSortButton = () => {
-    setIsReversed(!isReversed);
-  };
+  // const handleClickSortButton = () => {
+  //   setIsReversed(!isReversed);
+  // };
 
   const handleClickApproveButton = () => {
     if (id) {
@@ -413,14 +413,14 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
     return (
       <div className={styles.discussionAndTransactions}>
         <div className={styles.row}>
-          <MUIIconButton
+          {/* <MUIIconButton
             disableRipple
             className={styles.controlBtn}
             onClick={handleClickSortButton}
           >
             <SortIcon transform={isReversed ? 'scale(1, -1)' : 'scale(1, 1)'} />
             <span>{isReversed ? t('firstOldOnes') : t('firstNewOnes')}</span>
-          </MUIIconButton>
+          </MUIIconButton> */}
           <div className={styles.messagesCount}>
             {`${messages.length} ${t('comments')}`}
           </div>
