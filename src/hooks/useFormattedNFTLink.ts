@@ -1,11 +1,11 @@
-import { CreatedNFT } from 'NFTs/types';
 import { useMemo } from 'react';
 import slugify from 'slugify';
+import { CreatedNFT } from 'NFTs/types';
 
 export const getFormattedNFTLink = (
   NFT?: CreatedNFT,
   isDraft?: boolean,
-  isShowSecondLink?: boolean,
+  isShowSecondLink?: boolean
 ) => {
   if (NFT) {
     const sluggedTheme = slugify(NFT.theme);
@@ -24,13 +24,13 @@ export const getFormattedNFTLink = (
     if (isShowSecondLink ? !isDraft : isDraft) {
       return {
         full: `${window.location.origin}${basePath}draft/${id}_${sluggedTheme}`,
-        short: `${basePath}draft/${id}_${sluggedTheme}`,
+        short: `${basePath}draft/${id}_${sluggedTheme}`
       };
     }
 
     return {
       full: `${window.location.origin}${basePath}${id}_${sluggedTheme}`,
-      short: `${basePath}${id}_${sluggedTheme}`,
+      short: `${basePath}${id}_${sluggedTheme}`
     };
   }
 
@@ -40,7 +40,7 @@ export const getFormattedNFTLink = (
 export function useFormattedNFTLink({
   NFT,
   isDraft,
-  isShowSecondLink,
+  isShowSecondLink
 }: {
   NFT?: CreatedNFT;
   isDraft?: boolean;
@@ -48,7 +48,7 @@ export function useFormattedNFTLink({
 }) {
   const NFTLink = useMemo(
     () => getFormattedNFTLink(NFT, isDraft, isShowSecondLink),
-    [NFT, isDraft, isShowSecondLink],
+    [NFT, isDraft, isShowSecondLink]
   );
 
   return NFTLink;

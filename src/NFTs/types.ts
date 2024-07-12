@@ -8,7 +8,7 @@ export interface NFT {
   image: File;
 }
 
-export interface CreatedNFT extends Omit<NFT, 'image' > {
+export interface CreatedNFT extends Omit<NFT, 'image'> {
   firstName: string;
   lastName: string;
 
@@ -23,14 +23,10 @@ export interface CreatedNFT extends Omit<NFT, 'image' > {
   originTokenId?: number;
 }
 
-export type MintNftPayload = Omit<NFT, 'id' | 'image' >;
+export type MintNftPayload = Omit<NFT, 'id' | 'image'>;
 export type SaveNFTDataPayload = Omit<
-NFT,
-| 'language'
-| 'category'
-| 'description'
-| 'goalAmount'
-| 'nameOfDAOSlug'
+  NFT,
+  'language' | 'category' | 'description' | 'goalAmount' | 'nameOfDAOSlug'
 >;
 
 export type EditNFTPayload = NFT & {
@@ -38,17 +34,21 @@ export type EditNFTPayload = NFT & {
 };
 
 export type LoadNFTsPayload = {
-  walletAddress?: string
+  walletAddress?: string;
   page: number;
   pageSize: number;
-  isReversed: boolean
+  isReversed: boolean;
   status: string;
   category: string;
   nameOfDAOSlug?: string;
   isDraft?: boolean;
 };
 
-export type FilterModerationStatus = 'all' | 'approved' | 'notApproved' | 'rejected';
+export type FilterModerationStatus =
+  | 'all'
+  | 'approved'
+  | 'notApproved'
+  | 'rejected';
 export type FilterNFTStatus = 'draft' | 'published';
 export type FilterCategory = 'all' | string;
 export type FilterNameOfDAO = 'all' | string;
@@ -67,8 +67,8 @@ export type MessageWithIDAndWalletAddress = MessageWithWalletAddress & {
 };
 
 export type MintTxResponse = {
-  txId: string,
-  res: string,
-  block: string,
-  retval: number
+  txId: string;
+  res: string;
+  block: string;
+  retval: number;
 };

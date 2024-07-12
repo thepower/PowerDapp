@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { ParkIcon, Button } from 'common';
 import { useTranslation } from 'react-i18next';
+import { ParkIcon, Button } from 'common';
 import styles from './TariffCard.module.scss';
 
 interface TariffCardProps {
@@ -15,18 +15,25 @@ interface TariffCardProps {
     description: string;
     list: string;
     isFree?: boolean;
-  }
+  };
   onClick: () => void;
 }
 
 export const TariffCard: React.FC<TariffCardProps> = ({
-  tariff, isActive, isDisabled, isLoading, onClick,
+  tariff,
+  isActive,
+  isDisabled,
+  isLoading,
+  onClick
 }) => {
   const { t } = useTranslation();
 
   const list = t(tariff.list).split('\n');
   return (
-    <div key={tariff.id} className={isActive ? styles.tariffCard__isActive : styles.tariffCard}>
+    <div
+      key={tariff.id}
+      className={isActive ? styles.tariffCard__isActive : styles.tariffCard}
+    >
       <div className={!isActive ? styles.title__isActive : styles.title}>
         {t(tariff.title)}
       </div>
@@ -41,7 +48,7 @@ export const TariffCard: React.FC<TariffCardProps> = ({
       <Button
         className={styles.button}
         fullWidth
-        variant="outlined"
+        variant='outlined'
         disabled={isDisabled}
         onClick={onClick}
         loading={isLoading}
@@ -51,10 +58,14 @@ export const TariffCard: React.FC<TariffCardProps> = ({
 
       <div className={styles.list}>
         {list.map((item) => (
-          <div className={!isActive ? styles.listItem__isActive : styles.listItem}>
+          <div
+            className={!isActive ? styles.listItem__isActive : styles.listItem}
+          >
             <ParkIcon />
             {item}
-          </div>))}
+          </div>
+        ))}
       </div>
-    </div>);
+    </div>
+  );
 };

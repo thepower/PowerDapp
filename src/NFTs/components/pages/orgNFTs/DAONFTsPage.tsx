@@ -1,57 +1,39 @@
-import {
-  Layout, Pagination, Filter,
-} from 'common';
-import React, {
-  useCallback, useEffect, useMemo, useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { RootState } from 'application/store';
-import { ConnectedProps, connect } from 'react-redux';
-import { loadNFTsTrigger } from 'NFTs/slice/NFTsSlice';
-import {
-  getNFTs,
-  getNFTsCount,
-} from 'NFTs/selectors/NFTsSelectors';
-import { checkIfLoading } from 'network/selectors';
-import { SelectChangeEvent, Skeleton } from '@mui/material';
+import { IconButton, SelectChangeEvent, Skeleton } from '@mui/material';
 import { range } from 'lodash';
-import { isMobile } from 'application/components/App';
-// import {
-//   SortIcon,
-// } from 'assets/icons';
 import { useTranslation } from 'react-i18next';
+import { ConnectedProps, connect } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { getLoadDataUrl } from 'api/openResty';
+import { isMobile } from 'application/components/App';
+import { daos } from 'application/constants';
+import { RootState } from 'application/store';
+import { SortIcon } from 'assets/icons';
+import { Layout, Pagination, Filter } from 'common';
+import { checkIfLoading } from 'network/selectors';
+import { nftCategoriesForSelect } from 'NFTs/constants';
+import { getNFTs, getNFTsCount } from 'NFTs/selectors/NFTsSelectors';
+import { loadNFTs } from 'NFTs/thunks/NFTs';
 import {
   FilterModerationStatus,
   FilterCategory,
-  FilterNFTStatus,
+  FilterNFTStatus
 } from 'NFTs/types';
-import { RouteComponentProps } from 'react-router';
-import { getLoadDataUrl } from 'api/openResty';
-import {
-  getIsModerator,
-} from 'profiles/selectors/rolesSelectors';
-import {
-  nftCategoriesForSelect,
-} from 'NFTs/constants';
-import { daos } from 'application/constants';
+import { getIsModerator } from 'profiles/selectors/rolesSelectors';
 
 import styles from './DAONFTsPage.module.scss';
 import { NFTCard } from '../../NFTCard/NFTCard';
 
-type OwnProps = RouteComponentProps<{
-  daoSlug?: string;
-}>;
-
 const mapDispatchToProps = {
-  loadNFTsTrigger,
+  loadNFTs
 };
 
-const mapStateToProps = (state: RootState, props: OwnProps) => ({
-  daoSlugParam: props?.match?.params?.daoSlug,
+const mapStateToProps = (state: RootState) => ({
   NFTs: getNFTs(state),
   NFTsCount: getNFTsCount(state),
-  isGetNFTsLoading: checkIfLoading(state, loadNFTsTrigger.type),
-  isModerator: getIsModerator(state),
+  isGetNFTsLoading: checkIfLoading(state, loadNFTs.typePrefix),
+  isModerator: getIsModerator(state)
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -61,35 +43,34 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
   NFTs,
   NFTsCount,
   isGetNFTsLoading,
-  loadNFTsTrigger,
-  daoSlugParam,
-  isModerator,
+  loadNFTs,
+  isModerator
 }) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [isReversed] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
   const [moderationStatus, setModerationStatus] =
     useState<FilterModerationStatus>('all');
-  const [NFTStatus, setNFTStatus] =
-    useState<FilterNFTStatus>('published');
+  const [NFTStatus, setNFTStatus] = useState<FilterNFTStatus>('published');
   const [category, setCategory] = useState<FilterCategory>('all');
 
-  const isDraftBool = useMemo(
-    () => (NFTStatus === 'draft'),
-    [NFTStatus],
-  );
+  const { daoSlug: daoSlugParam } = useParams<{
+    daoSlug?: string;
+  }>();
+
+  const isDraftBool = useMemo(() => NFTStatus === 'draft', [NFTStatus]);
 
   useEffect(() => {
     if (daoSlugParam) {
-      loadNFTsTrigger({
+      loadNFTs({
         page,
         pageSize,
         isReversed,
         status: moderationStatus,
         category,
         nameOfDAOSlug: daoSlugParam,
-        isDraft: isDraftBool,
+        isDraft: isDraftBool
       });
     }
   }, [
@@ -98,9 +79,9 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
     isReversed,
     moderationStatus,
     category,
-    loadNFTsTrigger,
+    loadNFTs,
     daoSlugParam,
-    isDraftBool,
+    isDraftBool
   ]);
 
   useEffect(() => {
@@ -109,7 +90,7 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
+    newPage: number
   ) => {
     setPage(newPage);
   };
@@ -119,21 +100,19 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
     setPage(0);
   };
 
-  // const handleClickSortButton = () => {
-  //   setIsReversed(!isReversed);
-  // };
+  const handleClickSortButton = () => {
+    setIsReversed(!isReversed);
+  };
 
   const isLoading = isGetNFTsLoading || !NFTs.length;
 
   const renderOrg = useCallback(() => {
     const org = daos?.find((org) => org.slug === daoSlugParam);
-    const orgImgUrl = `${getLoadDataUrl('')}/${
-      org?.img
-    }`;
+    const orgImgUrl = `${getLoadDataUrl('')}/${org?.img}`;
 
     return (
       <div className={styles.org}>
-        <img className={styles.orgImg} src={orgImgUrl} alt="" />
+        <img className={styles.orgImg} src={orgImgUrl} alt='' />
         <div className={styles.orgCol}>
           <div className={styles.orgTitle}>{org?.name}</div>
           <div className={styles.orgDescription}>{org?.description}</div>
@@ -159,21 +138,15 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
               sx={{
                 transform: 'none',
                 transformOrigin: 'unset',
-                borderRadius: '5px',
+                borderRadius: '5px'
               }}
             />
           ))}
         </div>
       );
     }
-    if (
-      !NFTs.length
-    ) {
-      return (
-        <div className={styles.noNFTs}>
-          {t('youDontHaveAnyNFTsYet')}
-        </div>
-      );
+    if (!NFTs.length) {
+      return <div className={styles.noNFTs}>{t('youDontHaveAnyNFTsYet')}</div>;
     }
     return (
       <div className={styles.NFTs}>
@@ -201,7 +174,7 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
           </div>
           <div className={styles.col}>
             <div className={styles.colSet}>
-              {/* <IconButton
+              <IconButton
                 disableRipple
                 className={styles.controlBtn}
                 onClick={handleClickSortButton}
@@ -212,17 +185,19 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
                 <span>
                   {isReversed ? t('firstNewOnes') : t('firstOldOnes')}
                 </span>
-              </IconButton> */}
+              </IconButton>
               {isModerator && (
                 <Filter
                   label={t('moderationStatus')}
                   value={moderationStatus}
-                  onChange={(_e, v) => setModerationStatus(v as FilterModerationStatus)}
+                  onChange={(_e, v) =>
+                    setModerationStatus(v as FilterModerationStatus)
+                  }
                   items={[
                     { label: t('displayAll'), value: 'all' },
                     { label: t('displayAccepted'), value: 'approved' },
                     { label: t('displayNotAccepted'), value: 'notApproved' },
-                    { label: t('displayRejected'), value: 'rejected' },
+                    { label: t('displayRejected'), value: 'rejected' }
                   ]}
                 />
               )}
@@ -233,7 +208,7 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
                   onChange={(_e, v) => setNFTStatus(v as FilterNFTStatus)}
                   items={[
                     { label: t('displayPublished'), value: 'published' },
-                    { label: t('displayDraft'), value: 'draft' },
+                    { label: t('displayDraft'), value: 'draft' }
                   ]}
                 />
               )}
@@ -243,7 +218,7 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
                 onChange={(_e, v) => setCategory(v as FilterCategory)}
                 items={[
                   { label: t('displayAll'), value: 'all' },
-                  ...nftCategoriesForSelect(t),
+                  ...nftCategoriesForSelect(t)
                 ]}
               />
             </div>
@@ -264,4 +239,4 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
   );
 };
 
-export const DAONFTsPage = connector(DAONFTsPageComponent);
+export default connector(DAONFTsPageComponent);

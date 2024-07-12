@@ -1,66 +1,48 @@
-import {
-  Layout, Pagination, Button, Filter,
-} from 'common';
-import React, {
-  useCallback, useEffect, useMemo, useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { RootState } from 'application/store';
-import { ConnectedProps, connect } from 'react-redux';
-import { loadNFTsTrigger } from 'NFTs/slice/NFTsSlice';
-import {
-  getNFTs,
-  getNFTsCount,
-} from 'NFTs/selectors/NFTsSelectors';
-import { checkIfLoading } from 'network/selectors';
-import { SelectChangeEvent, Skeleton } from '@mui/material';
+import { IconButton, SelectChangeEvent, Skeleton } from '@mui/material';
 import { range } from 'lodash';
-import { isMobile } from 'application/components/App';
-// import {
-//   SortIcon,
-// } from 'assets/icons';
-import { RoutesEnum } from 'application/typings/routes';
 import { useTranslation } from 'react-i18next';
+import { ConnectedProps, connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { getWalletAddress } from 'account/selectors/accountSelectors';
+import { isMobile } from 'application/components/App';
+import { daosForSelect } from 'application/constants';
+import { RootState } from 'application/store';
+import { RoutesEnum } from 'application/typings/routes';
+import { SortIcon } from 'assets/icons';
+import { Layout, Pagination, Button, Filter } from 'common';
+import { checkIfLoading } from 'network/selectors';
+import { nftCategoriesForSelect } from 'NFTs/constants';
+import { getNFTs, getNFTsCount } from 'NFTs/selectors/NFTsSelectors';
+import { loadNFTs } from 'NFTs/thunks/NFTs';
 import {
   FilterModerationStatus,
   FilterCategory,
   FilterNameOfDAO,
-  FilterNFTStatus,
+  FilterNFTStatus
 } from 'NFTs/types';
-import { push } from 'connected-react-router';
-import { RouteComponentProps } from 'react-router';
 import {
   getIsVerified,
   getIsModerator,
-  getIsRegistered,
+  getIsRegistered
 } from 'profiles/selectors/rolesSelectors';
-import { getWalletAddress } from 'account/selectors/accountSelectors';
-import {
-  nftCategoriesForSelect,
-} from 'NFTs/constants';
-import { daosForSelect } from 'application/constants';
-import { toast } from 'react-toastify';
 import styles from './NFTsPage.module.scss';
 import { NFTCard } from '../../NFTCard/NFTCard';
 
-type OwnProps = RouteComponentProps<{
-  walletAddress?: string;
-  daoSlug?: string;
-}>;
-
 const mapDispatchToProps = {
-  loadNFTsTrigger,
-  routeTo: push,
+  loadNFTs
 };
 
-const mapStateToProps = (state: RootState, props: OwnProps) => ({
+const mapStateToProps = (state: RootState) => ({
   walletAddress: getWalletAddress(state),
   NFTs: getNFTs(state),
   NFTsCount: getNFTsCount(state),
-  isGetNFTssLoading: checkIfLoading(state, loadNFTsTrigger.type),
+  isGetNFTssLoading: checkIfLoading(state, loadNFTs.typePrefix),
   isRegistered: getIsRegistered(state),
   isModerator: getIsModerator(state),
-  isAuthor: getIsVerified(state),
+  isAuthor: getIsVerified(state)
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -72,40 +54,37 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
   NFTs,
   NFTsCount,
   isGetNFTssLoading,
-  loadNFTsTrigger,
-  walletAddress,
+  loadNFTs,
   isDraft,
   isModerator,
   isAuthor,
   isRegistered,
-  routeTo,
+  walletAddress
 }) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [isReversed] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
   const [moderationStatus, setModerationStatus] =
     useState<FilterModerationStatus>('all');
-  const [NFTStatus, setNFTsStatus] =
-    useState<FilterNFTStatus>('published');
+  const [NFTStatus, setNFTsStatus] = useState<FilterNFTStatus>('published');
   const [category, setCategory] = useState<FilterCategory>('all');
-  const [nameOfDAO, setNameOfDAO] =
-    useState<FilterNameOfDAO>('all');
+  const [nameOfDAO, setNameOfDAO] = useState<FilterNameOfDAO>('all');
 
-  const isDraftBool = useMemo(
-    () => (NFTStatus === 'draft'),
-    [NFTStatus],
-  );
-
+  const isDraftBool = useMemo(() => NFTStatus === 'draft', [NFTStatus]);
+  console.log({
+    load: isGetNFTssLoading,
+    name: loadNFTs
+  });
   useEffect(() => {
-    loadNFTsTrigger({
+    loadNFTs({
       page,
       pageSize,
       isReversed,
       status: moderationStatus,
       category,
       nameOfDAOSlug: nameOfDAO,
-      isDraft: isDraftBool,
+      isDraft: isDraftBool
     });
   }, [
     page,
@@ -114,18 +93,26 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
     moderationStatus,
     category,
     isDraft,
-    loadNFTsTrigger,
+    loadNFTs,
     nameOfDAO,
-    isDraftBool,
+    isDraftBool
   ]);
 
   useEffect(() => {
     setPage(0);
   }, [moderationStatus, category]);
 
+  useEffect(() => {
+    if (isDraft) {
+      setNFTsStatus('draft');
+    } else {
+      setNFTsStatus('published');
+    }
+  }, [isDraft]);
+
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
+    newPage: number
   ) => {
     setPage(newPage);
   };
@@ -135,9 +122,9 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
     setPage(0);
   };
 
-  // const handleClickSortButton = () => {
-  //   setIsReversed(!isReversed);
-  // };
+  const handleClickSortButton = () => {
+    setIsReversed(!isReversed);
+  };
 
   const isLoading = isGetNFTssLoading || !NFTs.length;
 
@@ -156,7 +143,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
               sx={{
                 transform: 'none',
                 transformOrigin: 'unset',
-                borderRadius: '5px',
+                borderRadius: '5px'
               }}
             />
           ))}
@@ -164,11 +151,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
       );
     }
     if (!NFTs.length) {
-      return (
-        <div className={styles.noNFTs}>
-          {t('youDontHaveAnyNFTssYet')}
-        </div>
-      );
+      return <div className={styles.noNFTs}>{t('youDontHaveAnyNFTssYet')}</div>;
     }
     return (
       <div className={styles.NFTs}>
@@ -182,21 +165,17 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
         ))}
       </div>
     );
-  }, [
-    isLoading,
-    NFTs,
-    pageSize,
-    isDraftBool,
-    t,
-  ]);
+  }, [isLoading, NFTs, pageSize, isDraftBool, t]);
+
+  const navigate = useNavigate();
 
   const onClickCreateNFT = useCallback(() => {
     if (isAuthor) {
-      routeTo(walletAddress ? RoutesEnum.add : RoutesEnum.login);
+      navigate(walletAddress ? RoutesEnum.add : RoutesEnum.login);
     } else {
       toast.warn(t('profileOnModeration'));
     }
-  }, [isAuthor, routeTo, walletAddress, t]);
+  }, [isAuthor, walletAddress, t]);
 
   return (
     <Layout>
@@ -205,8 +184,8 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
           <div className={styles.col}>
             {isRegistered && (
               <Button
-                variant="contained"
-                size="small"
+                variant='contained'
+                size='small'
                 onClick={onClickCreateNFT}
               >
                 {t('createNFT')}
@@ -218,7 +197,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
           </div>
           <div className={styles.col}>
             <div className={styles.colSet}>
-              {/* <IconButton
+              <IconButton
                 disableRipple
                 className={styles.controlBtn}
                 onClick={handleClickSortButton}
@@ -229,17 +208,19 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
                 <span>
                   {isReversed ? t('firstNewOnes') : t('firstOldOnes')}
                 </span>
-              </IconButton> */}
+              </IconButton>
               {isModerator && (
                 <Filter
                   label={t('moderationStatus')}
                   value={moderationStatus}
-                  onChange={(_e, v) => setModerationStatus(v as FilterModerationStatus)}
+                  onChange={(_e, v) =>
+                    setModerationStatus(v as FilterModerationStatus)
+                  }
                   items={[
                     { label: t('displayAll'), value: 'all' },
                     { label: t('displayAccepted'), value: 'approved' },
                     { label: t('displayNotAccepted'), value: 'notApproved' },
-                    { label: t('displayRejected'), value: 'rejected' },
+                    { label: t('displayRejected'), value: 'rejected' }
                   ]}
                 />
               )}
@@ -250,7 +231,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
                   onChange={(_e, v) => setNFTsStatus(v as FilterNFTStatus)}
                   items={[
                     { label: t('displayPublished'), value: 'published' },
-                    { label: t('displayDraft'), value: 'draft' },
+                    { label: t('displayDraft'), value: 'draft' }
                   ]}
                 />
               )}
@@ -260,7 +241,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
                 onChange={(_e, v) => setCategory(v as FilterCategory)}
                 items={[
                   { label: t('displayAll'), value: 'all' },
-                  ...nftCategoriesForSelect(t),
+                  ...nftCategoriesForSelect(t)
                 ]}
               />
               <Filter
@@ -269,7 +250,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
                 onChange={(_e, v) => setNameOfDAO(v as FilterNameOfDAO)}
                 items={[
                   { label: t('displayAll'), value: 'all' },
-                  ...daosForSelect,
+                  ...daosForSelect
                 ]}
               />
             </div>
@@ -290,4 +271,4 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
   );
 };
 
-export const NFTsPage = connector(NFTsPageComponent);
+export default connector(NFTsPageComponent);

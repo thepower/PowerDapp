@@ -18,23 +18,24 @@ export enum NftField {
 
   publishedAt = 4097,
   originContract = 4098,
-  originTokenId = 4099,
+  originTokenId = 4099
 }
 
 export const nftLanguagesForSelect = [
   { label: 'Русский', value: 'ru' },
-  { label: 'English', value: 'en' },
+  { label: 'English', value: 'en' }
 ];
 
-export const nftCategories = [
-  'category_1',
-  'category_2',
-] as const;
+export const nftCategories = ['category_1', 'category_2'] as const;
 
-export const nftCategoriesForSelect = (t: TFunction) => sortBy(nftCategories.map((category) => ({ label: t(category), value: category })), 'label');
+export const nftCategoriesForSelect = (t: TFunction) =>
+  sortBy(
+    nftCategories.map((category) => ({ label: t(category), value: category })),
+    'label'
+  );
 
 export const userTariffLevelMap: { [key: number]: string } = {
   0: 'tariff1Title',
   1: 'tariff2Title',
-  2: 'tariff3Title',
+  2: 'tariff3Title'
 };

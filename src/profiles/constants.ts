@@ -5,7 +5,7 @@ export enum ProfileField {
   updatedAt = 6,
   photoHash = 7,
   isRejected = 8,
-  email = 9,
+  email = 9
 }
 
 export enum UserRole {
@@ -22,5 +22,5 @@ export enum UserRole {
   VERIFIED_USER = '0x3e367f60f8b9d6961fa5c6517ce2b836b5fcc53aa1cf05f73d4b96fdd84a17e7',
   VERIFIER_ADMIN_ROLE = '0xb194a0b06484f8a501e0bef8877baf2a303f803540f5ddeb9d985c0cd76f3e70',
   VERIFIER_ROLE = '0x0ce23c3e399818cfee81a7ab0880f714e53d7672b08df0fa62f2843416e1ea09',
-  LOCKED_USER = '0x0c01f8fdd27ccba87e8f18dced185f2d9889a0bfc5821dece64e08afef63f1fe',
+  LOCKED_USER = '0x0c01f8fdd27ccba87e8f18dced185f2d9889a0bfc5821dece64e08afef63f1fe'
 }

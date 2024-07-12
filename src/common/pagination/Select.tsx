@@ -7,7 +7,7 @@ import {
   SelectClasses,
   InputBaseClasses,
   MenuClasses,
-  MenuItemClasses,
+  MenuItemClasses
 } from '@mui/material';
 
 import { SelectIcon } from 'common';
@@ -21,18 +21,24 @@ type SelectProps = MuiSelectProps & {
 export class Select extends React.PureComponent<SelectProps> {
   private selectClasses: Partial<SelectClasses> = {
     select: styles.select,
-    icon: styles.selectIcon,
+    icon: styles.selectIcon
   };
 
   private inputBaseClasses: Partial<InputBaseClasses> = {
     root: styles.inputBaseRoot,
     input: styles.inputBaseInput,
-    focused: styles.inputBaseFocused,
+    focused: styles.inputBaseFocused
   };
 
-  private menuClasses: Partial<MenuClasses> = { list: styles.menuNFTs, paper: styles.menuPaper };
+  private menuClasses: Partial<MenuClasses> = {
+    list: styles.menuNFTs,
+    paper: styles.menuPaper
+  };
 
-  private menuItemClasses: Partial<MenuItemClasses> = { selected: styles.menuItemSelected, root: styles.menuItemRoot };
+  private menuItemClasses: Partial<MenuItemClasses> = {
+    selected: styles.menuItemSelected,
+    root: styles.menuItemRoot
+  };
 
   constructor(props: SelectProps) {
     super(props);
@@ -40,17 +46,14 @@ export class Select extends React.PureComponent<SelectProps> {
   }
 
   render() {
-    const {
-      className, value, items, onChange, ...otherProps
-    } = this.props;
-    const {
-      selectClasses, inputBaseClasses, menuClasses, menuItemClasses,
-    } = this;
+    const { className, value, items, onChange, ...otherProps } = this.props;
+    const { selectClasses, inputBaseClasses, menuClasses, menuItemClasses } =
+      this;
 
     return (
       <MuiSelect
         className={className}
-        variant="standard"
+        variant='standard'
         input={<InputBase classes={inputBaseClasses} />}
         classes={selectClasses}
         MenuProps={{
@@ -58,8 +61,8 @@ export class Select extends React.PureComponent<SelectProps> {
           disableScrollLock: true,
           anchorOrigin: {
             vertical: 32,
-            horizontal: 'center',
-          },
+            horizontal: 'center'
+          }
         }}
         IconComponent={SelectIcon}
         value={value}
@@ -67,7 +70,12 @@ export class Select extends React.PureComponent<SelectProps> {
         {...otherProps}
       >
         {items.map((rowsPerPageOption) => (
-          <MenuItem disableRipple key={rowsPerPageOption} value={rowsPerPageOption} classes={menuItemClasses}>
+          <MenuItem
+            disableRipple
+            key={rowsPerPageOption}
+            value={rowsPerPageOption}
+            classes={menuItemClasses}
+          >
             {rowsPerPageOption}
           </MenuItem>
         ))}

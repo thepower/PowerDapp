@@ -3,7 +3,7 @@ import {
   FormControl,
   FormHelperText,
   OutlinedInput as MuiOutlinedInput,
-  OutlinedInputProps as MuiOutlinedInputProps,
+  OutlinedInputProps as MuiOutlinedInputProps
 } from '@mui/material';
 
 import cn from 'classnames';
@@ -25,11 +25,12 @@ export const OutlinedInput: React.FC<OutlinedInputProps> = ({
   classes,
   ...otherProps
 }) => (
-  <FormControl
-    fullWidth={fullWidth}
-    className={className}
-  >
-    {label && <div className={cn(styles.label, styles[`labelColor_${color}`])}>{label}</div>}
+  <FormControl fullWidth={fullWidth} className={className}>
+    {label && (
+      <div className={cn(styles.label, styles[`labelColor_${color}`])}>
+        {label}
+      </div>
+    )}
     <MuiOutlinedInput
       {...otherProps}
       classes={{ ...styles, ...classes }}
@@ -38,5 +39,10 @@ export const OutlinedInput: React.FC<OutlinedInputProps> = ({
       className={multiline ? styles.multiline : ''}
       fullWidth={fullWidth}
     />
-    {error && <FormHelperText className={styles[`${color}ErrorColor`]}>{errorMessage}</FormHelperText>}
-  </FormControl>);
+    {error && (
+      <FormHelperText className={styles[`${color}ErrorColor`]}>
+        {errorMessage}
+      </FormHelperText>
+    )}
+  </FormControl>
+);

@@ -6,7 +6,7 @@ export const chat = {
     {
       inputs: [],
       stateMutability: 'nonpayable',
-      type: 'constructor',
+      type: 'constructor'
     },
     {
       anonymous: false,
@@ -15,111 +15,111 @@ export const chat = {
           indexed: false,
           internalType: 'string',
           name: 'text',
-          type: 'string',
+          type: 'string'
         },
         {
           indexed: false,
           internalType: 'bytes',
           name: 'data',
-          type: 'bytes',
-        },
+          type: 'bytes'
+        }
       ],
       name: 'textbin',
-      type: 'event',
+      type: 'event'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: '',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'chatCounters',
       outputs: [
         {
           internalType: 'uint256',
           name: '',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'id',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'getChatCounters',
       outputs: [
         {
           internalType: 'uint256',
           name: 'counter',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'id',
-          type: 'uint256',
+          type: 'uint256'
         },
         {
           internalType: 'string',
           name: 'message',
-          type: 'string',
-        },
+          type: 'string'
+        }
       ],
       name: 'registerMessage',
       outputs: [],
       stateMutability: 'nonpayable',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'string',
           name: 's',
-          type: 'string',
-        },
+          type: 'string'
+        }
       ],
       name: 'string_tobytes',
       outputs: [
         {
           internalType: 'bytes',
           name: '',
-          type: 'bytes',
-        },
+          type: 'bytes'
+        }
       ],
       stateMutability: 'pure',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'x',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'toBytes',
       outputs: [
         {
           internalType: 'bytes',
           name: 'b',
-          type: 'bytes',
-        },
+          type: 'bytes'
+        }
       ],
       stateMutability: 'pure',
-      type: 'function',
-    },
-  ],
+      type: 'function'
+    }
+  ]
 } as const;

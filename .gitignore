@@ -2,31 +2,40 @@
 
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
 
 # testing
 /coverage
 screenshots
 videos
-wdio/node_modules
 
 # production
 /build
+/buildsc
+/dist
 
 # misc
-/src/config/index.ts
-.DS_Store
-.idea
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.vscode
+*.local
+.env
 
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 .yalc
 yalc.lock
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

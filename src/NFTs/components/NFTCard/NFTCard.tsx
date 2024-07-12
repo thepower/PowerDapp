@@ -1,14 +1,13 @@
 import React, { memo } from 'react';
-import { CategoryIcon, MarkerIcon, UserIcon } from 'assets/icons';
-import { CreatedNFT } from 'NFTs/types';
-
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { getLoadDataUrl } from 'api/openResty';
 import { daosForSelect } from 'application/constants';
 import { RoutesEnum } from 'application/typings/routes';
+import { CategoryIcon, MarkerIcon, UserIcon } from 'assets/icons';
 import hooks from 'hooks';
-import { useTranslation } from 'react-i18next';
+import { CreatedNFT } from 'NFTs/types';
 import styles from './NFTCard.module.scss';
 
 type NFTCardProps = {
@@ -22,9 +21,8 @@ const NFTCardComponent: React.FC<NFTCardProps> = memo(
     const { t } = useTranslation();
 
     const nameOfDAO =
-      daosForSelect?.find(
-        ({ value }) => value === NFT?.nameOfDAOSlug,
-      )?.label || '-';
+      daosForSelect?.find(({ value }) => value === NFT?.nameOfDAOSlug)?.label ||
+      '-';
     const to = hooks.useFormattedNFTLink({ NFT, isDraft });
 
     const imgSrc = isDraft
@@ -32,11 +30,7 @@ const NFTCardComponent: React.FC<NFTCardProps> = memo(
       : `${getLoadDataUrl(NFT.originTokenId?.toString())}/${NFT.imageHash}`;
     return (
       <div className={styles.card}>
-        <img
-          className={styles.img}
-          src={imgSrc}
-          alt=""
-        />
+        <img className={styles.img} src={imgSrc} alt='' />
         <div className={styles.secondCol}>
           <Link to={to.short} className={styles.title} title={NFT.theme}>
             {NFT.theme}
@@ -75,7 +69,7 @@ const NFTCardComponent: React.FC<NFTCardProps> = memo(
         </div>
       </div>
     );
-  },
+  }
 );
 
 export const NFTCard = NFTCardComponent;

@@ -23,7 +23,7 @@ export { Jdenticon } from './jdenticon/Jdenticon';
 export type { UnknownFunctionType } from './typings/common';
 
 // utils
-export { manageSagaState } from './manageSagaState';
+export { manageThunkStateMiddleware } from './manageThunkState';
 export { branchCallFunction } from './utils/common';
 export { FileReaderType, getFileData } from './utils/files';
 

@@ -1,40 +1,40 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogProps } from '@mui/material';
 
+import { useTranslation } from 'react-i18next';
+import { ConnectedProps, connect } from 'react-redux';
+import appEnvs from 'appEnvs';
+import { RootState } from 'application/store';
+import { openPopupCenter } from 'application/utils/popup';
+import { FingerPrintIcon } from 'assets/icons';
 import { Button } from 'common';
 
-import { RootState } from 'application/store';
-import { ConnectedProps, connect } from 'react-redux';
+import { stopAction } from 'network/slice';
 import { getPopupData } from 'walletSign/selectors/walletSelectors';
 import { setPopupData } from 'walletSign/slices/walletSign';
-import { openPopupCenter } from 'application/utils/popup';
-import appEnvs from 'appEnvs';
-import { stopAction } from 'network/slice';
-import { useTranslation } from 'react-i18next';
-import { FingerPrintIcon } from 'assets/icons';
 import styles from './WalletSignModal.module.scss';
 
 const dialogClasses = {
-  paper: styles.modal,
+  paper: styles.modal
 };
 
 const mapDispatchToProps = {
   setPopupData,
-  stopAction,
+  stopAction
 };
 
 const mapStateToProps = (state: RootState) => ({
-  popupData: getPopupData(state),
+  popupData: getPopupData(state)
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type ModalPropsComponentProps = ConnectedProps<typeof connector> &
-Omit<DialogProps, 'open'>;
+  Omit<DialogProps, 'open'>;
 
 const WalletSignModalComponent: React.FC<ModalPropsComponentProps> = ({
   popupData,
   setPopupData,
-  stopAction,
+  stopAction
 }) => {
   const { t } = useTranslation();
 
@@ -46,7 +46,7 @@ const WalletSignModalComponent: React.FC<ModalPropsComponentProps> = ({
       onClose={() => {
         setPopupData(null);
         if (popupData?.action) {
-          stopAction({ name: popupData.action, withParams: false });
+          stopAction({ name: popupData.action });
         }
       }}
     >
@@ -60,13 +60,13 @@ const WalletSignModalComponent: React.FC<ModalPropsComponentProps> = ({
         </div>
         {/* {popupData?.description && <div className={styles.description}>{popupData.description}</div>} */}
         <Button
-          variant="contained"
+          variant='contained'
           onClick={() => {
             openPopupCenter({
               height: 600,
               width: 357,
               title: 'Wallet',
-              url: `${appEnvs.WALLET_THEPOWER_URL}/sign-and-send/${popupData?.requestUrlData}`,
+              url: `${appEnvs.WALLET_THEPOWER_URL}/sign-and-send/${popupData?.requestUrlData}`
             });
             setPopupData(null);
           }}

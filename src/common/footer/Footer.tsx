@@ -11,8 +11,12 @@ export const Footer = () => {
 
   return (
     <footer className={styles.footer}>
-      <Link className={styles.link} to={RoutesEnum.about}>{t('aboutProject')}</Link>
-      <Link className={styles.link} to={RoutesEnum.pricing}>{t('pricing')}</Link>
+      <Link className={styles.link} to={RoutesEnum.about}>
+        {t('aboutProject')}
+      </Link>
+      <Link className={styles.link} to={RoutesEnum.pricing}>
+        {t('pricing')}
+      </Link>
       <div className={styles.text}>2024 DeInfra DAO</div>
     </footer>
   );

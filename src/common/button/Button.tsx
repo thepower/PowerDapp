@@ -1,11 +1,15 @@
 import React from 'react';
-import { LoadingButton as MuiLoadingButton, LoadingButtonProps as MuiLoadingButtonProps } from '@mui/lab';
+import {
+  LoadingButton as MuiLoadingButton,
+  LoadingButtonProps as MuiLoadingButtonProps
+} from '@mui/lab';
 import { Link, LinkProps } from 'react-router-dom';
 import styles from './Button.module.scss';
 
-type ButtonProps = MuiLoadingButtonProps & Partial<Pick<LinkProps, 'to'>> & {
-  variant: 'outlined' | 'contained'
-};
+type ButtonProps = MuiLoadingButtonProps &
+  Partial<Pick<LinkProps, 'to'>> & {
+    variant: 'outlined' | 'contained';
+  };
 
 export const Button: React.FC<ButtonProps> = ({
   children,

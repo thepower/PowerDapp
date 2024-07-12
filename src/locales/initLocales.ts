@@ -1,14 +1,14 @@
 import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import Backend from 'i18next-http-backend';
+import { initReactI18next } from 'react-i18next';
 
-import ru from './ru.json';
 import en from './en.json';
+import ru from './ru.json';
 
 const langs = {
   ru,
-  en,
+  en
 };
 
 export const langsKeys = Object.keys(langs);
@@ -21,8 +21,8 @@ i18n
     fallbackLng: ['en'],
     resources: langs,
     interpolation: {
-      escapeValue: true,
-    },
+      escapeValue: true
+    }
   });
 
 if (!langsKeys.includes(i18n.language)) {

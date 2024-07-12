@@ -1,49 +1,39 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import {
-  Button, Filter, Layout, Pagination,
-} from 'common';
-import { ConnectedProps, connect } from 'react-redux';
-import { RootState } from 'application/store';
-
-import { push } from 'connected-react-router';
-
+import { IconButton, SelectChangeEvent, Skeleton } from '@mui/material';
+import cn from 'classnames';
+import { range } from 'lodash';
 import { useTranslation } from 'react-i18next';
+import { ConnectedProps, connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { getWalletAddress } from 'account/selectors/accountSelectors';
-import {
-  CubeIcon, SortIcon, UserIcon,
-} from 'assets/icons';
+import { RootState } from 'application/store';
+import { CubeIcon, SortIcon, UserIcon } from 'assets/icons';
+import { Button, Filter, Layout, Pagination } from 'common';
+
 import { checkIfLoading } from 'network/selectors';
+import { UserRole } from 'profiles/constants';
 import {
   getProfiles,
-  getProfilesCount,
+  getProfilesCount
 } from 'profiles/selectors/profilesSelectors';
-import { range } from 'lodash';
-import { IconButton, SelectChangeEvent, Skeleton } from '@mui/material';
-import { isMobile } from 'react-device-detect';
-import { UserRole } from 'profiles/constants';
+import { loadProfiles } from 'profiles/thunks/profiles';
+import { grantRole, revokeRole } from 'profiles/thunks/roles';
+
 import { Profile, ProfileFilterStatus } from 'profiles/types';
-import { Link } from 'react-router-dom';
-import cn from 'classnames';
-import {
-  loadProfilesTrigger,
-  grantRoleTrigger,
-  revokeRoleTrigger,
-} from '../../../slice/profilesSlice';
 import styles from './ProfilesPage.module.scss';
 
 const mapDispatchToProps = {
-  routeTo: push,
-  loadProfilesTrigger,
-  grantRoleTrigger,
-  revokeRoleTrigger,
+  loadProfiles,
+  grantRole,
+  revokeRole
 };
 
 const mapStateToProps = (state: RootState) => ({
   profiles: getProfiles(state),
   profilesCount: getProfilesCount(state),
   walletAddress: getWalletAddress(state),
-  isGetProfilesLoading: checkIfLoading(state, loadProfilesTrigger.type),
+  isGetProfilesLoading: checkIfLoading(state, loadProfiles.typePrefix)
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -52,10 +42,10 @@ type ProfilesPageComponentProps = ConnectedProps<typeof connector>;
 const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
   profiles,
   profilesCount,
-  loadProfilesTrigger,
+  loadProfiles,
   isGetProfilesLoading,
-  grantRoleTrigger,
-  revokeRoleTrigger,
+  grantRole,
+  revokeRole
 }) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
@@ -64,25 +54,22 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
   const [status, setStatus] = useState<ProfileFilterStatus>('REGISTERED');
 
   useEffect(() => {
-    loadProfilesTrigger({
+    loadProfiles({
       page,
       pageSize,
       isReversed,
-      status,
+      status
     });
   }, [page, pageSize, isReversed, status]);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
+    newPage: number
   ) => {
     setPage(newPage);
   };
 
-  const handleChangePageSize = (
-    event: SelectChangeEvent<unknown>,
-    child: React.ReactNode,
-  ) => {
+  const handleChangePageSize = (event: SelectChangeEvent<unknown>) => {
     setPage(0);
     setPageSize(event.target.value as number);
   };
@@ -97,62 +84,62 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
   };
 
   const handleClickAcceptButton = (walletAddress: string) => {
-    grantRoleTrigger({
+    grantRole({
       role: UserRole.VERIFIED_USER,
       walletAddress,
       additionalActionOnSuccess: () => {
-        loadProfilesTrigger({
+        loadProfiles({
           page: 0,
           pageSize,
           isReversed,
-          status,
+          status
         });
-      },
+      }
     });
   };
 
   const handleRevokeVerifiedButton = (walletAddress: string) => {
-    revokeRoleTrigger({
+    revokeRole({
       role: UserRole.VERIFIED_USER,
       walletAddress,
       additionalActionOnSuccess: () => {
-        loadProfilesTrigger({
+        loadProfiles({
           page: 0,
           pageSize,
           isReversed,
-          status,
+          status
         });
-      },
+      }
     });
   };
 
   const handleClickRejectButton = (walletAddress: string) => {
-    grantRoleTrigger({
+    grantRole({
       role: UserRole.LOCKED_USER,
       walletAddress,
       additionalActionOnSuccess: () => {
-        loadProfilesTrigger({
+        loadProfiles({
           page: 0,
           pageSize,
           isReversed,
-          status,
+          status
         });
-      },
+      }
     });
   };
 
   const handleClickUnlockButton = (walletAddress: string) => {
-    revokeRoleTrigger({
+    revokeRole({
       role: UserRole.LOCKED_USER,
       walletAddress,
       additionalActionOnSuccess: () => {
-        loadProfilesTrigger({
+        loadProfiles({
           page: 0,
           pageSize,
           isReversed,
-          status,
+          status
         });
-      },
+      }
     });
   };
 
@@ -162,15 +149,13 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
     const buttons = (profile: Profile) => {
       switch (status) {
         case 'all':
-          return (
-            null
-          );
+          return null;
         case 'LOCKED':
           return (
             <Button
-              size="small"
+              size='small'
               onClick={() => handleClickUnlockButton(profile.walletAddress)}
-              variant="contained"
+              variant='contained'
             >
               {t('unlock')}
             </Button>
@@ -178,9 +163,9 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
         case 'VERIFIED':
           return (
             <Button
-              size="small"
+              size='small'
               onClick={() => handleRevokeVerifiedButton(profile.walletAddress)}
-              variant="contained"
+              variant='contained'
             >
               {t('revokeVerified')}
             </Button>
@@ -189,16 +174,16 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
           return (
             <>
               <Button
-                size="small"
+                size='small'
                 onClick={() => handleClickAcceptButton(profile.walletAddress)}
-                variant="contained"
+                variant='contained'
               >
                 {t('accept')}
               </Button>
               <Button
-                size="small"
+                size='small'
                 onClick={() => handleClickRejectButton(profile.walletAddress)}
-                variant="outlined"
+                variant='outlined'
               >
                 {t('reject')}
               </Button>
@@ -212,11 +197,12 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
           {range(0, pageSize).map((item) => (
             <Skeleton
               key={item}
-              height={isMobile ? 80 : 40}
+              height={80}
+              // height={isMobile ? 80 : 40}
               sx={{
                 transform: 'none',
                 transformOrigin: 'unset',
-                borderRadius: '5px',
+                borderRadius: '5px'
               }}
             />
           ))}
@@ -244,13 +230,7 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
         ))}
       </div>
     );
-  }, [
-    isLoading,
-    pageSize,
-    profiles,
-    status,
-    t,
-  ]);
+  }, [isLoading, pageSize, profiles, status, t]);
   return (
     <Layout>
       <div className={styles.content}>
@@ -282,7 +262,7 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
                   { label: t('displayAll'), value: 'all' },
                   { label: t('registered'), value: 'REGISTERED' },
                   { label: t('verified'), value: 'VERIFIED' },
-                  { label: t('locked'), value: 'LOCKED' },
+                  { label: t('locked'), value: 'LOCKED' }
                 ]}
               />
             </div>
@@ -303,4 +283,4 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
   );
 };
 
-export const ProfilesPage = connector(ProfilesPageComponent);
+export default connector(ProfilesPageComponent);

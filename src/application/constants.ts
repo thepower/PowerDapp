@@ -3,7 +3,7 @@ import daos from './daos.json';
 
 const daosForSelect = sortBy(daos, 'name').map((dao) => ({
   label: dao.name,
-  value: dao.slug,
+  value: dao.slug
 }));
 
 export { daos, daosForSelect };

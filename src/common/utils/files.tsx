@@ -1,6 +1,6 @@
 export enum FileReaderType {
   binary,
-  arrayBuffer,
+  arrayBuffer
 }
 
 export const getFileData = (inputFile: File, type: FileReaderType) => {

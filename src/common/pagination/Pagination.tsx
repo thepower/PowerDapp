@@ -3,10 +3,10 @@ import { SelectChangeEvent } from '@mui/material';
 import cn from 'classnames';
 
 import { WithTranslation, withTranslation } from 'react-i18next';
-import { Select } from './Select';
 import { ActionsComponent } from './ActionsComponent';
 
 import styles from './Pagination.module.scss';
+import { Select } from './Select';
 
 interface PaginationProps extends WithTranslation {
   className?: string;
@@ -16,8 +16,14 @@ interface PaginationProps extends WithTranslation {
   rowsPerPageOptions: number[];
   page: number;
   count: number;
-  onPageChange: (event: React.MouseEvent<HTMLButtonElement>, value: number) => void;
-  handleChangePageSize: (event: SelectChangeEvent<unknown>, child: React.ReactNode) => void;
+  onPageChange: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    value: number
+  ) => void;
+  handleChangePageSize: (
+    event: SelectChangeEvent<unknown>,
+    child: React.ReactNode
+  ) => void;
   beforeTableHeaderChild?: JSX.Element;
   isWithoutRowsPerPage?: boolean;
 }
@@ -34,7 +40,9 @@ class PaginationComponent extends React.PureComponent<PaginationProps> {
     return (
       rowsPerPageOptions?.length > 1 && (
         <div className={styles.selectContainer}>
-          <div className={styles.labelRowsPerPage}>{this.props.t('showBy')}</div>
+          <div className={styles.labelRowsPerPage}>
+            {this.props.t('showBy')}
+          </div>
           <Select
             className={styles.select}
             items={rowsPerPageOptions}
@@ -50,7 +58,8 @@ class PaginationComponent extends React.PureComponent<PaginationProps> {
   renderLeftCol = () => {
     const { tableTitle, beforeTableHeaderChild } = this.props;
     return tableTitle || beforeTableHeaderChild
-      ? (tableTitle && <div className={styles.tableTitle}>{tableTitle}</div>) || beforeTableHeaderChild
+      ? (tableTitle && <div className={styles.tableTitle}>{tableTitle}</div>) ||
+          beforeTableHeaderChild
       : this.renderSelect();
   };
 
@@ -64,7 +73,7 @@ class PaginationComponent extends React.PureComponent<PaginationProps> {
       count,
       pageSize,
       beforeTableHeaderChild,
-      isWithoutRowsPerPage,
+      isWithoutRowsPerPage
     } = this.props;
 
     return (
@@ -72,8 +81,10 @@ class PaginationComponent extends React.PureComponent<PaginationProps> {
         className={cn(
           className,
           styles.paginationContainer,
-          (tableTitle || beforeTableHeaderChild) && !isWithoutRowsPerPage && styles.flexEnd,
-          !(tableTitle || beforeTableHeaderChild) && styles.footer,
+          (tableTitle || beforeTableHeaderChild) &&
+            !isWithoutRowsPerPage &&
+            styles.flexEnd,
+          !(tableTitle || beforeTableHeaderChild) && styles.footer
         )}
       >
         {this.renderLeftCol()}

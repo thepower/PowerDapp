@@ -5,12 +5,12 @@ import {
   MenuItem,
   SelectClasses,
   MenuClasses,
-  MenuItemClasses,
+  MenuItemClasses
 } from '@mui/material';
-import { OutlinedInput } from 'common';
 
 import cn from 'classnames';
 import { ChevronDownIcon } from 'assets/icons/ChevronDown';
+import { OutlinedInput } from 'common';
 import styles from './Select.module.scss';
 
 type SelectProps = MuiSelectProps & {
@@ -22,9 +22,15 @@ type SelectProps = MuiSelectProps & {
 export class Select extends React.PureComponent<SelectProps> {
   private selectClasses: Partial<SelectClasses> = { icon: styles.icon };
 
-  private menuClasses: Partial<MenuClasses> = { list: styles.menuList, paper: styles.menuPaper };
+  private menuClasses: Partial<MenuClasses> = {
+    list: styles.menuList,
+    paper: styles.menuPaper
+  };
 
-  private menuItemClasses: Partial<MenuItemClasses> = { selected: styles.menuItemSelected, root: styles.menuItemRoot };
+  private menuItemClasses: Partial<MenuItemClasses> = {
+    selected: styles.menuItemSelected,
+    root: styles.menuItemRoot
+  };
 
   constructor(props: SelectProps) {
     super(props);
@@ -32,25 +38,26 @@ export class Select extends React.PureComponent<SelectProps> {
   }
 
   render() {
-    const {
-      className, value, items, onChange, ...otherProps
-    } = this.props;
-    const {
-      selectClasses, menuClasses, menuItemClasses,
-    } = this;
+    const { className, value, items, onChange, ...otherProps } = this.props;
+    const { selectClasses, menuClasses, menuItemClasses } = this;
     return (
       <MuiSelect
         className={cn(className, !!value && styles.selected)}
-        input={<OutlinedInput label={this.props.label} errorMessage={this.props.errorMessage} />}
+        input={
+          <OutlinedInput
+            label={this.props.label}
+            errorMessage={this.props.errorMessage}
+          />
+        }
         classes={selectClasses}
         IconComponent={ChevronDownIcon}
         sx={{
           '& .MuiSelect-select .notranslate::after': this.props.placeholder
             ? {
-              content: `"${this.props.placeholder}"`,
-              opacity: 0.42,
-            }
-            : {},
+                content: `"${this.props.placeholder}"`,
+                opacity: 0.42
+              }
+            : {}
         }}
         MenuProps={{
           classes: menuClasses,
@@ -58,15 +65,19 @@ export class Select extends React.PureComponent<SelectProps> {
           marginThreshold: 10,
           anchorOrigin: {
             vertical: 48,
-            horizontal: 'center',
-          },
+            horizontal: 'center'
+          }
         }}
         value={value}
         onChange={onChange}
         {...otherProps}
       >
         {items.map((item) => (
-          <MenuItem key={item.value} value={item.value} classes={menuItemClasses}>
+          <MenuItem
+            key={item.value}
+            value={item.value}
+            classes={menuItemClasses}
+          >
             {item.label}
           </MenuItem>
         ))}

@@ -1,4 +1,3 @@
-
 # Power Dapp - Boilerplate for Building Web3 Applications
 
 Welcome to the repository of Power Dapp for building web3 application. This project is designed to provide developers with a robust framework for quickly scaffold and build decentralized applications (dApps) that interact with blockchain technologies, specifically focusing on features like managing NFTs, handling digital wallets, and integrating with DeInfra Network.
@@ -73,7 +72,7 @@ To get some SK tokens for testing, you can use the faucet at
 https://faucet.thepower.io/
 ```
 
-Use 1 chain of devnet for testing with free tokens. 
+Use 1 chain of devnet for testing with free tokens.
 
 ### Frontend Build
 
@@ -134,19 +133,19 @@ To deploy the smart contracts to the blockchain, follow these steps:
 
 Compile all contracts using the following command
 
-   ```bash
-   yarn buildsc
-   ## or
-   npm buildsc
-   ```
+```bash
+yarn buildsc
+## or
+npm buildsc
+```
 
 Compile the single contract using the following command:
 
-   ```bash
-   yarn solcjs contracts/filename.sol -o build --bin --optimize --abi
-   ## or
-   npm solcjs contracts/filename.sol -o build --bin --optimize --abi
-   ```
+```bash
+yarn solcjs contracts/filename.sol -o build --bin --optimize --abi
+## or
+npm solcjs contracts/filename.sol -o build --bin --optimize --abi
+```
 
 ### Smart contracts deploy
 
@@ -166,7 +165,7 @@ Deploy the contract using the following command:
 
 ```bash
 yarn deploy ./utils/deploy-config.json
-## or 
+## or
 npm deploy ./utils/deploy-config.json
 ```
 
@@ -178,11 +177,11 @@ For detailed documentation on each module and its functionalities, refer to the 
 
 We welcome contributions from the community! If you'd like to contribute to the Power DCloud Web3 Application, please:
 
-   1. Fork the repository.
-   2. Create your feature branch (git checkout -b feature/AmazingFeature).
-   3. Commit your changes (git commit -m 'Add some AmazingFeature').
-   4. Push to the branch (git push origin feature/AmazingFeature).
-   5. Open a pull request.
+1.  Fork the repository.
+2.  Create your feature branch (git checkout -b feature/AmazingFeature).
+3.  Commit your changes (git commit -m 'Add some AmazingFeature').
+4.  Push to the branch (git push origin feature/AmazingFeature).
+5.  Open a pull request.
 
 ## Support
 

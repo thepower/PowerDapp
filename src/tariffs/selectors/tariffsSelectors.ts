@@ -5,15 +5,15 @@ const getTariffsState = (state: RootState) => state.tariffs;
 
 export const getTariffLevel = createSelector(
   getTariffsState,
-  (tariffs) => tariffs.tariffLevel,
+  (tariffs) => tariffs.tariffLevel
 );
 
 export const getUserTariffLevel = createSelector(
   getTariffsState,
-  (tariffs) => tariffs.userTariffLevel,
+  (tariffs) => tariffs.userTariffLevel
 );
 
 export const getBillData = createSelector(
   getTariffsState,
-  (tariffs) => tariffs.billData,
+  (tariffs) => tariffs.billData
 );

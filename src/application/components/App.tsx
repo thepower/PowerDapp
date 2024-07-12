@@ -1,20 +1,22 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
-import { ThemeProvider as MuiThemeProvider, StyledEngineProvider } from '@mui/material/styles';
-import { StylesProvider } from '@mui/styles';
 import { CssBaseline } from '@mui/material';
+import {
+  ThemeProvider as MuiThemeProvider,
+  StyledEngineProvider
+} from '@mui/material/styles';
+import { StylesProvider } from '@mui/styles';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import MUITheme from 'application/utils/MUITheme';
-import { store } from '../store';
-import history from '../utils/history';
+import { ToastNotification } from 'notification/ToastNotification';
 import { AppRoutes } from './AppRoutes';
-import { ToastNotification } from '../../notification/ToastNotification';
+import { store } from '../store';
 
 export const isMobile = window.innerWidth < 768;
 
 export const App = () => (
   <Provider store={store}>
-    <ConnectedRouter history={history}>
+    <BrowserRouter>
       <StylesProvider injectFirst>
         <StyledEngineProvider injectFirst>
           <MuiThemeProvider theme={MUITheme}>
@@ -25,6 +27,6 @@ export const App = () => (
           </MuiThemeProvider>
         </StyledEngineProvider>
       </StylesProvider>
-    </ConnectedRouter>
+    </BrowserRouter>
   </Provider>
 );

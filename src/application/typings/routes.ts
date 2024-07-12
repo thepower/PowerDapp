@@ -10,5 +10,5 @@ export enum RoutesEnum {
   edit = '/edit',
   dao = '/dao',
   root = '/',
-  sso = '/sso',
+  sso = '/sso'
 }

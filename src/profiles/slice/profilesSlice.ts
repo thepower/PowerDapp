@@ -1,22 +1,17 @@
-import {
-  createSlice, createAction, createEntityAdapter, PayloadAction,
-} from '@reduxjs/toolkit';
-import {
+import { createEntityAdapter, PayloadAction } from '@reduxjs/toolkit';
+import { createAppSlice } from 'application/createAppSlice';
+import { Profile } from 'profiles/types';
 
-  CreateProfilePayload, GrantRolePayload, LoadProfilesPayload, Profile, RevokeRolePayload,
-} from 'profiles/types';
-import { AddActionOnSuccessAndErrorType } from 'typings/common';
-
-export const profilesAdapter = createEntityAdapter<Profile>({
-  selectId: (profile) => profile.walletAddress,
+export const profilesAdapter = createEntityAdapter<Profile, string>({
+  selectId: (profile) => profile.walletAddress
 });
 
 interface ProfilesState {
   items: ReturnType<typeof profilesAdapter.getInitialState>;
-  userProfile?: Profile
-  profile?: Profile
+  userProfile?: Profile;
+  profile?: Profile;
   profilesCount?: number;
-  profileRoles: string[]
+  profileRoles: string[];
 }
 
 const initialState: ProfilesState = {
@@ -24,41 +19,42 @@ const initialState: ProfilesState = {
   userProfile: undefined,
   profile: undefined,
   profilesCount: undefined,
-  profileRoles: [],
+  profileRoles: []
 };
 
-const profilesSlice = createSlice({
+export const profilesSlice = createAppSlice({
   name: 'profiles',
   initialState,
   reducers: {
-    setProfiles: (state: ProfilesState, { payload }: PayloadAction<Profile[]>) => {
-      profilesAdapter.setAll(
-        state.items,
-        payload,
-      );
+    setProfiles: (
+      state: ProfilesState,
+      { payload }: PayloadAction<Profile[]>
+    ) => {
+      profilesAdapter.setAll(state.items, payload);
     },
     setProfile: (state: ProfilesState, { payload }: PayloadAction<Profile>) => {
       state.profile = payload;
     },
-    setUserProfile: (state: ProfilesState, { payload }: PayloadAction<Profile>) => {
+    setUserProfile: (
+      state: ProfilesState,
+      { payload }: PayloadAction<Profile>
+    ) => {
       state.userProfile = payload;
     },
-    setProfilesCount: (state: ProfilesState, { payload }: PayloadAction<number>) => {
+    setProfilesCount: (
+      state: ProfilesState,
+      { payload }: PayloadAction<number>
+    ) => {
       state.profilesCount = payload;
     },
-    setProfilesRoles: (state: ProfilesState, { payload }: PayloadAction<string[]>) => {
+    setProfilesRoles: (
+      state: ProfilesState,
+      { payload }: PayloadAction<string[]>
+    ) => {
       state.profileRoles = payload;
-    },
-  },
+    }
+  }
 });
-
-export const createOrEditProfileTrigger = createAction<CreateProfilePayload>('createProfile');
-export const loadProfilesTrigger = createAction<LoadProfilesPayload>('loadProfiles');
-export const loadProfileTrigger = createAction<string>('loadProfile');
-export const loadUserProfileTrigger = createAction<string>('loadUserProfile');
-
-export const grantRoleTrigger = createAction<AddActionOnSuccessAndErrorType<GrantRolePayload>>('grantRole');
-export const revokeRoleTrigger = createAction<AddActionOnSuccessAndErrorType<RevokeRolePayload>>('revokeRole');
 
 export const {
   actions: {
@@ -66,7 +62,6 @@ export const {
     setUserProfile,
     setProfile,
     setProfilesCount,
-    setProfilesRoles,
-  },
-  reducer: profilesReducer,
+    setProfilesRoles
+  }
 } = profilesSlice;

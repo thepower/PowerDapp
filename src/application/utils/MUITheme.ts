@@ -2,9 +2,7 @@ import { createTheme, Theme } from '@mui/material/styles';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {
-
-  }
+  interface DefaultTheme extends Theme {}
 }
 
 declare module '@mui/material/Button' {
@@ -15,13 +13,13 @@ declare module '@mui/material/Button' {
 
 export const MUITheme = createTheme({
   typography: {
-    fontFamily: 'Ubuntu, sans-serif',
+    fontFamily: 'Ubuntu, sans-serif'
   },
   spacing: 4,
   transitions: {
     duration: {
-      standard: 300,
-    },
+      standard: 300
+    }
   },
   breakpoints: {
     values: {
@@ -29,17 +27,17 @@ export const MUITheme = createTheme({
       sm: 360,
       md: 768,
       lg: 1280,
-      xl: 1600,
-    },
+      xl: 1600
+    }
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
           background: '#F9F9FA',
-          color: '#1D1D1F',
-        },
-      },
+          color: '#1D1D1F'
+        }
+      }
     },
     MuiOutlinedInput: {
       styleOverrides: {
@@ -48,71 +46,71 @@ export const MUITheme = createTheme({
           borderRadius: 5,
           background: '#FFF',
           '&:hover': {
-            background: '#FFF',
+            background: '#FFF'
           },
           '.MuiOutlinedInput-input::placeholder': {
-            color: '#1D1D1F',
+            color: '#1D1D1F'
           },
           '&:hover .MuiOutlinedInput-input::placeholder': {
-            color: '#1D1D1F',
+            color: '#1D1D1F'
           },
           '&.Mui-focused': {
             background: '#FFF',
             '.MuiOutlinedInput-notchedOutline': {
-              border: 0,
+              border: 0
             },
             '.MuiOutlinedInput-input::placeholder': {
-              color: 'transparent',
-            },
+              color: 'transparent'
+            }
           },
           '&:hover:not(.Mui-focused) .MuiOutlinedInput-notchedOutline': {
-            border: 0,
+            border: 0
           },
           '&.Mui-disabled': {
             background: '#CDDDE5',
-            pointerEvents: 'none',
+            pointerEvents: 'none'
           },
           '&.Mui-disabled .MuiOutlinedInput-input': {
-            WebkitTextFillColor: 'unset',
-          },
+            WebkitTextFillColor: 'unset'
+          }
         },
         colorSecondary: {
           color: '#6b798f',
           borderRadius: 5,
           background: '#dfebfb',
           '&:hover': {
-            background: '#DBEAFF',
+            background: '#DBEAFF'
           },
           '.MuiOutlinedInput-input::placeholder': {
-            color: '#8895AA',
+            color: '#8895AA'
           },
           '&:hover .MuiOutlinedInput-input::placeholder': {
-            color: '#98A6BC',
+            color: '#98A6BC'
           },
           '&.Mui-focused': {
             background: '#DBEAFF',
             '.MuiOutlinedInput-notchedOutline': {
-              border: 0,
+              border: 0
             },
             '.MuiOutlinedInput-input::placeholder': {
-              color: 'transparent',
-            },
+              color: 'transparent'
+            }
           },
           '&:hover:not(.Mui-focused) .MuiOutlinedInput-notchedOutline': {
-            border: 0,
+            border: 0
           },
           '&.Mui-disabled': {
             background: '#EBF3FF',
-            pointerEvents: 'none',
+            pointerEvents: 'none'
           },
           '&.Mui-disabled .MuiOutlinedInput-input': {
-            WebkitTextFillColor: 'unset',
-          },
+            WebkitTextFillColor: 'unset'
+          }
         },
         notchedOutline: {
-          border: 0,
-        },
-      },
+          border: 0
+        }
+      }
     },
     MuiFormHelperText: {
       styleOverrides: {
@@ -121,11 +119,11 @@ export const MUITheme = createTheme({
           bottom: '-24px',
           fontSize: '14px',
           lineHeight: '16px',
-          margin: '0 4px 0 0',
-        },
-      },
-    },
-  },
+          margin: '0 4px 0 0'
+        }
+      }
+    }
+  }
 });
 
 export default MUITheme;

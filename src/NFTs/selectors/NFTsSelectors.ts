@@ -4,15 +4,17 @@ import { RootState } from '../../application/store';
 
 const getNFTsState = (state: RootState) => state.NFTs;
 
-const { selectAll, selectById } = NFTsAdapter.getSelectors((state: RootState) => state.NFTs.items);
+const { selectAll, selectById } = NFTsAdapter.getSelectors(
+  (state: RootState) => state.NFTs.items
+);
 
-export const getNFTs = createSelector(selectAll, (list) => list);
+export const getNFTs = selectAll;
 
 export const getNFTsCount = createSelector(
   getNFTsState,
-  (NFTs) => NFTs.NFTsCount,
+  (NFTs) => NFTs.NFTsCount
 );
 
-export const getNFTById = createSelector(selectById, (NFT) => NFT);
+export const getNFTById = selectById;
 
 export const getNFT = createSelector(getNFTsState, (state) => state.NFT);

@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction } from '@reduxjs/toolkit';
+import { createAppSlice } from 'application/createAppSlice';
 import { Maybe } from '../../typings/common';
 
 type PopupData = {
@@ -12,20 +13,19 @@ type InitialState = {
 };
 
 const initialState: InitialState = {
-  data: null,
+  data: null
 };
 
-const walletSignSlice = createSlice({
+export const walletSignSlice = createAppSlice({
   name: 'walletSign',
   initialState,
   reducers: {
     setPopupData: (state, { payload }: PayloadAction<Maybe<PopupData>>) => {
       state.data = payload;
-    },
-  },
+    }
+  }
 });
 
 export const {
-  actions: { setPopupData },
-  reducer: walletSignReducer,
+  actions: { setPopupData }
 } = walletSignSlice;

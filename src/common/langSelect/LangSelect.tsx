@@ -7,7 +7,7 @@ import {
   SelectClasses,
   InputBaseClasses,
   MenuClasses,
-  MenuItemClasses,
+  MenuItemClasses
 } from '@mui/material';
 
 import styles from './LangSelect.module.scss';
@@ -18,25 +18,35 @@ type SelectProps = MuiSelectProps & {
 
 const selectClasses: Partial<SelectClasses> = {
   select: styles.select,
-  icon: styles.selectIcon,
+  icon: styles.selectIcon
 };
 
 const inputBaseClasses: Partial<InputBaseClasses> = {
   root: styles.inputBaseRoot,
   input: styles.inputBaseInput,
-  focused: styles.inputBaseFocused,
+  focused: styles.inputBaseFocused
 };
 
-const menuClasses: Partial<MenuClasses> = { list: styles.menuNFTs, paper: styles.menuPaper };
+const menuClasses: Partial<MenuClasses> = {
+  list: styles.menuNFTs,
+  paper: styles.menuPaper
+};
 
-const menuItemClasses: Partial<MenuItemClasses> = { selected: styles.menuItemSelected, root: styles.menuItemRoot };
+const menuItemClasses: Partial<MenuItemClasses> = {
+  selected: styles.menuItemSelected,
+  root: styles.menuItemRoot
+};
 
-export const LangSelect:FC<SelectProps> = ({
-  className, value, items, onChange, ...otherProps
+export const LangSelect: FC<SelectProps> = ({
+  className,
+  value,
+  items,
+  onChange,
+  ...otherProps
 }) => (
   <MuiSelect
     className={className}
-    variant="standard"
+    variant='standard'
     input={<InputBase classes={inputBaseClasses} />}
     classes={selectClasses}
     MenuProps={{
@@ -44,8 +54,8 @@ export const LangSelect:FC<SelectProps> = ({
       disableScrollLock: true,
       anchorOrigin: {
         vertical: 64,
-        horizontal: 'center',
-      },
+        horizontal: 'center'
+      }
     }}
     inputProps={{ IconComponent: () => null }}
     value={value}
@@ -53,7 +63,12 @@ export const LangSelect:FC<SelectProps> = ({
     {...otherProps}
   >
     {items.map((rowsPerPageOption) => (
-      <MenuItem disableRipple key={rowsPerPageOption} value={rowsPerPageOption} classes={menuItemClasses}>
+      <MenuItem
+        disableRipple
+        key={rowsPerPageOption}
+        value={rowsPerPageOption}
+        classes={menuItemClasses}
+      >
         {rowsPerPageOption}
       </MenuItem>
     ))}

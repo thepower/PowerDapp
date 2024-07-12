@@ -6,15 +6,24 @@ interface PopupOptions {
 }
 
 export const openPopupCenter = ({
-  url, title, width, height,
+  url,
+  title,
+  width,
+  height
 }: PopupOptions) => {
   // Determine dual-screen support
   const dualScreenLeft = window.screenLeft ?? window.screenX;
   const dualScreenTop = window.screenTop ?? window.screenY;
 
   // Determine window dimensions
-  const screenWidth = window.innerWidth || document.documentElement.clientWidth || window.screen.width;
-  const screenHeight = window.innerHeight || document.documentElement.clientHeight || window.screen.height;
+  const screenWidth =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    window.screen.width;
+  const screenHeight =
+    window.innerHeight ||
+    document.documentElement.clientHeight ||
+    window.screen.height;
 
   // Calculate system zoom
   const systemZoom = screenWidth / window.screen.availWidth;

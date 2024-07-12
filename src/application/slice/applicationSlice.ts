@@ -1,10 +1,6 @@
-import {
-  createAction,
-  createSlice,
-  Draft,
-  PayloadAction,
-} from '@reduxjs/toolkit';
+import { Draft, PayloadAction } from '@reduxjs/toolkit';
 import { NetworkApi, WalletApi } from '@thepowereco/tssdk';
+import { createAppSlice } from 'application/createAppSlice';
 import { Maybe } from '../../typings/common';
 
 interface ApplicationDataState {
@@ -24,44 +20,48 @@ const initialState: ApplicationDataState = {
   networkApi: null,
   walletApi: null,
   networkChains: [],
-  backUrl: null,
+  backUrl: null
 };
 
-const applicationDataSlice = createSlice({
+export const applicationDataSlice = createAppSlice({
   name: SLICE_NAME,
   initialState,
   reducers: {
     setDynamicApis: (
       state: ApplicationDataState,
-      { payload }: PayloadAction<{ networkApi: NetworkApi, walletApi: WalletApi }>,
+      {
+        payload
+      }: PayloadAction<{ networkApi: NetworkApi; walletApi: WalletApi }>
     ) => {
       state.networkApi = payload.networkApi;
       state.walletApi = payload.walletApi;
     },
-    setTestnetAvailable: (state: ApplicationDataState, { payload }: PayloadAction<boolean>) => {
+    setTestnetAvailable: (
+      state: ApplicationDataState,
+      { payload }: PayloadAction<boolean>
+    ) => {
       state.testnetAvailable = payload;
     },
-    setShowUnderConstruction: (state: ApplicationDataState, action: PayloadAction<boolean>) => {
+    setShowUnderConstruction: (
+      state: ApplicationDataState,
+      action: PayloadAction<boolean>
+    ) => {
       state.showUnderConstruction = action.payload;
     },
-    setNetworkChains: (state: ApplicationDataState, action: PayloadAction<number[]>) => {
+    setNetworkChains: (
+      state: ApplicationDataState,
+      action: PayloadAction<number[]>
+    ) => {
       state.networkChains = action.payload;
-    },
-    setBackUrl: (state: ApplicationDataState, action: PayloadAction<Maybe<string>>) => {
-      state.backUrl = action.payload;
-    },
-  },
+    }
+  }
 });
 
-export const initApplication = createAction(`${SLICE_NAME}/initApplication`);
-
 export const {
-  reducer: applicationDataReducer,
   actions: {
     setDynamicApis,
     setTestnetAvailable,
     setShowUnderConstruction,
-    setNetworkChains,
-    setBackUrl,
-  },
+    setNetworkChains
+  }
 } = applicationDataSlice;

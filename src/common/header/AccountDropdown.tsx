@@ -5,24 +5,24 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemButton,
+  ListItemButton
 } from '@mui/material';
-import { UserIcon, LogInIcon, CoinsStackedIcon } from 'assets/icons';
-
 import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector, useAppDispatch } from 'application/store';
+import { useNavigate } from 'react-router-dom';
 import { getWalletAddress } from 'account/selectors/accountSelectors';
-import { RoutesEnum } from 'application/typings/routes';
-import { resetAccount } from 'account/slice/accountSlice';
-import { push } from 'connected-react-router';
-import { loadBalanceTrigger } from 'myAssets/slices/walletSlice';
-import appEnvs from 'appEnvs';
-import { getWalletNativeTokensAmountByID } from 'myAssets/selectors/walletSelectors';
-import { getIsVerified } from 'profiles/selectors/rolesSelectors';
+import { resetAccount } from 'account/thunks/account';
 import { getLoadDataUrl } from 'api/openResty';
+import appEnvs from 'appEnvs';
+import { useAppSelector, useAppDispatch } from 'application/hooks';
+import { RoutesEnum } from 'application/typings/routes';
+import { UserIcon, LogInIcon, CoinsStackedIcon } from 'assets/icons';
+
+import { getWalletNativeTokensAmountByID } from 'myAssets/selectors/walletSelectors';
+import { loadBalance } from 'myAssets/thunks/wallet';
 import { getUserProfile } from 'profiles/selectors/profilesSelectors';
-import { loadUserProfileTrigger } from 'profiles/slice/profilesSlice';
+import { getIsVerified } from 'profiles/selectors/rolesSelectors';
+import { loadUserProfile } from 'profiles/thunks/profiles';
 import styles from './AccountDropdown.module.scss';
 
 type AccountDropdownProps = {
@@ -30,28 +30,31 @@ type AccountDropdownProps = {
 };
 
 export const AccountDropdown: React.FC<AccountDropdownProps> = ({
-  className,
+  className
 }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const walletAddress = useAppSelector(getWalletAddress);
   const isAuthor = useAppSelector(getIsVerified);
   const userProfile = useAppSelector(getUserProfile);
-  const SKAmount = useAppSelector((state) => getWalletNativeTokensAmountByID(state, 'SK'));
+  const SKAmount = useAppSelector((state) =>
+    getWalletNativeTokensAmountByID(state, 'SK')
+  );
 
   const [dropdown, setDropdown] = React.useState<HTMLButtonElement | null>(
-    null,
+    null
   );
 
   useEffect(() => {
     if (walletAddress) {
-      dispatch(loadUserProfileTrigger(walletAddress));
+      dispatch(loadUserProfile(walletAddress));
     }
-  }, [loadUserProfileTrigger, walletAddress]);
+  }, [loadUserProfile, walletAddress]);
 
   useEffect(() => {
-    if (walletAddress) dispatch(loadBalanceTrigger());
+    if (walletAddress) dispatch(loadBalance());
   }, [walletAddress]);
 
   const open = Boolean(dropdown);
@@ -65,7 +68,7 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({
   };
 
   const onClickLogin = () => {
-    dispatch(push(RoutesEnum.login));
+    navigate(RoutesEnum.login);
   };
 
   const onClickPowerLogOut = () => {
@@ -73,9 +76,9 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({
     handleClose();
   };
 
-  const profileImgUrl = `${getLoadDataUrl(appEnvs.OPEN_RESTY_PROFILE_BUCKET)}/${
-    userProfile?.photoHash
-  }`;
+  const profileImgUrl = `${getLoadDataUrl(
+    appEnvs.OPEN_RESTY_PROFILE_BUCKET
+  )}/${userProfile?.photoHash}`;
   return (
     <div className={className}>
       {walletAddress ? (
@@ -84,10 +87,10 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({
           aria-describedby={id}
           className={cn(
             styles.accountDropdown,
-            open && styles.accountDropdownActive,
+            open && styles.accountDropdownActive
           )}
           onClick={handleClick}
-          size="large"
+          size='large'
         >
           <UserIcon />
         </IconButton>
@@ -96,7 +99,7 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({
           className={styles.accountDropdown}
           onClick={onClickLogin}
           disableRipple
-          size="large"
+          size='large'
         >
           <LogInIcon />
         </IconButton>
@@ -111,27 +114,27 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({
         disableScrollLock
         anchorOrigin={{
           vertical: 64,
-          horizontal: 'right',
+          horizontal: 'right'
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'right',
+          horizontal: 'right'
         }}
       >
         <List>
-          {(userProfile && userProfile?.firstName && userProfile?.lastName) && (
+          {userProfile && userProfile?.firstName && userProfile?.lastName && (
             <ListItem disablePadding>
               <ListItemButton
                 disableRipple
                 className={styles.listButton}
-                target="_blank"
+                target='_blank'
                 href={appEnvs.WALLET_THEPOWER_URL}
               >
                 {userProfile?.photoHash && (
                   <ListItemIcon className={styles.listIcon}>
                     <img
                       src={profileImgUrl}
-                      alt="profileImg"
+                      alt='profileImg'
                       className={styles.profileImg}
                     />
                   </ListItemIcon>
@@ -147,25 +150,23 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({
           {walletAddress && (
             <ListItem disablePadding>
               <ListItemButton
+                target='_blank'
+                href={appEnvs.WALLET_THEPOWER_URL}
                 disableRipple
                 className={styles.listButton}
-                target="_blank"
-                href={appEnvs.WALLET_THEPOWER_URL}
               >
                 <ListItemIcon className={styles.listIcon}>
                   <CoinsStackedIcon />
                 </ListItemIcon>
-                {SKAmount || 0}
-                {' '}
-                SK
+                {SKAmount || 0} SK
               </ListItemButton>
             </ListItem>
           )}
           {walletAddress && isAuthor && (
             <ListItem disablePadding>
               <ListItemButton
+                onClick={() => navigate(`${RoutesEnum.root}${walletAddress}`)}
                 className={styles.listButton}
-                href={`${RoutesEnum.root}${walletAddress}`}
               >
                 <ListItemIcon className={styles.listIcon}>
                   <UserIcon />
@@ -177,8 +178,9 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({
           {walletAddress && isAuthor && (
             <ListItem disablePadding>
               <ListItemButton
+                onClick={() => navigate(RoutesEnum.editProfile)}
+                disableRipple
                 className={styles.listButton}
-                href={RoutesEnum.editProfile}
               >
                 <ListItemIcon className={styles.listIcon}>
                   <UserIcon />

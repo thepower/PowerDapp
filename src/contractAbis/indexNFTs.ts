@@ -8,140 +8,140 @@ export const indexNFTs = {
         {
           internalType: 'address',
           name: 'roles',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'bytes32',
           name: 'newAdminRole',
-          type: 'bytes32',
-        },
+          type: 'bytes32'
+        }
       ],
       stateMutability: 'nonpayable',
-      type: 'constructor',
+      type: 'constructor'
     },
     {
       inputs: [],
       name: 'ERC721EnumerableForbiddenBatchMint',
-      type: 'error',
+      type: 'error'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'sender',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
+          type: 'uint256'
         },
         {
           internalType: 'address',
           name: 'owner',
-          type: 'address',
-        },
+          type: 'address'
+        }
       ],
       name: 'ERC721IncorrectOwner',
-      type: 'error',
+      type: 'error'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'operator',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'ERC721InsufficientApproval',
-      type: 'error',
+      type: 'error'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'approver',
-          type: 'address',
-        },
+          type: 'address'
+        }
       ],
       name: 'ERC721InvalidApprover',
-      type: 'error',
+      type: 'error'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'operator',
-          type: 'address',
-        },
+          type: 'address'
+        }
       ],
       name: 'ERC721InvalidOperator',
-      type: 'error',
+      type: 'error'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'owner',
-          type: 'address',
-        },
+          type: 'address'
+        }
       ],
       name: 'ERC721InvalidOwner',
-      type: 'error',
+      type: 'error'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'receiver',
-          type: 'address',
-        },
+          type: 'address'
+        }
       ],
       name: 'ERC721InvalidReceiver',
-      type: 'error',
+      type: 'error'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'sender',
-          type: 'address',
-        },
+          type: 'address'
+        }
       ],
       name: 'ERC721InvalidSender',
-      type: 'error',
+      type: 'error'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'ERC721NonexistentToken',
-      type: 'error',
+      type: 'error'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'owner',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'uint256',
           name: 'index',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'ERC721OutOfBoundsIndex',
-      type: 'error',
+      type: 'error'
     },
     {
       anonymous: false,
@@ -150,23 +150,23 @@ export const indexNFTs = {
           indexed: true,
           internalType: 'address',
           name: 'owner',
-          type: 'address',
+          type: 'address'
         },
         {
           indexed: true,
           internalType: 'address',
           name: 'approved',
-          type: 'address',
+          type: 'address'
         },
         {
           indexed: true,
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'Approval',
-      type: 'event',
+      type: 'event'
     },
     {
       anonymous: false,
@@ -175,23 +175,23 @@ export const indexNFTs = {
           indexed: true,
           internalType: 'address',
           name: 'owner',
-          type: 'address',
+          type: 'address'
         },
         {
           indexed: true,
           internalType: 'address',
           name: 'operator',
-          type: 'address',
+          type: 'address'
         },
         {
           indexed: false,
           internalType: 'bool',
           name: 'approved',
-          type: 'bool',
-        },
+          type: 'bool'
+        }
       ],
       name: 'ApprovalForAll',
-      type: 'event',
+      type: 'event'
     },
     {
       anonymous: false,
@@ -200,17 +200,17 @@ export const indexNFTs = {
           indexed: false,
           internalType: 'uint256',
           name: '_fromTokenId',
-          type: 'uint256',
+          type: 'uint256'
         },
         {
           indexed: false,
           internalType: 'uint256',
           name: '_toTokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'BatchMetadataUpdate',
-      type: 'event',
+      type: 'event'
     },
     {
       anonymous: false,
@@ -219,11 +219,11 @@ export const indexNFTs = {
           indexed: false,
           internalType: 'uint256',
           name: '_tokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'MetadataUpdate',
-      type: 'event',
+      type: 'event'
     },
     {
       anonymous: false,
@@ -232,23 +232,23 @@ export const indexNFTs = {
           indexed: true,
           internalType: 'address',
           name: 'from',
-          type: 'address',
+          type: 'address'
         },
         {
           indexed: true,
           internalType: 'address',
           name: 'to',
-          type: 'address',
+          type: 'address'
         },
         {
           indexed: true,
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'Transfer',
-      type: 'event',
+      type: 'event'
     },
     {
       inputs: [],
@@ -257,61 +257,61 @@ export const indexNFTs = {
         {
           internalType: 'bytes32',
           name: '',
-          type: 'bytes32',
-        },
+          type: 'bytes32'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'to',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'approve',
       outputs: [],
       stateMutability: 'nonpayable',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'owner',
-          type: 'address',
-        },
+          type: 'address'
+        }
       ],
       name: 'balanceOf',
       outputs: [
         {
           internalType: 'uint256',
           name: '',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'burn',
       outputs: [],
       stateMutability: 'nonpayable',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [],
@@ -320,118 +320,118 @@ export const indexNFTs = {
         {
           internalType: 'string',
           name: '',
-          type: 'string',
-        },
+          type: 'string'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
+          type: 'uint256'
         },
         {
           internalType: 'uint256',
           name: 'key',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'delCustomField',
       outputs: [],
       stateMutability: 'nonpayable',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'getApproved',
       outputs: [
         {
           internalType: 'address',
           name: '',
-          type: 'address',
-        },
+          type: 'address'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
+          type: 'uint256'
         },
         {
           internalType: 'uint256[]',
           name: 'keys',
-          type: 'uint256[]',
-        },
+          type: 'uint256[]'
+        }
       ],
       name: 'getNftData',
       outputs: [
         {
           internalType: 'bytes[]',
           name: '',
-          type: 'bytes[]',
-        },
+          type: 'bytes[]'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'start',
-          type: 'uint256',
+          type: 'uint256'
         },
         {
           components: [
             {
               internalType: 'uint256',
               name: 'k',
-              type: 'uint256',
+              type: 'uint256'
             },
             {
               internalType: 'bytes',
               name: 'v',
-              type: 'bytes',
-            },
+              type: 'bytes'
+            }
           ],
           internalType: 'struct IndexArticles2.kv[]',
           name: 'filters',
-          type: 'tuple[]',
+          type: 'tuple[]'
         },
         {
           internalType: 'uint256',
           name: 'amount',
-          type: 'uint256',
+          type: 'uint256'
         },
         {
           internalType: 'bool',
           name: 'reverse',
-          type: 'bool',
-        },
+          type: 'bool'
+        }
       ],
       name: 'grep',
       outputs: [
         {
           internalType: 'uint256[]',
           name: '',
-          type: 'uint256[]',
-        },
+          type: 'uint256[]'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
@@ -440,53 +440,53 @@ export const indexNFTs = {
             {
               internalType: 'uint256',
               name: 'k',
-              type: 'uint256',
+              type: 'uint256'
             },
             {
               internalType: 'bytes',
               name: 'v',
-              type: 'bytes',
-            },
+              type: 'bytes'
+            }
           ],
           internalType: 'struct IndexArticles2.kv[]',
           name: 'filters',
-          type: 'tuple[]',
-        },
+          type: 'tuple[]'
+        }
       ],
       name: 'grep_estimate',
       outputs: [
         {
           internalType: 'uint256',
           name: '',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'owner',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'address',
           name: 'operator',
-          type: 'address',
-        },
+          type: 'address'
+        }
       ],
       name: 'isApprovedForAll',
       outputs: [
         {
           internalType: 'bool',
           name: '',
-          type: 'bool',
-        },
+          type: 'bool'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [],
@@ -495,45 +495,45 @@ export const indexNFTs = {
         {
           internalType: 'uint256',
           name: '',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'newToken',
-          type: 'uint256',
+          type: 'uint256'
         },
         {
           internalType: 'address',
           name: 'originERC721',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'uint256',
           name: 'rTokenId',
-          type: 'uint256',
+          type: 'uint256'
         },
         {
           internalType: 'uint256[]',
           name: 'keys',
-          type: 'uint256[]',
-        },
+          type: 'uint256[]'
+        }
       ],
       name: 'mint',
       outputs: [
         {
           internalType: 'uint256',
           name: '',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       stateMutability: 'nonpayable',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [],
@@ -542,54 +542,54 @@ export const indexNFTs = {
         {
           internalType: 'string',
           name: '',
-          type: 'string',
-        },
+          type: 'string'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: '',
-          type: 'uint256',
+          type: 'uint256'
         },
         {
           internalType: 'uint256',
           name: '',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'nftData',
       outputs: [
         {
           internalType: 'bytes',
           name: '',
-          type: 'bytes',
-        },
+          type: 'bytes'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'ownerOf',
       outputs: [
         {
           internalType: 'address',
           name: '',
-          type: 'address',
-        },
+          type: 'address'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [],
@@ -598,99 +598,99 @@ export const indexNFTs = {
         {
           internalType: 'contract InScienceProfiles',
           name: '',
-          type: 'address',
-        },
+          type: 'address'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'from',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'address',
           name: 'to',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'safeTransferFrom',
       outputs: [],
       stateMutability: 'nonpayable',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'from',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'address',
           name: 'to',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
+          type: 'uint256'
         },
         {
           internalType: 'bytes',
           name: 'data',
-          type: 'bytes',
-        },
+          type: 'bytes'
+        }
       ],
       name: 'safeTransferFrom',
       outputs: [],
       stateMutability: 'nonpayable',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'operator',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'bool',
           name: 'approved',
-          type: 'bool',
-        },
+          type: 'bool'
+        }
       ],
       name: 'setApprovalForAll',
       outputs: [],
       stateMutability: 'nonpayable',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'bytes4',
           name: 'interfaceId',
-          type: 'bytes4',
-        },
+          type: 'bytes4'
+        }
       ],
       name: 'supportsInterface',
       outputs: [
         {
           internalType: 'bool',
           name: '',
-          type: 'bool',
-        },
+          type: 'bool'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [],
@@ -699,73 +699,73 @@ export const indexNFTs = {
         {
           internalType: 'string',
           name: '',
-          type: 'string',
-        },
+          type: 'string'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'index',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'tokenByIndex',
       outputs: [
         {
           internalType: 'uint256',
           name: '',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'owner',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'uint256',
           name: 'index',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'tokenOfOwnerByIndex',
       outputs: [
         {
           internalType: 'uint256',
           name: '',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'tokenURI',
       outputs: [
         {
           internalType: 'string',
           name: '',
-          type: 'string',
-        },
+          type: 'string'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [],
@@ -774,34 +774,34 @@ export const indexNFTs = {
         {
           internalType: 'uint256',
           name: '',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       stateMutability: 'view',
-      type: 'function',
+      type: 'function'
     },
     {
       inputs: [
         {
           internalType: 'address',
           name: 'from',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'address',
           name: 'to',
-          type: 'address',
+          type: 'address'
         },
         {
           internalType: 'uint256',
           name: 'tokenId',
-          type: 'uint256',
-        },
+          type: 'uint256'
+        }
       ],
       name: 'transferFrom',
       outputs: [],
       stateMutability: 'nonpayable',
-      type: 'function',
-    },
-  ],
+      type: 'function'
+    }
+  ]
 } as const;

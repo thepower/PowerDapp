@@ -1,6 +1,5 @@
-import appEnvs from 'appEnvs';
 import axios from 'axios';
-import { call } from 'typed-redux-saga';
+import appEnvs from 'appEnvs';
 
 async function calculateSHA256(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -21,7 +20,9 @@ async function calculateSHA256(file: File): Promise<string> {
 
         // Convert the hashBuffer to a hexadecimal string
         const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map((byte) => byte.toString(16).padStart(2, '0')).join('');
+        const hashHex = hashArray
+          .map((byte) => byte.toString(16).padStart(2, '0'))
+          .join('');
 
         // Resolve the promise with the hash
         resolve(hashHex);
@@ -41,8 +42,8 @@ async function calculateSHA256(file: File): Promise<string> {
   });
 }
 
-export function* uploadFile(file: File, id: string) {
-  const hash = yield* call(calculateSHA256, file);
+export async function uploadFile(file: File, id: string) {
+  const hash = await calculateSHA256(file);
 
   const re = /(?:\.([^.]+))?$/;
   const extension = re.exec(file.name)?.[1];
@@ -50,11 +51,15 @@ export function* uploadFile(file: File, id: string) {
     const formData = new FormData();
     formData.append(file.name, file);
 
-    yield axios.post(`${appEnvs.OPEN_RESTY_API_URL}/upload/${id}/${hash}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    await axios.post(
+      `${appEnvs.OPEN_RESTY_API_URL}/upload/${id}/${hash}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    );
 
     return extension ? `${hash}.${extension}` : hash;
   } catch (error: any) {
@@ -67,11 +72,15 @@ export function* uploadFile(file: File, id: string) {
   }
 }
 
-export const getLoadDataUrl = (id?: string) => `${appEnvs.OPEN_RESTY_API_URL}/data/${id}`;
+export const getLoadDataUrl = (id?: string) =>
+  `${appEnvs.OPEN_RESTY_API_URL}/data/${id}`;
 
 export const downloadFile = async (requestUrl: string, id: string) => {
   try {
-    const response = await axios.get<Blob>(`${getLoadDataUrl(id)}/${requestUrl}`, { responseType: 'blob' });
+    const response = await axios.get<Blob>(
+      `${getLoadDataUrl(id)}/${requestUrl}`,
+      { responseType: 'blob' }
+    );
     const file = new File([response.data], requestUrl);
     return file;
   } catch (error) {

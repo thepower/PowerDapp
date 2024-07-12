@@ -2,11 +2,15 @@ import React from 'react';
 
 import {
   FormControl,
-  FormControlLabel, IconButton, Popover, Radio, RadioGroup,
+  FormControlLabel,
+  IconButton,
+  Popover,
+  Radio,
+  RadioGroup
 } from '@mui/material';
-import { CloseIcon, FilterIcon } from 'assets/icons';
-import { useTranslation } from 'react-i18next';
 import cn from 'classnames';
+import { useTranslation } from 'react-i18next';
+import { CloseIcon, FilterIcon } from 'assets/icons';
 import styles from './Filter.module.scss';
 
 type FilterProps = {
@@ -14,11 +18,15 @@ type FilterProps = {
   label?: string;
   value?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>, value: string) => void;
-  items: { label: string, value: string }[]
+  items: { label: string; value: string }[];
 };
 
 export const Filter: React.FC<FilterProps> = ({
-  className, label, value, onChange, items,
+  className,
+  label,
+  value,
+  onChange,
+  items
 }) => {
   const { t } = useTranslation();
 
@@ -34,7 +42,10 @@ export const Filter: React.FC<FilterProps> = ({
     setFilter(null);
   };
 
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+  const handleOnChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    value: string
+  ) => {
     onChange(event, value);
     setFilter(null);
   };
@@ -45,11 +56,13 @@ export const Filter: React.FC<FilterProps> = ({
 
   return (
     <FormControl className={className}>
-
       <IconButton
         disableRipple
         aria-describedby={id}
-        className={cn(styles.filter, (open || value !== 'all') && styles.filterActive)}
+        className={cn(
+          styles.filter,
+          (open || value !== 'all') && styles.filterActive
+        )}
         onClick={handleClickFilter}
       >
         <FilterIcon />
@@ -64,33 +77,34 @@ export const Filter: React.FC<FilterProps> = ({
         marginThreshold={10}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'right',
+          horizontal: 'right'
         }}
         transformOrigin={{
           vertical: -8,
-          horizontal: 'right',
+          horizontal: 'right'
         }}
       >
-        <CloseIcon
-          className={styles.closeButton}
-          onClick={onClickClose}
-        />
+        <CloseIcon className={styles.closeButton} onClick={onClickClose} />
         <RadioGroup
-          aria-labelledby="aria-filter-radio-group"
-          name="filter-radio-group"
+          aria-labelledby='aria-filter-radio-group'
+          name='filter-radio-group'
           value={value}
           onChange={handleOnChange}
         >
-          {items.map(({ label, value }) => <FormControlLabel
-            className={styles.formControlLabel}
-            value={value}
-            control={<Radio
-              disableRipple
-              classes={{ root: styles.radio, checked: styles.radioChecked }}
-            />}
-            label={label}
-            key={value}
-          />)}
+          {items.map(({ label, value }) => (
+            <FormControlLabel
+              className={styles.formControlLabel}
+              value={value}
+              control={
+                <Radio
+                  disableRipple
+                  classes={{ root: styles.radio, checked: styles.radioChecked }}
+                />
+              }
+              label={label}
+              key={value}
+            />
+          ))}
         </RadioGroup>
       </Popover>
     </FormControl>
