@@ -1,67 +1,32 @@
-# compiled output
-node_modules
-dump.rdb
-/build
-/buildsc
-/dist
-/uploads
-tp-cli.json
-.env
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Logs
-*.log
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+screenshots
+videos
+wdio/node_modules
+
+# production
+/build
+
+# misc
+/src/config/index.ts
+.DS_Store
+.idea
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.vscode
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
 
-# OS
-.DS_Store
-
-# Tests
-/coverage
-/.nyc_output
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-src/regal-sun-332215-9c9a74b9465e.json
-.env.development
-.env.production
-.env.local
-.env.network
-
-*~
-*.key
-build/AccessControl*
-build/Context*
-build/ERC165*
-build/ERC721*
-build/ERC721Burnable*
-build/ERC721Enumerable*
-build/IAccessControl*
-build/IERC1155Errors*
-build/IERC165*
-build/IERC20Errors*
-build/IERC4906*
-build/IERC721*
-build/IERC721Enumerable*
-build/IERC721Errors*
-build/IERC721Metadata*
-build/IERC721Receiver*
-build/Math*
-build/SignedMath*
-build/Strings*
-utils/power_wallet_*
+.yalc
+yalc.lock
