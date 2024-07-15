@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AddressApi } from '@thepowereco/tssdk';
+import { AddressApi, NetworkApi } from '@thepowereco/tssdk';
 
 import { encodeFunction } from '@thepowereco/tssdk/dist/helpers/abi.helper';
 import { compact } from 'lodash';
@@ -20,14 +20,21 @@ import {
   setProfilesCount,
   setUserProfile
 } from 'profiles/slice/profilesSlice';
-import { CreateProfilePayload } from 'profiles/types';
+import {
+  CreateProfilePayload,
+  LoadProfilePayload,
+  Profile
+} from 'profiles/types';
 import { objectToString } from 'sso/utils';
-import { loadProfileRoles } from './roles';
+import { loadProfileRolesThunk } from './roles';
 
-export const createOrEditProfile = createAsyncThunk<void, CreateProfilePayload>(
+export const createOrEditProfileThunk = createAsyncThunk<
+  void,
+  CreateProfilePayload
+>(
   'profile/createOrEditProfile',
   async (
-    { firstName, lastName, email, photo, editedWalletAddress },
+    { firstName, lastName, email, photo, editedWalletAddress, navigate },
     { dispatch, getState, rejectWithValue }
   ) => {
     try {
@@ -109,7 +116,7 @@ export const createOrEditProfile = createAsyncThunk<void, CreateProfilePayload>(
 
       const createProfileResponse = await signTxWithPopup({
         data,
-        action: createOrEditProfile.typePrefix,
+        action: createOrEditProfileThunk.typePrefix,
         description: isRegistered
           ? i18n.t('editProfile')
           : i18n.t('saveProfile')
@@ -120,9 +127,11 @@ export const createOrEditProfile = createAsyncThunk<void, CreateProfilePayload>(
 
       toast.info(i18n.t(isRegistered ? 'profileEdited' : 'profileCreated'));
 
-      await dispatch(loadProfileRoles(editedWalletAddress || walletAddress));
+      await dispatch(
+        loadProfileRolesThunk(editedWalletAddress || walletAddress)
+      );
 
-      // dispatch(push(`/${editedWalletAddress || walletAddress}`));
+      navigate(`/${editedWalletAddress || walletAddress}`);
     } catch (error: any) {
       console.error(error);
       toast.error(error.message);
@@ -131,13 +140,89 @@ export const createOrEditProfile = createAsyncThunk<void, CreateProfilePayload>(
   }
 );
 
-export const loadProfile = createAsyncThunk(
+export const loadProfile = async ({
+  walletAddressOrId,
+  networkApi
+}: {
+  walletAddressOrId: string | number;
+  networkApi: NetworkApi;
+}) => {
+  try {
+    const isById = typeof walletAddressOrId === 'number';
+
+    let walletAddress: string;
+
+    if (isById) {
+      const walletAddressHex: string = await networkApi.executeCall(
+        AddressApi.textAddressToHex(abis.profiles.address),
+        'getRegisteredUser',
+        [walletAddressOrId],
+        abis.profiles.abi
+      );
+      if (walletAddressHex) {
+        walletAddress = AddressApi.hexToTextAddress(
+          AddressApi.evmAddressToHexAddress(walletAddressHex)
+        );
+      } else throw new Error('no getRegisteredUser');
+    } else {
+      walletAddress = walletAddressOrId;
+    }
+
+    const [
+      firstNameHex,
+      lastNameHex,
+      emailHex,
+      createdAtHex,
+      updatedAtHex,
+      photoHashHex
+    ]: `0x${string}`[] = await networkApi.executeCall(
+      AddressApi.textAddressToHex(abis.profiles.address),
+      isById ? 'getProfileData' : 'getAddrProfileData',
+      [
+        isById
+          ? walletAddressOrId
+          : AddressApi.textAddressToEvmAddress(walletAddressOrId),
+        [
+          ProfileField.firstName,
+          ProfileField.lastName,
+          ProfileField.email,
+          ProfileField.createdAt,
+          ProfileField.updatedAt,
+          ProfileField.photoHash
+        ]
+      ],
+      abis.profiles.abi
+    );
+
+    const firstName = hexToString(firstNameHex);
+    const lastName = hexToString(lastNameHex);
+    const email = hexToString(emailHex);
+
+    const photoHash = hexToString(photoHashHex);
+
+    const createdAt = parseInt(createdAtHex, 16);
+    const updatedAt = parseInt(updatedAtHex, 16);
+
+    const profile = {
+      walletAddress,
+      firstName,
+      lastName,
+      email,
+      createdAt,
+      updatedAt,
+      photoHash
+    };
+
+    return profile;
+  } catch (error: any) {
+    console.error(error);
+  }
+};
+
+export const loadProfileThunk = createAsyncThunk<Profile, LoadProfilePayload>(
   'profile/loadProfile',
   async (
-    {
-      walletAddressOrId,
-      isSetProfile
-    }: { walletAddressOrId: string | number; isSetProfile?: boolean },
+    { walletAddressOrId, isSetProfile },
     { getState, dispatch, rejectWithValue }
   ) => {
     try {
@@ -154,7 +239,6 @@ export const loadProfile = createAsyncThunk(
           [walletAddressOrId],
           abis.profiles.abi
         );
-
         if (walletAddressHex) {
           walletAddress = AddressApi.hexToTextAddress(
             AddressApi.evmAddressToHexAddress(walletAddressHex)
@@ -216,18 +300,20 @@ export const loadProfile = createAsyncThunk(
       return profile;
     } catch (error: any) {
       console.error(error);
-      toast.error(error.message);
       return rejectWithValue(error.message);
     }
   }
 );
 
-export const loadUserProfile = createAsyncThunk<void, string>(
-  'profile/loadProfile',
-  async (walletAddress, { dispatch }) => {
-    const profile = await dispatch(
-      loadProfile({ walletAddressOrId: walletAddress })
-    ).unwrap();
+export const loadUserProfileThunk = createAsyncThunk<void, string>(
+  'profile/loadUserProfile',
+  async (walletAddress, { dispatch, getState }) => {
+    const state = getState() as RootState;
+    const networkApi = getNetworkApi(state) as NetworkApi;
+    const profile = await loadProfile({
+      walletAddressOrId: walletAddress,
+      networkApi
+    });
     if (profile) {
       dispatch(setUserProfile(profile));
     } else {
@@ -236,7 +322,7 @@ export const loadUserProfile = createAsyncThunk<void, string>(
   }
 );
 
-export const loadProfiles = createAsyncThunk(
+export const loadProfilesThunk = createAsyncThunk(
   'profiles/loadProfiles',
   async (
     {
@@ -249,7 +335,7 @@ export const loadProfiles = createAsyncThunk(
   ) => {
     try {
       const state = getState() as RootState;
-      const networkApi = getNetworkApi(state)!;
+      const networkApi = getNetworkApi(state) as NetworkApi;
 
       const requiredRoles = [];
       const deniedRoles = [];
@@ -305,9 +391,7 @@ export const loadProfiles = createAsyncThunk(
 
       const profiles = await Promise.all(
         ids.map((idBigInt) =>
-          dispatch(
-            loadProfile({ walletAddressOrId: idBigInt.toString() })
-          ).unwrap()
+          loadProfile({ walletAddressOrId: Number(idBigInt), networkApi })
         )
       );
 

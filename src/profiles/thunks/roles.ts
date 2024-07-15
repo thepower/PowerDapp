@@ -17,7 +17,7 @@ import { objectToString } from 'sso/utils';
 import { UserLevelResponse } from 'tariffs/types';
 import { AddActionOnSuccessAndErrorType } from 'typings/common';
 
-export const grantRole = createAsyncThunk<
+export const grantRoleThunk = createAsyncThunk<
   void,
   AddActionOnSuccessAndErrorType<GrantRolePayload>
 >(
@@ -89,7 +89,7 @@ export const grantRole = createAsyncThunk<
 
       const grantRoleRes = await signTxWithPopup({
         data,
-        action: grantRole.typePrefix,
+        action: grantRoleThunk.typePrefix,
         description: i18n.t('grantRole')
       });
 
@@ -102,7 +102,7 @@ export const grantRole = createAsyncThunk<
   }
 );
 
-export const revokeRole = createAsyncThunk<
+export const revokeRoleThunk = createAsyncThunk<
   void,
   AddActionOnSuccessAndErrorType<RevokeRolePayload>
 >(
@@ -132,7 +132,7 @@ export const revokeRole = createAsyncThunk<
 
       const revokeRoleRes = await signTxWithPopup({
         data,
-        action: revokeRole.typePrefix
+        action: revokeRoleThunk.typePrefix
       });
 
       if (!revokeRoleRes?.txId) throw new Error('!revokeRoleRes?.txId');
@@ -144,9 +144,9 @@ export const revokeRole = createAsyncThunk<
   }
 );
 
-export const loadProfileRoles = createAsyncThunk(
+export const loadProfileRolesThunk = createAsyncThunk<UserRole[], string>(
   'roles/loadProfileRoles',
-  async (walletAddress: string, { getState, dispatch }) => {
+  async (walletAddress, { getState, dispatch }) => {
     try {
       const state = getState() as RootState;
       const networkApi = getNetworkApi(state)!;
@@ -174,7 +174,11 @@ export const loadProfileRoles = createAsyncThunk(
         abis.profiles.abi
       );
 
-      dispatch(setProfilesRoles(roles.filter((_, i) => profileRoles[i])));
+      const rolesWithId = roles.filter((_, i) => profileRoles[i]);
+
+      dispatch(setProfilesRoles(rolesWithId));
+
+      return rolesWithId;
     } catch (error: any) {
       throw new Error(
         error.message || 'An error occurred while loading profile roles'

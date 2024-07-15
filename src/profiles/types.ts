@@ -1,3 +1,4 @@
+import { NavigateFunction } from 'react-router-dom';
 import { UserRole } from './constants';
 
 export type CreateProfilePayload = {
@@ -6,13 +7,18 @@ export type CreateProfilePayload = {
   email: string;
   photo: File;
   editedWalletAddress?: string;
+  navigate: NavigateFunction;
 };
 
-export type Profile = Omit<CreateProfilePayload, 'photo'> & {
+export type Profile = Omit<CreateProfilePayload, 'photo' | 'navigate'> & {
   walletAddress: string;
   photoHash: string;
   createdAt: number;
   updatedAt: number;
+};
+export type LoadProfilePayload = {
+  walletAddressOrId: string | number;
+  isSetProfile?: boolean;
 };
 
 export type LoadProfilesPayload = {

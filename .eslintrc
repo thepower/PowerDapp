@@ -85,7 +85,7 @@
     "react/jsx-wrap-multilines": "off",
     "react/destructuring-assignment": "off",
     "no-shadow": "off",
-    "@typescript-eslint/no-shadow": ["warn"],
+    "@typescript-eslint/no-shadow": "off",
     "react/no-array-index-key": "off"
   }
 }

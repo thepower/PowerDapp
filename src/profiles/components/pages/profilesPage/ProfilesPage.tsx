@@ -17,23 +17,23 @@ import {
   getProfiles,
   getProfilesCount
 } from 'profiles/selectors/profilesSelectors';
-import { loadProfiles } from 'profiles/thunks/profiles';
-import { grantRole, revokeRole } from 'profiles/thunks/roles';
+import { loadProfilesThunk } from 'profiles/thunks/profiles';
+import { grantRoleThunk, revokeRoleThunk } from 'profiles/thunks/roles';
 
 import { Profile, ProfileFilterStatus } from 'profiles/types';
 import styles from './ProfilesPage.module.scss';
 
 const mapDispatchToProps = {
-  loadProfiles,
-  grantRole,
-  revokeRole
+  loadProfilesThunk,
+  grantRoleThunk,
+  revokeRoleThunk
 };
 
 const mapStateToProps = (state: RootState) => ({
   profiles: getProfiles(state),
   profilesCount: getProfilesCount(state),
   walletAddress: getWalletAddress(state),
-  isGetProfilesLoading: checkIfLoading(state, loadProfiles.typePrefix)
+  isGetProfilesLoading: checkIfLoading(state, loadProfilesThunk.typePrefix)
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -42,10 +42,10 @@ type ProfilesPageComponentProps = ConnectedProps<typeof connector>;
 const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
   profiles,
   profilesCount,
-  loadProfiles,
+  loadProfilesThunk,
   isGetProfilesLoading,
-  grantRole,
-  revokeRole
+  grantRoleThunk,
+  revokeRoleThunk
 }) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
@@ -54,7 +54,7 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
   const [status, setStatus] = useState<ProfileFilterStatus>('REGISTERED');
 
   useEffect(() => {
-    loadProfiles({
+    loadProfilesThunk({
       page,
       pageSize,
       isReversed,
@@ -84,11 +84,11 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
   };
 
   const handleClickAcceptButton = (walletAddress: string) => {
-    grantRole({
+    grantRoleThunk({
       role: UserRole.VERIFIED_USER,
       walletAddress,
       additionalActionOnSuccess: () => {
-        loadProfiles({
+        loadProfilesThunk({
           page: 0,
           pageSize,
           isReversed,
@@ -99,11 +99,11 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
   };
 
   const handleRevokeVerifiedButton = (walletAddress: string) => {
-    revokeRole({
+    revokeRoleThunk({
       role: UserRole.VERIFIED_USER,
       walletAddress,
       additionalActionOnSuccess: () => {
-        loadProfiles({
+        loadProfilesThunk({
           page: 0,
           pageSize,
           isReversed,
@@ -114,11 +114,11 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
   };
 
   const handleClickRejectButton = (walletAddress: string) => {
-    grantRole({
+    grantRoleThunk({
       role: UserRole.LOCKED_USER,
       walletAddress,
       additionalActionOnSuccess: () => {
-        loadProfiles({
+        loadProfilesThunk({
           page: 0,
           pageSize,
           isReversed,
@@ -129,11 +129,11 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
   };
 
   const handleClickUnlockButton = (walletAddress: string) => {
-    revokeRole({
+    revokeRoleThunk({
       role: UserRole.LOCKED_USER,
       walletAddress,
       additionalActionOnSuccess: () => {
-        loadProfiles({
+        loadProfilesThunk({
           page: 0,
           pageSize,
           isReversed,
@@ -143,7 +143,7 @@ const ProfilesPageComponent: React.FC<ProfilesPageComponentProps> = ({
     });
   };
 
-  const isLoading = isGetProfilesLoading || !profiles.length;
+  const isLoading = isGetProfilesLoading;
 
   const renderProfiles = useCallback(() => {
     const buttons = (profile: Profile) => {

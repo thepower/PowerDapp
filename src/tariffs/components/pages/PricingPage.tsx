@@ -8,7 +8,7 @@ import { Layout } from 'common';
 import { checkIfLoading } from 'network/selectors';
 import { getIsVerified } from 'profiles/selectors/rolesSelectors';
 import { getUserTariffLevel } from 'tariffs/selectors/tariffsSelectors';
-import { payTariff } from 'tariffs/thunks/tariffs';
+import { payTariffThunk } from 'tariffs/thunks/tariffs';
 import styles from './PricingPage.module.scss';
 import { TariffCard } from '../tariffCard/TariffCard';
 
@@ -38,13 +38,13 @@ const tariffs = [
 ];
 
 const mapDispatchToProps = {
-  payTariff
+  payTariffThunk
 };
 
 const mapStateToProps = (state: RootState) => ({
   userTariffLevel: getUserTariffLevel(state),
   walletAddress: getWalletAddress(state),
-  isPayTariffLoading: checkIfLoading(state, payTariff.typePrefix),
+  isPayTariffLoading: checkIfLoading(state, payTariffThunk.typePrefix),
   isVerified: getIsVerified(state)
 });
 
@@ -55,7 +55,7 @@ type PricingPageComponentProps = ConnectedProps<typeof connector>;
 const PricingPageComponent: React.FC<PricingPageComponentProps> = ({
   walletAddress,
   userTariffLevel,
-  payTariff,
+  payTariffThunk,
   isPayTariffLoading,
   isVerified
 }) => {
@@ -66,7 +66,7 @@ const PricingPageComponent: React.FC<PricingPageComponentProps> = ({
   const isSecondTariffActive = userTariffLevel?.foundLevel === 2;
 
   const onClickChooseTariff = (tariffId: number) => {
-    payTariff({ tariffId, walletAddress });
+    payTariffThunk({ tariffId, walletAddress });
   };
 
   return (

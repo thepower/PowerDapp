@@ -16,7 +16,7 @@ import { Layout, Pagination, Button, Filter } from 'common';
 import { checkIfLoading } from 'network/selectors';
 import { nftCategoriesForSelect } from 'NFTs/constants';
 import { getNFTs, getNFTsCount } from 'NFTs/selectors/NFTsSelectors';
-import { loadNFTs } from 'NFTs/thunks/NFTs';
+import { loadNFTsThunk } from 'NFTs/thunks/NFTs';
 import {
   FilterModerationStatus,
   FilterCategory,
@@ -32,14 +32,14 @@ import styles from './NFTsPage.module.scss';
 import { NFTCard } from '../../NFTCard/NFTCard';
 
 const mapDispatchToProps = {
-  loadNFTs
+  loadNFTsThunk
 };
 
 const mapStateToProps = (state: RootState) => ({
   walletAddress: getWalletAddress(state),
   NFTs: getNFTs(state),
   NFTsCount: getNFTsCount(state),
-  isGetNFTssLoading: checkIfLoading(state, loadNFTs.typePrefix),
+  isGetNFTssLoading: checkIfLoading(state, loadNFTsThunk.typePrefix),
   isRegistered: getIsRegistered(state),
   isModerator: getIsModerator(state),
   isAuthor: getIsVerified(state)
@@ -54,7 +54,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
   NFTs,
   NFTsCount,
   isGetNFTssLoading,
-  loadNFTs,
+  loadNFTsThunk,
   isDraft,
   isModerator,
   isAuthor,
@@ -72,12 +72,9 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
   const [nameOfDAO, setNameOfDAO] = useState<FilterNameOfDAO>('all');
 
   const isDraftBool = useMemo(() => NFTStatus === 'draft', [NFTStatus]);
-  console.log({
-    load: isGetNFTssLoading,
-    name: loadNFTs
-  });
+
   useEffect(() => {
-    loadNFTs({
+    loadNFTsThunk({
       page,
       pageSize,
       isReversed,
@@ -93,7 +90,6 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
     moderationStatus,
     category,
     isDraft,
-    loadNFTs,
     nameOfDAO,
     isDraftBool
   ]);
@@ -126,10 +122,10 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
     setIsReversed(!isReversed);
   };
 
-  const isLoading = isGetNFTssLoading || !NFTs.length;
+  const isLoading = isGetNFTssLoading;
 
-  const onClickCategory = (category: string) => {
-    setCategory(category);
+  const onClickCategory = (value: string) => {
+    setCategory(value);
   };
 
   const renderCards = useCallback(() => {

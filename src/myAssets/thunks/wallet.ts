@@ -4,7 +4,7 @@ import { getWalletAddress } from '../../account/selectors/accountSelectors';
 import { getWalletApi } from '../../application/selectors';
 import { setWalletBalanceData } from '../slices/walletSlice';
 
-export const loadBalance = createAsyncThunk(
+export const loadBalanceThunk = createAsyncThunk(
   'wallet/loadBalance',
   async (_, { getState, dispatch, rejectWithValue }) => {
     const state = getState() as RootState;

@@ -14,7 +14,7 @@ import { Layout, Pagination, Filter } from 'common';
 import { checkIfLoading } from 'network/selectors';
 import { nftCategoriesForSelect } from 'NFTs/constants';
 import { getNFTs, getNFTsCount } from 'NFTs/selectors/NFTsSelectors';
-import { loadNFTs } from 'NFTs/thunks/NFTs';
+import { loadNFTsThunk } from 'NFTs/thunks/NFTs';
 import {
   FilterModerationStatus,
   FilterCategory,
@@ -26,13 +26,13 @@ import styles from './DAONFTsPage.module.scss';
 import { NFTCard } from '../../NFTCard/NFTCard';
 
 const mapDispatchToProps = {
-  loadNFTs
+  loadNFTsThunk
 };
 
 const mapStateToProps = (state: RootState) => ({
   NFTs: getNFTs(state),
   NFTsCount: getNFTsCount(state),
-  isGetNFTsLoading: checkIfLoading(state, loadNFTs.typePrefix),
+  isGetNFTsLoading: checkIfLoading(state, loadNFTsThunk.typePrefix),
   isModerator: getIsModerator(state)
 });
 
@@ -43,7 +43,7 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
   NFTs,
   NFTsCount,
   isGetNFTsLoading,
-  loadNFTs,
+  loadNFTsThunk,
   isModerator
 }) => {
   const { t } = useTranslation();
@@ -63,7 +63,7 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
 
   useEffect(() => {
     if (daoSlugParam) {
-      loadNFTs({
+      loadNFTsThunk({
         page,
         pageSize,
         isReversed,
@@ -79,7 +79,6 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
     isReversed,
     moderationStatus,
     category,
-    loadNFTs,
     daoSlugParam,
     isDraftBool
   ]);
@@ -104,7 +103,7 @@ const DAONFTsPageComponent: React.FC<DAONFTsPageComponentProps> = ({
     setIsReversed(!isReversed);
   };
 
-  const isLoading = isGetNFTsLoading || !NFTs.length;
+  const isLoading = isGetNFTsLoading;
 
   const renderOrg = useCallback(() => {
     const org = daos?.find((org) => org.slug === daoSlugParam);

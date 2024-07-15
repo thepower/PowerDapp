@@ -14,7 +14,7 @@ import { objectToString } from 'sso/utils';
 import { setBillData, setUserTariffLevel } from 'tariffs/slice/tariffSlice';
 import { UserLevelResponse } from 'tariffs/types';
 
-export const loadTariffLevel = createAsyncThunk(
+export const loadTariffLevelThunk = createAsyncThunk(
   'tariffs/loadTariffLevel',
   async (walletAddress: string, { rejectWithValue, getState }) => {
     try {
@@ -42,7 +42,7 @@ export const loadTariffLevel = createAsyncThunk(
   }
 );
 
-export const loadUserTariffLevel = createAsyncThunk(
+export const loadUserTariffLevelThunk = createAsyncThunk(
   'tariffs/loadUserTariffLevel',
   async (walletAddress: string, { rejectWithValue, getState, dispatch }) => {
     try {
@@ -72,7 +72,7 @@ export const loadUserTariffLevel = createAsyncThunk(
   }
 );
 
-export const activeFreeTariff = createAsyncThunk(
+export const activeFreeTariffThunk = createAsyncThunk(
   'tariffs/activeFreeTariff',
   async (walletAddress: string, { rejectWithValue, dispatch, getState }) => {
     try {
@@ -111,14 +111,14 @@ export const activeFreeTariff = createAsyncThunk(
 
       const createProfileResponse = await signTxWithPopup({
         data,
-        action: activeFreeTariff.typePrefix,
+        action: activeFreeTariffThunk.typePrefix,
         description: i18n.t('mintFreeTariffNFT')
       });
 
       if (!createProfileResponse.txId)
         throw new Error('!activeFreeTariff.txId');
 
-      await dispatch(loadUserTariffLevel(walletAddress)).unwrap();
+      await dispatch(loadUserTariffLevelThunk(walletAddress));
 
       toast.info(i18n.t('tariffActivated'));
     } catch (error: any) {
@@ -128,7 +128,7 @@ export const activeFreeTariff = createAsyncThunk(
     }
   }
 );
-export const payTariff = createAsyncThunk(
+export const payTariffThunk = createAsyncThunk(
   'tariffs/payTariff',
   async (
     { walletAddress, tariffId }: { walletAddress: string; tariffId: number },

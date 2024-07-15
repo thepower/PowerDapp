@@ -19,7 +19,7 @@ import { Layout, Pagination, Button, Filter } from 'common';
 import { checkIfLoading } from 'network/selectors';
 import { nftCategoriesForSelect, userTariffLevelMap } from 'NFTs/constants';
 import { getNFTs, getNFTsCount } from 'NFTs/selectors/NFTsSelectors';
-import { loadNFT, loadNFTs } from 'NFTs/thunks/NFTs';
+import { loadNFTsThunk } from 'NFTs/thunks/NFTs';
 import {
   FilterModerationStatus,
   FilterCategory,
@@ -33,23 +33,23 @@ import {
   getIsRegistered
 } from 'profiles/selectors/rolesSelectors';
 import { getTariffLevel } from 'tariffs/selectors/tariffsSelectors';
-import { loadTariffLevel } from 'tariffs/thunks/tariffs';
+import { loadTariffLevelThunk } from 'tariffs/thunks/tariffs';
 import styles from './AuthorNFTsPage.module.scss';
-import { loadProfile } from '../../../../profiles/thunks/profiles';
+import { loadProfileThunk } from '../../../../profiles/thunks/profiles';
 import { NFTCard } from '../../NFTCard/NFTCard';
 
 const mapDispatchToProps = {
-  loadNFTs,
-  loadProfile,
-  loadTariffLevel
+  loadProfileThunk,
+  loadTariffLevelThunk,
+  loadNFTsThunk
 };
 
 const mapStateToProps = (state: RootState) => ({
   walletAddress: getWalletAddress(state),
   NFTs: getNFTs(state),
   NFTsCount: getNFTsCount(state),
-  isGetNFTsLoading: checkIfLoading(state, loadNFT.typePrefix),
-  isProfileLoading: checkIfLoading(state, loadProfile.typePrefix),
+  isGetNFTsLoading: checkIfLoading(state, loadNFTsThunk.typePrefix),
+  isProfileLoading: checkIfLoading(state, loadProfileThunk.typePrefix),
   profile: getProfile(state),
   isRegistered: getIsRegistered(state),
   isModerator: getIsModerator(state),
@@ -64,11 +64,11 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
   NFTs,
   NFTsCount,
   isGetNFTsLoading,
-  loadNFTs,
+  loadNFTsThunk,
   walletAddress,
   profile,
-  loadProfile,
-  loadTariffLevel,
+  loadProfileThunk,
+  loadTariffLevelThunk,
   isModerator,
   isProfileLoading,
   isAuthor,
@@ -95,7 +95,7 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
   }>();
 
   useEffect(() => {
-    loadNFTs({
+    loadNFTsThunk({
       page,
       pageSize,
       isReversed,
@@ -113,19 +113,18 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
     category,
     walletAddressParam,
     nameOfDAOSlug,
-    isDraftBool,
-    loadNFTs
+    isDraftBool
   ]);
 
   useEffect(() => {
     if (walletAddressParam) {
-      loadProfile({
+      loadProfileThunk({
         walletAddressOrId: walletAddressParam,
         isSetProfile: true
       });
-      loadTariffLevel(walletAddressParam);
+      loadTariffLevelThunk(walletAddressParam);
     }
-  }, [loadProfile, loadTariffLevel, walletAddressParam]);
+  }, [walletAddressParam]);
 
   useEffect(() => {
     setPage(0);
@@ -147,7 +146,7 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
     setIsReversed(!isReversed);
   };
 
-  const isLoading = isGetNFTsLoading || !NFTs.length;
+  const isLoading = isGetNFTsLoading;
 
   const authorName = `${profile?.firstName} ${profile?.lastName}`;
   const profileImgUrl = `${getLoadDataUrl(
@@ -240,10 +239,8 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
     isShowEmail
   ]);
 
-  const renderHead = useCallback(() => renderProfile(), [renderProfile]);
-
-  const onClickCategory = (category: string) => {
-    setCategory(category);
+  const onClickCategory = (value: string) => {
+    setCategory(value);
   };
 
   const renderCards = useCallback(() => {
@@ -300,7 +297,7 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
   return (
     <Layout>
       <div className={styles.content}>
-        {renderHead()}
+        {renderProfile()}
         <div className={styles.row}>
           <div className={styles.col}>
             {isRegistered && (

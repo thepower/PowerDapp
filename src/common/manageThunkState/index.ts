@@ -15,10 +15,13 @@ export const manageThunkStateMiddleware: ThunkMiddleware<RootState> =
     if (isAsyncThunkAction(action)) {
       const name = action.type.split('/').slice(0, 2).join('/');
       if (isPending(action)) {
-        dispatch(startAction({ name, requestId: action.meta.requestId }));
-      } else if (isFulfilled(action)) {
-        dispatch(stopAction({ name, requestId: action.meta.requestId }));
-      } else if (isRejected(action)) {
+        dispatch(
+          startAction({
+            name,
+            requestId: action.meta.requestId
+          })
+        );
+      } else if (isFulfilled(action) || isRejected(action)) {
         dispatch(stopAction({ name, requestId: action.meta.requestId }));
       }
     }

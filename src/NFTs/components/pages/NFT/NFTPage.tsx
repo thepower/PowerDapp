@@ -37,10 +37,14 @@ import {
 } from 'common';
 import hooks from 'hooks';
 import { getMessages } from 'messages/selectors/messagesSelectors';
-import { postMessage, loadMessages } from 'messages/thunks/messages';
+import { postMessageThunk, loadMessagesThunk } from 'messages/thunks/messages';
 import { checkIfLoading } from 'network/selectors';
 import { getNFT } from 'NFTs/selectors/NFTsSelectors';
-import { approveOrRejectNFT, publishNFT, loadNFT } from 'NFTs/thunks/NFTs';
+import {
+  approveOrRejectNFTThunk,
+  publishNFTThunk,
+  loadNFTThunk
+} from 'NFTs/thunks/NFTs';
 import {
   getIsGeneralEditor,
   getIsModerator,
@@ -49,20 +53,20 @@ import {
 import styles from './NFTPage.module.scss';
 
 const mapDispatchToProps = {
-  loadNFT,
-  loadMessages,
-  postMessage,
-  approveOrRejectNFT,
-  publishNFT
+  loadNFTThunk,
+  loadMessagesThunk,
+  postMessageThunk,
+  approveOrRejectNFTThunk,
+  publishNFTThunk
 };
 
 const mapStateToProps = (state: RootState) => {
   return {
     NFT: getNFT(state),
-    isNFTLoading: checkIfLoading(state, loadNFT.typePrefix),
-    isLoadMessagesLoading: checkIfLoading(state, loadMessages.typePrefix),
-    isPostMessageLoading: checkIfLoading(state, postMessage.typePrefix),
-    isPublishNFTLoading: checkIfLoading(state, publishNFT.typePrefix),
+    isNFTLoading: checkIfLoading(state, loadNFTThunk.typePrefix),
+    isLoadMessagesLoading: checkIfLoading(state, loadMessagesThunk.typePrefix),
+    isPostMessageLoading: checkIfLoading(state, postMessageThunk.typePrefix),
+    isPublishNFTLoading: checkIfLoading(state, publishNFTThunk.typePrefix),
     messages: getMessages(state),
     isModerator: getIsModerator(state),
     isAuthor: getIsVerified(state),
@@ -82,19 +86,19 @@ const initialValues = {
 type InitialValues = typeof initialValues;
 
 const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
-  loadNFT,
+  loadNFTThunk,
   NFT,
   messages,
   isNFTLoading,
   isLoadMessagesLoading,
   isPostMessageLoading,
-  loadMessages,
-  postMessage,
+  loadMessagesThunk,
+  postMessageThunk,
   isModerator,
   isUserGeneralEditor,
   walletAddress,
-  approveOrRejectNFT,
-  publishNFT,
+  approveOrRejectNFTThunk,
+  publishNFTThunk,
   isPublishNFTLoading,
   isAuthor
 }) => {
@@ -111,19 +115,19 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
   const id = idAndSlug?.match(/^\d+/)?.[0];
   const isDraft = !!draft;
 
-  const NFTID = useMemo(
+  const nftId = useMemo(
     () => (isDraft ? NFT?.id : NFT?.originTokenId),
     [NFT?.id, NFT?.originTokenId, isDraft]
   );
 
   useEffect(() => {
     if (id) {
-      loadNFT({ id, isDraft, isSetNFT: true });
+      loadNFTThunk({ id, isDraft });
     }
-    if (NFTID) {
-      loadMessages(NFTID);
+    if (nftId) {
+      loadMessagesThunk(nftId);
     }
-  }, [id, isDraft, loadNFT, loadMessages, NFTID]);
+  }, [id, isDraft, loadNFTThunk, loadMessagesThunk, nftId]);
 
   const nameOfDAO = useMemo(
     () => daos?.find(({ slug }) => slug === NFT?.nameOfDAOSlug)?.name,
@@ -141,14 +145,14 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
     { message }: InitialValues,
     formikHelpers: FormikHelpers<InitialValues>
   ) => {
-    if (message && NFTID) {
-      postMessage({
-        NFTID,
+    if (message && nftId) {
+      postMessageThunk({
+        nftId,
         message,
         additionalActionOnSuccess: () => {
           formikHelpers.resetForm();
-          if (NFTID) {
-            loadMessages(NFTID);
+          if (nftId) {
+            loadMessagesThunk(nftId);
           }
         }
       });
@@ -162,10 +166,10 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
   });
 
   const imgUrl = useMemo(() => {
-    const link = `${getLoadDataUrl(NFTID?.toString())}/${NFT?.imageHash}`;
+    const link = `${getLoadDataUrl(nftId?.toString())}/${NFT?.imageHash}`;
 
     return link;
-  }, [NFT?.imageHash, NFTID]);
+  }, [NFT?.imageHash, nftId]);
 
   const renderForm = () => {
     const messageLength = formik.values.message.length;
@@ -317,19 +321,19 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
 
   const handleClickApproveButton = () => {
     if (id) {
-      approveOrRejectNFT({ id: +id, isApproved: true });
+      approveOrRejectNFTThunk({ id: +id, isApproved: true });
     }
   };
 
   const handleClickRejectButton = () => {
     if (id) {
-      approveOrRejectNFT({ id: +id, isApproved: false });
+      approveOrRejectNFTThunk({ id: +id, isApproved: false });
     }
   };
 
   const handleClickPublishButton = () => {
     if (id) {
-      publishNFT({ id });
+      publishNFTThunk({ id });
     }
   };
 

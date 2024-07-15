@@ -1,3 +1,5 @@
+import { NavigateFunction } from 'react-router-dom';
+
 export interface NFT {
   id: number;
   language: string;
@@ -27,10 +29,11 @@ export type MintNftPayload = Omit<NFT, 'id' | 'image'>;
 export type SaveNFTDataPayload = Omit<
   NFT,
   'language' | 'category' | 'description' | 'goalAmount' | 'nameOfDAOSlug'
->;
+> & { navigate: NavigateFunction };
 
 export type EditNFTPayload = NFT & {
   walletAddress?: string;
+  navigate: NavigateFunction;
 };
 
 export type LoadNFTsPayload = {

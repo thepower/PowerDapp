@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AddressApi } from '@thepowereco/tssdk';
+import { AddressApi, NetworkApi } from '@thepowereco/tssdk';
 import { encodeFunction } from '@thepowereco/tssdk/dist/helpers/abi.helper';
 import { compact } from 'lodash';
 import { toast } from 'react-toastify';
-// import slugify from 'slugify';
+import slugify from 'slugify';
 import {
   hexToBytes,
   hexToString,
@@ -34,7 +34,7 @@ import { loadProfile } from 'profiles/thunks/profiles';
 import { objectToString } from 'sso/utils';
 import { AddActionOnSuccessAndErrorType } from 'typings/common';
 
-export const mintNft = createAsyncThunk<
+export const mintNftThunk = createAsyncThunk<
   void,
   AddActionOnSuccessAndErrorType<MintNftPayload>
 >(
@@ -89,7 +89,7 @@ export const mintNft = createAsyncThunk<
       const mintRes = await signTxWithPopup<MintTxResponse>({
         data,
         description: i18n.t('mintNft'),
-        action: mintNft.typePrefix
+        action: mintNftThunk.typePrefix
       });
 
       if (!mintRes?.txId && typeof mintRes?.retval !== 'number')
@@ -104,12 +104,15 @@ export const mintNft = createAsyncThunk<
   }
 );
 
-export const loadNFT = createAsyncThunk<
-  CreatedNFT,
-  { id: string; isDraft?: boolean; isSetNFT?: boolean }
->('nfts/loadNFT', async ({ id, isDraft, isSetNFT }, { getState, dispatch }) => {
-  const state = getState() as RootState;
-  const networkApi = getNetworkApi(state);
+export const loadNFT = async ({
+  id,
+  isDraft,
+  networkApi
+}: {
+  id: string;
+  isDraft?: boolean;
+  networkApi: NetworkApi;
+}) => {
   const NFTsAbi = isDraft ? abis.NFTs.abi : abis.indexNFTs.abi;
   const NFTsAddress = isDraft ? abis.NFTs.address : abis.indexNFTs.address;
 
@@ -174,9 +177,10 @@ export const loadNFT = createAsyncThunk<
 
   const imageHash = hexToString(imageHashHex);
 
-  const profile = await dispatch(
-    loadProfile({ walletAddressOrId: walletAddress })
-  ).unwrap();
+  const profile = await loadProfile({
+    walletAddressOrId: walletAddress,
+    networkApi
+  });
 
   const nft = {
     id: +id,
@@ -199,26 +203,29 @@ export const loadNFT = createAsyncThunk<
     publishedAt
   };
 
-  if (isSetNFT) {
-    dispatch(setNFT(nft));
-  }
+  return nft;
+};
+
+export const loadNFTThunk = createAsyncThunk<
+  CreatedNFT,
+  { id: string; isDraft?: boolean }
+>('nfts/loadNFT', async ({ id, isDraft }, { getState, dispatch }) => {
+  const state = getState() as RootState;
+  const networkApi = getNetworkApi(state) as NetworkApi;
+
+  const nft = await loadNFT({ id, isDraft, networkApi });
+
+  dispatch(setNFT(nft));
 
   return nft;
 });
 
-export const saveNFTData = createAsyncThunk<void, SaveNFTDataPayload>(
+export const saveNFTDataThunk = createAsyncThunk<void, SaveNFTDataPayload>(
   'nfts/saveNFTData',
-  async (
-    {
-      id,
-      image
-      //  theme
-    },
-    { dispatch }
-  ) => {
+  async ({ id, image, theme, navigate }, { dispatch, getState }) => {
     try {
-      // const state = getState() as RootState;
-      // const walletAddress = getWalletAddress(state);
+      const state = getState() as RootState;
+      const walletAddress = getWalletAddress(state);
 
       const imageHash = await uploadFile(image, id.toString());
 
@@ -248,7 +255,7 @@ export const saveNFTData = createAsyncThunk<void, SaveNFTDataPayload>(
 
         const setDataRes = await signTxWithPopup({
           data,
-          action: saveNFTData.typePrefix,
+          action: saveNFTDataThunk.typePrefix,
           description: i18n.t('saveNFT')
         });
 
@@ -256,11 +263,11 @@ export const saveNFTData = createAsyncThunk<void, SaveNFTDataPayload>(
 
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
-        // const sluggedTheme = slugify(theme);
+        const sluggedTheme = slugify(theme);
 
-        await dispatch(loadNFT({ id: id.toString(), isDraft: true }));
+        await dispatch(loadNFTThunk({ id: id.toString(), isDraft: true }));
 
-        // dispatch(push(`/${walletAddress}/draft/${id}_${sluggedTheme}`));
+        navigate(`/${walletAddress}/draft/${id}_${sluggedTheme}`);
       }
     } catch (error: any) {
       console.error(error);
@@ -270,7 +277,7 @@ export const saveNFTData = createAsyncThunk<void, SaveNFTDataPayload>(
   }
 );
 
-export const editNFT = createAsyncThunk<void, EditNFTPayload>(
+export const editNFTThunk = createAsyncThunk<void, EditNFTPayload>(
   'nfts/editNFT',
   async (
     {
@@ -280,8 +287,9 @@ export const editNFT = createAsyncThunk<void, EditNFTPayload>(
       nameOfDAOSlug,
       category,
       description,
-      image
-      // walletAddress
+      image,
+      walletAddress,
+      navigate
     },
     { dispatch }
   ) => {
@@ -322,7 +330,7 @@ export const editNFT = createAsyncThunk<void, EditNFTPayload>(
 
         const setDataRes = await signTxWithPopup({
           data,
-          action: editNFT.typePrefix,
+          action: editNFTThunk.typePrefix,
           description: i18n.t('editNFT')
         });
 
@@ -330,11 +338,11 @@ export const editNFT = createAsyncThunk<void, EditNFTPayload>(
 
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
-        // const sluggedTheme = slugify(theme);
+        const sluggedTheme = slugify(theme);
 
-        await dispatch(loadNFT({ id: id.toString(), isDraft: true }));
+        await dispatch(loadNFTThunk({ id: id.toString(), isDraft: true }));
 
-        // dispatch(push(`/${walletAddress}/draft/${id}_${sluggedTheme}`));
+        navigate(`/${walletAddress}/draft/${id}_${sluggedTheme}`);
       }
     } catch (error: any) {
       console.error(error);
@@ -344,7 +352,7 @@ export const editNFT = createAsyncThunk<void, EditNFTPayload>(
   }
 );
 
-export const approveOrRejectNFT = createAsyncThunk<
+export const approveOrRejectNFTThunk = createAsyncThunk<
   void,
   {
     id: number;
@@ -384,7 +392,7 @@ export const approveOrRejectNFT = createAsyncThunk<
 
       const setDataRes = await signTxWithPopup({
         data,
-        action: approveOrRejectNFT.typePrefix,
+        action: approveOrRejectNFTThunk.typePrefix,
         description: isApproved ? i18n.t('rejectNFT') : i18n.t('acceptNFT')
       });
 
@@ -392,7 +400,7 @@ export const approveOrRejectNFT = createAsyncThunk<
 
       toast.info(i18n.t(isApproved ? 'NFTApproved' : 'NFTRejected'));
 
-      await dispatch(loadNFT({ id: id.toString(), isDraft: true })).unwrap();
+      await dispatch(loadNFTThunk({ id: id.toString(), isDraft: true }));
     } catch (error: any) {
       console.error(error);
       toast.error(error.message);
@@ -400,7 +408,8 @@ export const approveOrRejectNFT = createAsyncThunk<
     }
   }
 );
-export const publishNFT = createAsyncThunk<void, { id: string }>(
+
+export const publishNFTThunk = createAsyncThunk<void, { id: string }>(
   'nfts/publishNFT',
   async ({ id }, { getState, rejectWithValue }) => {
     try {
@@ -505,7 +514,7 @@ export const publishNFT = createAsyncThunk<void, { id: string }>(
 
       const indexMintRes = await signTxWithPopup({
         data,
-        action: publishNFT.typePrefix,
+        action: publishNFTThunk.typePrefix,
         description: i18n.t('publishNFT')
       });
       if (!indexMintRes?.txId) throw new Error('!indexMintRes?.txId');
@@ -519,7 +528,7 @@ export const publishNFT = createAsyncThunk<void, { id: string }>(
   }
 );
 
-export const loadNFTs = createAsyncThunk<void, LoadNFTsPayload>(
+export const loadNFTsThunk = createAsyncThunk<void, LoadNFTsPayload>(
   'nfts/loadNFTs',
   async (
     {
@@ -543,7 +552,7 @@ export const loadNFTs = createAsyncThunk<void, LoadNFTsPayload>(
     const NFTsAddress = isLoadDraftNFTs
       ? abis.NFTs.address
       : abis.indexNFTs.address;
-    const networkApi = getNetworkApi(state);
+    const networkApi = getNetworkApi(state) as NetworkApi;
     const filters = [];
 
     if (category !== 'all')
@@ -611,9 +620,11 @@ export const loadNFTs = createAsyncThunk<void, LoadNFTsPayload>(
 
     const NFTs = await Promise.all(
       ids.map((idBigInt) =>
-        dispatch(
-          loadNFT({ id: idBigInt.toString(), isDraft: isLoadDraftNFTs })
-        ).unwrap()
+        loadNFT({
+          id: idBigInt.toString(),
+          isDraft: isLoadDraftNFTs,
+          networkApi
+        })
       )
     );
 

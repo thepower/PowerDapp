@@ -5,7 +5,7 @@ import Dropzone from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 import { ConnectedProps, connect } from 'react-redux';
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { getWalletAddress } from 'account/selectors/accountSelectors';
@@ -19,7 +19,10 @@ import { Layout, OutlinedInput, Button, IconButton } from 'common';
 
 import { checkIfLoading } from 'network/selectors';
 import { getUserProfile } from 'profiles/selectors/profilesSelectors';
-import { createOrEditProfile, loadUserProfile } from 'profiles/thunks/profiles';
+import {
+  createOrEditProfileThunk,
+  loadUserProfileThunk
+} from 'profiles/thunks/profiles';
 import styles from './EditProfilePage.module.scss';
 
 type InitialValues = {
@@ -29,13 +32,13 @@ type InitialValues = {
 };
 
 const mapDispatchToProps = {
-  createOrEditProfile,
-  loadUserProfile
+  createOrEditProfileThunk,
+  loadUserProfileThunk
 };
 
 const mapStateToProps = (state: RootState) => ({
-  isLoading: checkIfLoading(state, loadUserProfile.typePrefix),
-  isSubmitLoading: checkIfLoading(state, createOrEditProfile.typePrefix),
+  isLoading: checkIfLoading(state, loadUserProfileThunk.typePrefix),
+  isSubmitLoading: checkIfLoading(state, createOrEditProfileThunk.typePrefix),
   walletAddress: getWalletAddress(state),
   profile: getUserProfile(state)
 });
@@ -45,8 +48,8 @@ type EditProfilePageComponentProps = ConnectedProps<typeof connector>;
 
 const EditProfilePageComponent: React.FC<EditProfilePageComponentProps> = ({
   profile,
-  createOrEditProfile,
-  loadUserProfile,
+  createOrEditProfileThunk,
+  loadUserProfileThunk,
   isSubmitLoading,
   isLoading,
   walletAddress
@@ -56,6 +59,8 @@ const EditProfilePageComponent: React.FC<EditProfilePageComponentProps> = ({
     lastName: '',
     email: ''
   };
+
+  const navigate = useNavigate();
 
   const { walletAddress: editedWalletAddress } = useParams<{
     walletAddress: string;
@@ -67,8 +72,8 @@ const EditProfilePageComponent: React.FC<EditProfilePageComponentProps> = ({
 
   useEffect(() => {
     if (editedWalletAddress || walletAddress)
-      loadUserProfile(editedWalletAddress || walletAddress);
-  }, [walletAddress, editedWalletAddress, loadUserProfile]);
+      loadUserProfileThunk(editedWalletAddress || walletAddress);
+  }, [walletAddress, editedWalletAddress, loadUserProfileThunk]);
 
   const validationSchema = useMemo(
     () =>
@@ -88,10 +93,11 @@ const EditProfilePageComponent: React.FC<EditProfilePageComponentProps> = ({
 
   const handleSubmit = async (values: InitialValues) => {
     if (!images.length) return toast.error(t('addImageRequestError'));
-    return createOrEditProfile({
+    return createOrEditProfileThunk({
       ...values,
       photo: images[0],
-      editedWalletAddress
+      editedWalletAddress,
+      navigate
     });
   };
 

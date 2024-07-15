@@ -18,16 +18,16 @@ import { AddActionOnSuccessAndErrorType } from 'typings/common';
 
 const { getLStore } = LStoreApi;
 
-export const getUserMessagesAndCount = createAsyncThunk(
+export const getUserMessagesAndCountThunk = createAsyncThunk(
   'chat/getUserMessagesAndCount',
-  async (NFTID: number, { getState, rejectWithValue }) => {
+  async (nftID: number, { getState, rejectWithValue }) => {
     const state = getState() as RootState;
     const networkApi = getNetworkApi(state)! as NetworkApi; // Assuming you have a way to get networkApi from state
 
     try {
       const res: ArrayBuffer = await getLStore(
         abis.chat.address,
-        toBeHex(NFTID),
+        toBeHex(nftID),
         '.mp?bin=raw',
         networkApi
       );
@@ -51,20 +51,20 @@ export const getUserMessagesAndCount = createAsyncThunk(
   }
 );
 
-export const postMessage = createAsyncThunk<
+export const postMessageThunk = createAsyncThunk<
   void,
-  AddActionOnSuccessAndErrorType<{ NFTID: number; message: string }>
+  AddActionOnSuccessAndErrorType<{ nftId: number; message: string }>
 >(
   'chat/postMessage',
   async (
-    { NFTID, message, additionalActionOnSuccess },
+    { nftId, message, additionalActionOnSuccess },
     { rejectWithValue }
   ) => {
     try {
       const encodedFunction = encodeFunction(
         'registerMessage',
         [
-          BigInt(NFTID),
+          BigInt(nftId),
           objectToString({
             v: message,
             t: Date.now()
@@ -90,7 +90,7 @@ export const postMessage = createAsyncThunk<
 
       const registerMessageRes = await signTxWithPopup({
         data,
-        action: postMessage.typePrefix,
+        action: postMessageThunk.typePrefix,
         description: i18n.t('sendMessage')
       });
 
@@ -106,11 +106,13 @@ export const postMessage = createAsyncThunk<
   }
 );
 
-export const loadMessages = createAsyncThunk<void, number>(
+export const loadMessagesThunk = createAsyncThunk<void, number>(
   'chat/loadMessages',
-  async (NFTID, { dispatch, rejectWithValue }) => {
+  async (nftID, { dispatch, rejectWithValue }) => {
     try {
-      const messages = await dispatch(getUserMessagesAndCount(NFTID)).unwrap();
+      const messages = await dispatch(
+        getUserMessagesAndCountThunk(nftID)
+      ).unwrap();
       if (messages) {
         dispatch(setMessages(messages));
       }

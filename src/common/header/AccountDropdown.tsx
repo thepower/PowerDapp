@@ -11,7 +11,7 @@ import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { getWalletAddress } from 'account/selectors/accountSelectors';
-import { resetAccount } from 'account/thunks/account';
+import { resetAccountThunk } from 'account/thunks/account';
 import { getLoadDataUrl } from 'api/openResty';
 import appEnvs from 'appEnvs';
 import { useAppSelector, useAppDispatch } from 'application/hooks';
@@ -19,10 +19,10 @@ import { RoutesEnum } from 'application/typings/routes';
 import { UserIcon, LogInIcon, CoinsStackedIcon } from 'assets/icons';
 
 import { getWalletNativeTokensAmountByID } from 'myAssets/selectors/walletSelectors';
-import { loadBalance } from 'myAssets/thunks/wallet';
+import { loadBalanceThunk } from 'myAssets/thunks/wallet';
 import { getUserProfile } from 'profiles/selectors/profilesSelectors';
 import { getIsVerified } from 'profiles/selectors/rolesSelectors';
-import { loadUserProfile } from 'profiles/thunks/profiles';
+import { loadUserProfileThunk } from 'profiles/thunks/profiles';
 import styles from './AccountDropdown.module.scss';
 
 type AccountDropdownProps = {
@@ -49,12 +49,12 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({
 
   useEffect(() => {
     if (walletAddress) {
-      dispatch(loadUserProfile(walletAddress));
+      dispatch(loadUserProfileThunk(walletAddress));
     }
-  }, [loadUserProfile, walletAddress]);
+  }, [loadUserProfileThunk, walletAddress]);
 
   useEffect(() => {
-    if (walletAddress) dispatch(loadBalance());
+    if (walletAddress) dispatch(loadBalanceThunk());
   }, [walletAddress]);
 
   const open = Boolean(dropdown);
@@ -72,7 +72,7 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({
   };
 
   const onClickPowerLogOut = () => {
-    dispatch(resetAccount());
+    dispatch(resetAccountThunk(navigate));
     handleClose();
   };
 

@@ -1,19 +1,20 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { NetworkApi, WalletApi } from '@thepowereco/tssdk';
+import { NavigateFunction } from 'react-router-dom';
 import { setWalletData } from 'account/slice/accountSlice';
-import { loginToWallet } from 'account/thunks/account';
+import { loginToWalletThunk } from 'account/thunks/account';
 import appEnvs from 'appEnvs';
-import { RootState } from 'application/store';
-import { getIsRegistered } from 'profiles/selectors/rolesSelectors';
-import { loadProfileRoles } from 'profiles/thunks/roles';
-import { loadUserTariffLevel } from 'tariffs/thunks/tariffs';
+import { RoutesEnum } from 'application/typings/routes';
+import { UserRole } from 'profiles/constants';
+import { loadProfileRolesThunk } from 'profiles/thunks/roles';
+import { loadUserTariffLevelThunk } from 'tariffs/thunks/tariffs';
 import { setDynamicApis, setNetworkChains } from '../slice/applicationSlice';
 import { CURRENT_NETWORK } from '../utils/applicationUtils';
 import { getKeyFromApplicationStorage } from '../utils/localStorageUtils';
 
 export const defaultChain = appEnvs.CHAIN_ID;
 
-export const reInitApis = createAsyncThunk<
+export const reInitApisThunk = createAsyncThunk<
   {
     walletApi: WalletApi;
     networkApi: NetworkApi;
@@ -31,22 +32,22 @@ export const reInitApis = createAsyncThunk<
   return { walletApi, networkApi };
 });
 
-export const initApplication = createAsyncThunk(
+export const initApplicationThunk = createAsyncThunk<void, NavigateFunction>(
   'application/initApplication',
-  async (_, { dispatch, getState }) => {
-    const state = getState() as RootState;
-    await dispatch(reInitApis(defaultChain));
+  async (navigate, { dispatch }) => {
+    await dispatch(reInitApisThunk(defaultChain));
 
     let address: string | null = '';
 
     const chains = await NetworkApi.getNetworkChains(CURRENT_NETWORK);
+
     dispatch(setNetworkChains(chains.sort()));
 
     address = await getKeyFromApplicationStorage('address');
 
     if (address) {
       await dispatch(
-        loginToWallet({
+        loginToWalletThunk({
           address
         })
       );
@@ -58,15 +59,15 @@ export const initApplication = createAsyncThunk(
         })
       );
 
-      await dispatch(loadProfileRoles(address));
-      await dispatch(loadUserTariffLevel(address));
+      const roles = await dispatch(loadProfileRolesThunk(address)).unwrap();
+      await dispatch(loadUserTariffLevelThunk(address));
 
-      const isRegistered = getIsRegistered(state);
+      const isRegistered = roles.includes(UserRole.REGISTERED);
 
       if (isRegistered) {
-        // dispatch(push(window.location.pathname));
+        navigate(window.location.pathname);
       } else {
-        // dispatch(push(RoutesEnum.editProfile));
+        navigate(RoutesEnum.editProfile);
       }
     }
   }

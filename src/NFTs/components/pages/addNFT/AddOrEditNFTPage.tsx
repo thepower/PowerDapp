@@ -27,7 +27,12 @@ import {
 import { checkIfLoading } from 'network/selectors';
 import { nftCategoriesForSelect, nftLanguagesForSelect } from 'NFTs/constants';
 import { getNFT } from 'NFTs/selectors/NFTsSelectors';
-import { mintNft, saveNFTData, loadNFT, editNFT } from 'NFTs/thunks/NFTs';
+import {
+  mintNftThunk,
+  saveNFTDataThunk,
+  loadNFTThunk,
+  editNFTThunk
+} from 'NFTs/thunks/NFTs';
 import styles from './AddOrEditNFTPage.module.scss';
 
 const initialValues = {
@@ -41,19 +46,19 @@ const initialValues = {
 type InitialValues = typeof initialValues;
 
 const mapDispatchToProps = {
-  mintNft,
-  saveNFTData,
-  loadNFT,
-  editNFT
+  mintNftThunk,
+  saveNFTDataThunk,
+  loadNFTThunk,
+  editNFTThunk
 };
 
 const mapStateToProps = (state: RootState) => {
   return {
     walletAddress: getWalletAddress(state),
-    isMintNftNFTLoading: checkIfLoading(state, mintNft.typePrefix),
-    isSaveNFTDataLoading: checkIfLoading(state, saveNFTData.typePrefix),
-    isEditNFTLoading: checkIfLoading(state, editNFT.typePrefix),
-    isNFTLoading: checkIfLoading(state, loadNFT.typePrefix),
+    isMintNftNFTLoading: checkIfLoading(state, mintNftThunk.typePrefix),
+    isSaveNFTDataLoading: checkIfLoading(state, saveNFTDataThunk.typePrefix),
+    isEditNFTLoading: checkIfLoading(state, editNFTThunk.typePrefix),
+    isNFTLoading: checkIfLoading(state, loadNFTThunk.typePrefix),
     NFT: getNFT(state)
   };
 };
@@ -62,15 +67,15 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type AddOrEditNFTComponentProps = ConnectedProps<typeof connector>;
 
 const AddOrEditNFTComponent: React.FC<AddOrEditNFTComponentProps> = ({
-  mintNft,
-  saveNFTData,
+  mintNftThunk,
+  saveNFTDataThunk,
   isMintNftNFTLoading,
   isSaveNFTDataLoading,
   isEditNFTLoading,
   isNFTLoading,
   NFT,
-  loadNFT,
-  editNFT
+  loadNFTThunk,
+  editNFTThunk
 }) => {
   const { t } = useTranslation();
   const [mintedNftNFTId, setMintedNftNFTId] = useState<number | null>(null);
@@ -85,9 +90,9 @@ const AddOrEditNFTComponent: React.FC<AddOrEditNFTComponentProps> = ({
 
   useEffect(() => {
     if (id) {
-      loadNFT({ id, isDraft: true });
+      loadNFTThunk({ id, isDraft: true });
     }
-  }, []);
+  }, [id]);
 
   const getValidationSchema = () =>
     yup.object({
@@ -107,15 +112,16 @@ const AddOrEditNFTComponent: React.FC<AddOrEditNFTComponentProps> = ({
     if (!images.length) return toast.error(t('addImageRequestError'));
 
     if (id) {
-      return editNFT({
+      return editNFTThunk({
         id: +id,
         ...values,
         image: images[0],
-        walletAddress: NFT?.walletAddress
+        walletAddress: NFT?.walletAddress,
+        navigate
       });
     }
     if (!mintedNftNFTId) {
-      return mintNft({
+      return mintNftThunk({
         ...values,
         additionalActionOnSuccess: (NFTId) => {
           setMintedNftNFTId(NFTId as number);
@@ -123,10 +129,11 @@ const AddOrEditNFTComponent: React.FC<AddOrEditNFTComponentProps> = ({
       });
     }
 
-    return saveNFTData({
+    return saveNFTDataThunk({
       id: mintedNftNFTId,
       image: images[0],
-      theme: values.theme
+      theme: values.theme,
+      navigate
     });
   };
 

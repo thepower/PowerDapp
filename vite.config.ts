@@ -1,6 +1,7 @@
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
+import checker from 'vite-plugin-checker';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import svgrPlugin from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -19,8 +20,9 @@ export default defineConfig({
     basicSsl(),
     tsconfigPaths(),
     svgrPlugin(),
-    nodePolyfills({
-      globals: { Buffer: true, global: true, process: true }
+    nodePolyfills(),
+    checker({
+      typescript: true
     })
   ],
   build: {

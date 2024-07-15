@@ -1,8 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { NavigateFunction } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { RootState } from 'application/store';
 import { defaultChain } from 'application/thunks/initApplication';
-// import { RoutesEnum } from 'application/typings/routes';
+import { RoutesEnum } from 'application/typings/routes';
 import { setProfilesRoles } from 'profiles/slice/profilesSlice';
 import { getNetworkApi } from '../../application/selectors';
 import {
@@ -15,7 +16,10 @@ import {
   LoginToWalletSagaInput
 } from '../typings/accountTypings';
 
-export const loginToWallet = createAsyncThunk<void, LoginToWalletSagaInput>(
+export const loginToWalletThunk = createAsyncThunk<
+  void,
+  LoginToWalletSagaInput
+>(
   'account/loginToWallet',
   async ({ address }, { getState, dispatch, rejectWithValue }) => {
     const state = getState() as RootState;
@@ -46,14 +50,14 @@ export const loginToWallet = createAsyncThunk<void, LoginToWalletSagaInput>(
   }
 );
 
-export const resetAccount = createAsyncThunk(
+export const resetAccountThunk = createAsyncThunk<void, NavigateFunction>(
   'account/resetAccount',
-  async (_, { dispatch, rejectWithValue }) => {
+  async (navigate, { dispatch, rejectWithValue }) => {
     try {
       clearApplicationStorage();
       dispatch(clearAccountData());
       dispatch(setProfilesRoles([]));
-      // dispatch(push(RoutesEnum.root));
+      navigate(RoutesEnum.root);
     } catch (e) {
       toast.error('Reset account error. Try again in a few minutes.');
       return rejectWithValue('Reset account error');

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { initApplication } from 'application/thunks/initApplication';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { initApplicationThunk } from 'application/thunks/initApplication';
 import { FullScreenLoader } from 'common';
 
 import { LogInPage } from 'login/components/pages/LogInPage';
@@ -22,18 +22,18 @@ import { RoutesEnum } from '../typings/routes';
 
 const AppRoutesComponent: React.FC = () => {
   const dispatch = useAppDispatch();
-
+  const navigate = useNavigate();
   const isModerator = useAppSelector(getIsModerator);
 
   const networkApi = useAppSelector(
     (state) => state.applicationData.networkApi
   );
   const loading = useAppSelector((state) =>
-    checkIfLoading(state, initApplication.typePrefix)
+    checkIfLoading(state, initApplicationThunk.typePrefix)
   );
 
   useEffect(() => {
-    if (!networkApi && !loading) dispatch(initApplication());
+    if (!networkApi && !loading) dispatch(initApplicationThunk(navigate));
   }, []);
 
   if (!networkApi || loading) {
