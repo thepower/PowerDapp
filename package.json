@@ -83,6 +83,8 @@
     "vite-plugin-checker": "^0.7.2",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-svgr": "4.0.0",
+    "vite-plugin-top-level-await": "^1.4.4",
+    "vite-plugin-wasm": "^3.3.0",
     "vite-tsconfig-paths": "4.2.1"
   },
   "browserslist": {

@@ -6,7 +6,6 @@ import { messagesSlice } from 'messages/slice/messagesSlice';
 import { walletSlice } from 'myAssets/slices/walletSlice';
 import { NFTsSlice } from 'NFTs/slice/NFTsSlice';
 import { profilesSlice } from 'profiles/slice/profilesSlice';
-import { tariffsSlice } from 'tariffs/slice/tariffSlice';
 import { walletSignSlice } from 'walletSign/slices/walletSign';
 import { applicationDataSlice } from './slice/applicationSlice';
 import { accountSlice } from '../account/slice/accountSlice';
@@ -19,7 +18,6 @@ const rootReducer = combineSlices(
   walletSlice,
   NFTsSlice,
   profilesSlice,
-  tariffsSlice,
   walletSignSlice,
   applicationDataSlice,
   accountSlice,

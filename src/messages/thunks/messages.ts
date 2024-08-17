@@ -1,10 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import * as msgPack from '@thepowereco/msgpack';
 import { NetworkApi, LStoreApi, AddressApi } from '@thepowereco/tssdk';
 
 import { encodeFunction } from '@thepowereco/tssdk/dist/helpers/abi.helper';
 import { toBeHex } from 'ethers';
 import { entries, omit } from 'lodash';
+import * as msgPack from 'msgpackr';
 import { signTxWithPopup } from 'api/popup';
 import appEnvs from 'appEnvs';
 import { getNetworkApi } from 'application/selectors';

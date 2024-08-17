@@ -15,7 +15,6 @@ import EditProfilePage from 'profiles/components/pages/editProfilePage/EditProfi
 import ProfilesPage from 'profiles/components/pages/profilesPage/ProfilesPage';
 import { getIsModerator } from 'profiles/selectors/rolesSelectors';
 import SSOPage from 'sso/components/pages/SSOPage';
-import PricingPage from 'tariffs/components/pages/PricingPage';
 import AboutPage from './pages/about/AboutPage';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { RoutesEnum } from '../typings/routes';
@@ -71,9 +70,6 @@ const AppRoutesComponent: React.FC = () => {
         {isModerator && (
           <Route path={RoutesEnum.authors} Component={ProfilesPage} />
         )}
-
-        {/* View tariffs page */}
-        <Route path={RoutesEnum.pricing} Component={PricingPage} />
 
         {/* View DAO NFT page by DAO slug */}
         <Route path={`${RoutesEnum.dao}/:daoSlug`} Component={DAONFTsPage} />

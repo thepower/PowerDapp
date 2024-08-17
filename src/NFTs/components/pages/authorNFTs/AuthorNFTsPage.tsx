@@ -17,7 +17,7 @@ import { EditProfileIcon, UserIcon, WalletIcon, SortIcon } from 'assets/icons';
 import { Layout, Pagination, Button, Filter } from 'common';
 
 import { checkIfLoading } from 'network/selectors';
-import { nftCategoriesForSelect, userTariffLevelMap } from 'NFTs/constants';
+import { nftCategoriesForSelect } from 'NFTs/constants';
 import { getNFTs, getNFTsCount } from 'NFTs/selectors/NFTsSelectors';
 import { loadNFTsThunk } from 'NFTs/thunks/NFTs';
 import {
@@ -32,15 +32,12 @@ import {
   getIsModerator,
   getIsRegistered
 } from 'profiles/selectors/rolesSelectors';
-import { getTariffLevel } from 'tariffs/selectors/tariffsSelectors';
-import { loadTariffLevelThunk } from 'tariffs/thunks/tariffs';
 import styles from './AuthorNFTsPage.module.scss';
 import { loadProfileThunk } from '../../../../profiles/thunks/profiles';
 import { NFTCard } from '../../NFTCard/NFTCard';
 
 const mapDispatchToProps = {
   loadProfileThunk,
-  loadTariffLevelThunk,
   loadNFTsThunk
 };
 
@@ -53,8 +50,7 @@ const mapStateToProps = (state: RootState) => ({
   profile: getProfile(state),
   isRegistered: getIsRegistered(state),
   isModerator: getIsModerator(state),
-  isAuthor: getIsVerified(state),
-  tariffLevel: getTariffLevel(state)
+  isAuthor: getIsVerified(state)
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -68,11 +64,9 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
   walletAddress,
   profile,
   loadProfileThunk,
-  loadTariffLevelThunk,
   isModerator,
   isProfileLoading,
   isAuthor,
-  tariffLevel,
   isRegistered
 }) => {
   const { t } = useTranslation();
@@ -122,7 +116,6 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
         walletAddressOrId: walletAddressParam,
         isSetProfile: true
       });
-      loadTariffLevelThunk(walletAddressParam);
     }
   }, [walletAddressParam]);
 
@@ -176,9 +169,6 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
         <div className={styles.headCol}>
           <div className={styles.profileImageBlock}>
             <img className={styles.profileImg} src={profileImgUrl} alt='' />
-            <div className={styles.profileUserTariffLevel}>
-              {t(userTariffLevelMap?.[tariffLevel?.foundLevel || 0])}
-            </div>
           </div>
           {((walletAddress === profile?.walletAddress && isAuthor) ||
             isModerator) && (
@@ -228,7 +218,6 @@ const AuthorNFTsPageComponent: React.FC<AuthorNFTsPageComponentProps> = ({
     isProfileLoading,
     profileImgUrl,
     t,
-    tariffLevel?.foundLevel,
     walletAddress,
     profile?.walletAddress,
     profile?.email,

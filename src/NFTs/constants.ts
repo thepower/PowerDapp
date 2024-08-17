@@ -33,9 +33,3 @@ export const nftCategoriesForSelect = (t: TFunction) =>
     nftCategories.map((category) => ({ label: t(category), value: category })),
     'label'
   );
-
-export const userTariffLevelMap: { [key: number]: string } = {
-  0: 'tariff1Title',
-  1: 'tariff2Title',
-  2: 'tariff3Title'
-};

@@ -8,7 +8,6 @@ const BASENAME = import.meta.env.VITE_BASENAME! as string;
 const OPEN_RESTY_API_URL = import.meta.env.VITE_OPEN_RESTY_API_URL!;
 const OPEN_RESTY_PROFILE_BUCKET = import.meta.env
   .VITE_OPEN_RESTY_PROFILE_BUCKET!;
-const PAYGATE_API_URL = import.meta.env.VITE_PAYGATE_API_URL!;
 
 const PROFILES_CONTRACT_ADDRESS = import.meta.env
   .VITE_PROFILES_CONTRACT_ADDRESS!;
@@ -42,8 +41,6 @@ export default {
 
   OPEN_RESTY_API_URL,
   OPEN_RESTY_PROFILE_BUCKET,
-
-  PAYGATE_API_URL,
 
   PROFILES_CONTRACT_ADDRESS,
 

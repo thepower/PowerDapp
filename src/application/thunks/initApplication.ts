@@ -7,7 +7,6 @@ import appEnvs from 'appEnvs';
 import { RoutesEnum } from 'application/typings/routes';
 import { UserRole } from 'profiles/constants';
 import { loadProfileRolesThunk } from 'profiles/thunks/roles';
-import { loadUserTariffLevelThunk } from 'tariffs/thunks/tariffs';
 import { setDynamicApis, setNetworkChains } from '../slice/applicationSlice';
 import { CURRENT_NETWORK } from '../utils/applicationUtils';
 import { getKeyFromApplicationStorage } from '../utils/localStorageUtils';
@@ -60,7 +59,6 @@ export const initApplicationThunk = createAsyncThunk<void, NavigateFunction>(
       );
 
       const roles = await dispatch(loadProfileRolesThunk(address)).unwrap();
-      await dispatch(loadUserTariffLevelThunk(address));
 
       const isRegistered = roles.includes(UserRole.REGISTERED);
 

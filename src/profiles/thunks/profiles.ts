@@ -369,6 +369,7 @@ export const loadProfilesThunk = createAsyncThunk(
           [],
           abis.profiles.abi
         );
+
         const totalSupply = Number(totalSupplyBigint);
         estimateOrTotalSupply = totalSupply;
       }
@@ -386,7 +387,6 @@ export const loadProfilesThunk = createAsyncThunk(
         [start, [], requiredRoles, deniedRoles, amount, isReversed],
         abis.profiles.abi
       );
-
       const ids = compact(profilesIds);
 
       const profiles = await Promise.all(

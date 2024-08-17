@@ -2,7 +2,6 @@ import React, { PropsWithChildren } from 'react';
 import cn from 'classnames';
 
 import { Header, Footer } from 'common';
-import { PayTariffModal } from 'tariffs/components/payTariffModal/PayTariffModal';
 import { WalletSignModal } from 'walletSign/components/walletSignModal/WalletSignModal';
 import styles from './Layout.module.scss';
 
@@ -24,7 +23,6 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = ({
     )}
   >
     <WalletSignModal />
-    <PayTariffModal />
     {!isWithoutHeader && (
       <div className={styles.layoutHeader}>
         <Header />

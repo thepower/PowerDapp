@@ -14,7 +14,6 @@ import { UserRole } from 'profiles/constants';
 import { setProfilesRoles } from 'profiles/slice/profilesSlice';
 import { GrantRolePayload, RevokeRolePayload } from 'profiles/types';
 import { objectToString } from 'sso/utils';
-import { UserLevelResponse } from 'tariffs/types';
 import { AddActionOnSuccessAndErrorType } from 'typings/common';
 
 export const grantRoleThunk = createAsyncThunk<
@@ -25,15 +24,7 @@ export const grantRoleThunk = createAsyncThunk<
   async ({ role, walletAddress, additionalActionOnSuccess }, { getState }) => {
     try {
       const state = getState() as RootState;
-      const networkApi = getNetworkApi(state)!;
       const myWalletAddress = getWalletAddress(state);
-
-      const userLevel: UserLevelResponse = await networkApi.executeCall(
-        AddressApi.textAddressToHex(abis.tariff.address),
-        'user_level',
-        [AddressApi.textAddressToEvmAddress(walletAddress)],
-        abis.tariff.abi
-      );
 
       const mcalls = [];
 
@@ -48,19 +39,6 @@ export const grantRoleThunk = createAsyncThunk<
         AddressApi.textAddressToEvmAddress(abis.profiles.address),
         hexToBytes(encodedFunctionGrantRole as `0x${string}`)
       ]);
-
-      if (userLevel?.foundTokenId === 0n && role === UserRole.VERIFIED_USER) {
-        const encodedFunctionMint = encodeFunction(
-          'mint',
-          [AddressApi.textAddressToEvmAddress(walletAddress)],
-          abis.tariff.abi,
-          true
-        );
-        mcalls.push([
-          AddressApi.textAddressToEvmAddress(abis.tariff.address),
-          hexToBytes(encodedFunctionMint as `0x${string}`)
-        ]);
-      }
 
       const encodedFunction = encodeFunction(
         'mcall',
