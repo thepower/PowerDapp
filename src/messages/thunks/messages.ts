@@ -5,6 +5,8 @@ import { encodeFunction } from '@thepowereco/tssdk/dist/helpers/abi.helper';
 import { toBeHex } from 'ethers';
 import { entries, omit } from 'lodash';
 import * as msgPack from 'msgpackr';
+import { hexToBytes } from 'viem';
+import { getWalletAddress } from 'account/selectors/accountSelectors';
 import { signTxWithPopup } from 'api/popup';
 import appEnvs from 'appEnvs';
 import { getNetworkApi } from 'application/selectors';
@@ -58,28 +60,31 @@ export const postMessageThunk = createAsyncThunk<
   'chat/postMessage',
   async (
     { nftId, message, additionalActionOnSuccess },
-    { rejectWithValue }
+    { rejectWithValue, getState }
   ) => {
+    const state = getState() as RootState;
+    const walletAddress = getWalletAddress(state);
     try {
-      const encodedFunction = encodeFunction(
-        'registerMessage',
-        [
+      const encodedFunction = encodeFunction({
+        abi: abis.chat.abi,
+        functionName: 'registerMessage',
+        args: [
           BigInt(nftId),
           objectToString({
             v: message,
             t: Date.now()
           })
-        ],
-        abis.chat.abi
-      );
+        ]
+      });
 
-      const encodedFunctionBuffer = Buffer.from(encodedFunction, 'hex');
+      const encodedFunctionBuffer = hexToBytes(encodedFunction);
 
       const body = {
         k: 16,
+        f: Buffer.from(AddressApi.parseTextAddress(walletAddress)),
         to: Buffer.from(AddressApi.parseTextAddress(abis.chat.address)),
         p: [],
-        c: ['0x0', [encodedFunctionBuffer]]
+        c: ['0x0', [Buffer.from(encodedFunctionBuffer)]]
       };
 
       const data = objectToString({

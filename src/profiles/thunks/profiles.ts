@@ -4,7 +4,7 @@ import { AddressApi, NetworkApi } from '@thepowereco/tssdk';
 import { encodeFunction } from '@thepowereco/tssdk/dist/helpers/abi.helper';
 import { compact } from 'lodash';
 import { toast } from 'react-toastify';
-import { hexToString, numberToBytes, stringToBytes } from 'viem';
+import { hexToBytes, hexToString, toHex } from 'viem';
 import { getWalletAddress } from 'account/selectors/accountSelectors';
 import { uploadFile } from 'api/openResty';
 import { signTxWithPopup } from 'api/popup';
@@ -43,69 +43,120 @@ export const createOrEditProfileThunk = createAsyncThunk<
       const networkApi = getNetworkApi(state)!;
 
       const isRegistered = await networkApi.executeCall(
-        AddressApi.textAddressToHex(abis.profiles.address),
-        'hasRole',
-        [
-          UserRole.REGISTERED,
-          AddressApi.textAddressToEvmAddress(walletAddress)
-        ],
-        abis.profiles.abi
+        {
+          abi: abis.profiles.abi,
+          functionName: 'hasRole',
+          args: [
+            UserRole.REGISTERED,
+            AddressApi.textAddressToEvmAddress(walletAddress)
+          ]
+        },
+        { address: abis.profiles.address }
       );
 
       const hash = await uploadFile(photo, appEnvs.OPEN_RESTY_PROFILE_BUCKET);
       if (!hash) return rejectWithValue('File upload failed');
 
       const date = Date.now();
-      const dateUint8Array = numberToBytes(date);
+      const dateHex = toHex(date);
 
-      let params = [];
-      let method = '';
-
+      // let params = [];
+      // let method = '';
+      let encodedFunction;
       if (editedWalletAddress && isRegistered) {
-        method = 'setUserProfileFields';
-        params = [
-          AddressApi.textAddressToEvmAddress(editedWalletAddress),
-          [
-            [ProfileField.firstName, stringToBytes(firstName)],
-            [ProfileField.lastName, stringToBytes(lastName)],
-            [ProfileField.email, stringToBytes(email)],
-            [ProfileField.updatedAt, dateUint8Array],
-            [ProfileField.photoHash, stringToBytes(hash)]
+        // method = 'setUserProfileFields';
+        // params = [
+        //   AddressApi.textAddressToEvmAddress(editedWalletAddress),
+        //   [
+        //     { k: BigInt(ProfileField.firstName), v: toHex(firstName) },
+        //     { k: BigInt(ProfileField.lastName), v: toHex(lastName) },
+        //     { k: BigInt(ProfileField.email), v: toHex(email) },
+        //     { k: BigInt(ProfileField.updatedAt), v: dateHex },
+        //     { k: BigInt(ProfileField.photoHash), v: toHex(hash) }
+        //   ]
+        // ];
+
+        encodedFunction = encodeFunction({
+          abi: abis.profiles.abi,
+          functionName: 'setUserProfileFields',
+          args: [
+            AddressApi.textAddressToEvmAddress(editedWalletAddress),
+            [
+              { k: BigInt(ProfileField.firstName), v: toHex(firstName) },
+              { k: BigInt(ProfileField.lastName), v: toHex(lastName) },
+              { k: BigInt(ProfileField.email), v: toHex(email) },
+              { k: BigInt(ProfileField.updatedAt), v: dateHex },
+              { k: BigInt(ProfileField.photoHash), v: toHex(hash) }
+            ]
           ]
-        ];
+        });
       } else if (isRegistered) {
-        method = 'setProfileFields';
-        params = [
-          [
-            [ProfileField.firstName, stringToBytes(firstName)],
-            [ProfileField.lastName, stringToBytes(lastName)],
-            [ProfileField.email, stringToBytes(email)],
-            [ProfileField.updatedAt, dateUint8Array],
-            [ProfileField.photoHash, stringToBytes(hash)]
+        // method = 'setProfileFields';
+        // params = [
+        //   [
+        //     { k: BigInt(ProfileField.firstName), v: toHex(firstName) },
+        //     { k: BigInt(ProfileField.lastName), v: toHex(lastName) },
+        //     { k: BigInt(ProfileField.email), v: toHex(email) },
+        //     { k: BigInt(ProfileField.updatedAt), v: dateHex },
+        //     { k: BigInt(ProfileField.photoHash), v: toHex(hash) }
+        //   ]
+        // ];
+        encodedFunction = encodeFunction({
+          abi: abis.profiles.abi,
+          functionName: 'setProfileFields',
+          args: [
+            [
+              { k: BigInt(ProfileField.firstName), v: toHex(firstName) },
+              { k: BigInt(ProfileField.lastName), v: toHex(lastName) },
+              { k: BigInt(ProfileField.email), v: toHex(email) },
+              { k: BigInt(ProfileField.updatedAt), v: dateHex },
+              { k: BigInt(ProfileField.photoHash), v: toHex(hash) }
+            ]
           ]
-        ];
+        });
       } else {
-        method = 'quickReg';
-        params = [
-          [
-            [ProfileField.firstName, stringToBytes(firstName)],
-            [ProfileField.lastName, stringToBytes(lastName)],
-            [ProfileField.email, stringToBytes(email)],
-            [ProfileField.createdAt, dateUint8Array],
-            [ProfileField.updatedAt, dateUint8Array],
-            [ProfileField.photoHash, stringToBytes(hash)]
+        // method = 'quickReg';
+        // params = [
+        //   [
+        //     { k: BigInt(ProfileField.firstName), v: toHex(firstName) },
+        //     { k: BigInt(ProfileField.lastName), v: toHex(lastName) },
+        //     { k: BigInt(ProfileField.email), v: toHex(email) },
+        //     { k: BigInt(ProfileField.createdAt), v: dateHex },
+        //     { k: BigInt(ProfileField.updatedAt), v: dateHex },
+        //     { k: BigInt(ProfileField.photoHash), v: toHex(hash) }
+        //   ]
+        // ];
+
+        encodedFunction = encodeFunction({
+          abi: abis.profiles.abi,
+          functionName: 'quickReg',
+          args: [
+            [
+              { k: BigInt(ProfileField.firstName), v: toHex(firstName) },
+              { k: BigInt(ProfileField.lastName), v: toHex(lastName) },
+              { k: BigInt(ProfileField.email), v: toHex(email) },
+              { k: BigInt(ProfileField.createdAt), v: dateHex },
+              { k: BigInt(ProfileField.updatedAt), v: dateHex },
+              { k: BigInt(ProfileField.photoHash), v: toHex(hash) }
+            ]
           ]
-        ];
+        });
       }
 
-      const encodedFunction = encodeFunction(method, params, abis.profiles.abi);
-      const encodedFunctionBuffer = Buffer.from(encodedFunction, 'hex');
+      // const encodedFunction = encodeFunction({
+      //   abi: abis.profiles.abi,
+      //   functionName: method as any,
+      //   args: params as any
+      // });
+
+      const encodedFunctionBuffer = hexToBytes(encodedFunction);
 
       const body = {
         k: 16,
+        f: Buffer.from(AddressApi.parseTextAddress(walletAddress)),
         to: Buffer.from(AddressApi.parseTextAddress(abis.profiles.address)),
         p: [],
-        c: ['0x0', [encodedFunctionBuffer]]
+        c: ['0x0', [Buffer.from(encodedFunctionBuffer)]]
       };
 
       const data = objectToString({
@@ -113,7 +164,9 @@ export const createOrEditProfileThunk = createAsyncThunk<
         returnUrl: window.location.href,
         body
       });
-
+      console.log(encodedFunctionBuffer.length);
+      console.log({ encodedFunctionBuffer });
+      console.log({ data });
       const createProfileResponse = await signTxWithPopup({
         data,
         action: createOrEditProfileThunk.typePrefix,
@@ -121,7 +174,6 @@ export const createOrEditProfileThunk = createAsyncThunk<
           ? i18n.t('editProfile')
           : i18n.t('saveProfile')
       });
-
       if (!createProfileResponse.txId)
         throw new Error('!createOrEditProfileSaga.txId');
 
@@ -151,14 +203,16 @@ export const loadProfile = async ({
     const isById = typeof walletAddressOrId === 'number';
 
     let walletAddress: string;
-
     if (isById) {
-      const walletAddressHex: string = await networkApi.executeCall(
-        AddressApi.textAddressToHex(abis.profiles.address),
-        'getRegisteredUser',
-        [walletAddressOrId],
-        abis.profiles.abi
+      const walletAddressHex = await networkApi.executeCall(
+        {
+          abi: abis.profiles.abi,
+          functionName: 'getRegisteredUser',
+          args: [BigInt(walletAddressOrId)]
+        },
+        { address: abis.profiles.address }
       );
+
       if (walletAddressHex) {
         walletAddress = AddressApi.hexToTextAddress(
           AddressApi.evmAddressToHexAddress(walletAddressHex)
@@ -168,6 +222,49 @@ export const loadProfile = async ({
       walletAddress = walletAddressOrId;
     }
 
+    let res;
+    console.log({ walletAddressOrId, isById });
+
+    if (isById) {
+      res = await networkApi.executeCall(
+        {
+          abi: abis.profiles.abi,
+          functionName: 'getProfileData',
+          args: [
+            BigInt(walletAddressOrId),
+            [
+              ProfileField.firstName,
+              ProfileField.lastName,
+              ProfileField.email,
+              ProfileField.createdAt,
+              ProfileField.updatedAt,
+              ProfileField.photoHash
+            ].map(BigInt)
+          ]
+        },
+        { address: abis.profiles.address }
+      );
+    } else {
+      res = await networkApi.executeCall(
+        {
+          abi: abis.profiles.abi,
+          functionName: 'getAddrProfileData',
+          args: [
+            AddressApi.textAddressToEvmAddress(walletAddressOrId),
+            [
+              ProfileField.firstName,
+              ProfileField.lastName,
+              ProfileField.email,
+              ProfileField.createdAt,
+              ProfileField.updatedAt,
+              ProfileField.photoHash
+            ].map(BigInt)
+          ]
+        },
+        { address: abis.profiles.address }
+      );
+    }
+
     const [
       firstNameHex,
       lastNameHex,
@@ -175,24 +272,7 @@ export const loadProfile = async ({
       createdAtHex,
       updatedAtHex,
       photoHashHex
-    ]: `0x${string}`[] = await networkApi.executeCall(
-      AddressApi.textAddressToHex(abis.profiles.address),
-      isById ? 'getProfileData' : 'getAddrProfileData',
-      [
-        isById
-          ? walletAddressOrId
-          : AddressApi.textAddressToEvmAddress(walletAddressOrId),
-        [
-          ProfileField.firstName,
-          ProfileField.lastName,
-          ProfileField.email,
-          ProfileField.createdAt,
-          ProfileField.updatedAt,
-          ProfileField.photoHash
-        ]
-      ],
-      abis.profiles.abi
-    );
+    ] = res;
 
     const firstName = hexToString(firstNameHex);
     const lastName = hexToString(lastNameHex);
@@ -233,11 +313,13 @@ export const loadProfileThunk = createAsyncThunk<Profile, LoadProfilePayload>(
       let walletAddress: string;
 
       if (isById) {
-        const walletAddressHex: string = await networkApi.executeCall(
-          AddressApi.textAddressToHex(abis.profiles.address),
-          'getRegisteredUser',
-          [walletAddressOrId],
-          abis.profiles.abi
+        const walletAddressHex = await networkApi.executeCall(
+          {
+            abi: abis.profiles.abi,
+            functionName: 'getRegisteredUser',
+            args: [BigInt(walletAddressOrId)]
+          },
+          { address: abis.profiles.address }
         );
         if (walletAddressHex) {
           walletAddress = AddressApi.hexToTextAddress(
@@ -248,6 +330,69 @@ export const loadProfileThunk = createAsyncThunk<Profile, LoadProfilePayload>(
         walletAddress = walletAddressOrId;
       }
 
+      let res;
+
+      if (isById) {
+        res = await networkApi.executeCall(
+          {
+            abi: abis.profiles.abi,
+            functionName: 'getProfileData',
+            args: [
+              BigInt(walletAddressOrId),
+              [
+                ProfileField.firstName,
+                ProfileField.lastName,
+                ProfileField.email,
+                ProfileField.createdAt,
+                ProfileField.updatedAt,
+                ProfileField.photoHash
+              ].map(BigInt)
+            ]
+          },
+          { address: abis.profiles.address }
+        );
+      } else {
+        res = await networkApi.executeCall(
+          {
+            abi: abis.profiles.abi,
+            functionName: 'getAddrProfileData',
+            args: [
+              AddressApi.textAddressToEvmAddress(walletAddressOrId),
+              [
+                ProfileField.firstName,
+                ProfileField.lastName,
+                ProfileField.email,
+                ProfileField.createdAt,
+                ProfileField.updatedAt,
+                ProfileField.photoHash
+              ].map(BigInt)
+            ]
+          },
+          { address: abis.profiles.address }
+        );
+      }
+
+      // const d = await networkApi.executeCall(
+      //   {
+      //     abi: abis.profiles.abi,
+      //     functionName: isById ? 'getProfileData' : 'getAddrProfileData',
+      //     args: [
+      //       isById
+      //         ? BigInt(walletAddressOrId)
+      //         : AddressApi.textAddressToEvmAddress(walletAddressOrId),
+      //       [
+      //         ProfileField.firstName,
+      //         ProfileField.lastName,
+      //         ProfileField.email,
+      //         ProfileField.createdAt,
+      //         ProfileField.updatedAt,
+      //         ProfileField.photoHash
+      //       ].map(BigInt)
+      //     ]
+      //   },
+      //   { address: (abis.profiles.address) }
+      // );
+
       const [
         firstNameHex,
         lastNameHex,
@@ -255,24 +400,7 @@ export const loadProfileThunk = createAsyncThunk<Profile, LoadProfilePayload>(
         createdAtHex,
         updatedAtHex,
         photoHashHex
-      ]: `0x${string}`[] = await networkApi.executeCall(
-        AddressApi.textAddressToHex(abis.profiles.address),
-        isById ? 'getProfileData' : 'getAddrProfileData',
-        [
-          isById
-            ? walletAddressOrId
-            : AddressApi.textAddressToEvmAddress(walletAddressOrId),
-          [
-            ProfileField.firstName,
-            ProfileField.lastName,
-            ProfileField.email,
-            ProfileField.createdAt,
-            ProfileField.updatedAt,
-            ProfileField.photoHash
-          ]
-        ],
-        abis.profiles.abi
-      );
+      ] = res;
 
       const firstName = hexToString(firstNameHex);
       const lastName = hexToString(lastNameHex);
@@ -353,21 +481,25 @@ export const loadProfilesThunk = createAsyncThunk(
         deniedRoles.push(UserRole.LOCKED_USER);
       }
 
-      const estimateBigint: bigint = await networkApi.executeCall(
-        AddressApi.textAddressToHex(abis.profiles.address),
-        'grep_estimate',
-        [[], requiredRoles, deniedRoles],
-        abis.profiles.abi
+      const estimateBigint = await networkApi.executeCall(
+        {
+          abi: abis.profiles.abi,
+          functionName: 'grep_estimate',
+          args: [[], requiredRoles, deniedRoles]
+        },
+        { address: abis.profiles.address }
       );
       const estimate = Number(estimateBigint);
       let estimateOrTotalSupply = estimate;
 
       if (isReversed) {
-        const totalSupplyBigint: bigint = await networkApi.executeCall(
-          AddressApi.textAddressToHex(abis.profiles.address),
-          'totalSupply',
-          [],
-          abis.profiles.abi
+        const totalSupplyBigint = await networkApi.executeCall(
+          {
+            abi: abis.profiles.abi,
+            functionName: 'totalSupply',
+            args: []
+          },
+          { address: abis.profiles.address }
         );
 
         const totalSupply = Number(totalSupplyBigint);
@@ -380,13 +512,33 @@ export const loadProfilesThunk = createAsyncThunk(
       const amount = pageSize;
 
       dispatch(setProfilesCount(estimate));
-
-      const profilesIds: bigint[] = await networkApi.executeCall(
-        AddressApi.textAddressToHex(abis.profiles.address),
-        'grep',
-        [start, [], requiredRoles, deniedRoles, amount, isReversed],
-        abis.profiles.abi
+      console.log({
+        estimateOrTotalSupply,
+        args: [
+          BigInt(start),
+          [],
+          requiredRoles,
+          deniedRoles,
+          BigInt(amount),
+          isReversed
+        ]
+      });
+      const profilesIds = await networkApi.executeCall(
+        {
+          abi: abis.profiles.abi,
+          functionName: 'grep',
+          args: [
+            BigInt(start),
+            [],
+            requiredRoles,
+            deniedRoles,
+            BigInt(amount),
+            isReversed
+          ]
+        },
+        { address: abis.profiles.address }
       );
+      console.log({ profilesIds });
       const ids = compact(profilesIds);
 
       const profiles = await Promise.all(

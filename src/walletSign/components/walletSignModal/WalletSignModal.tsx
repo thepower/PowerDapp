@@ -37,7 +37,6 @@ const WalletSignModalComponent: React.FC<ModalPropsComponentProps> = ({
   stopAction
 }) => {
   const { t } = useTranslation();
-
   return (
     <Dialog
       open={!!popupData}

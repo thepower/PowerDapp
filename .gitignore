@@ -12,6 +12,7 @@ videos
 /build
 /buildsc
 /dist
+/deployed-contracts
 
 # misc
 *.local

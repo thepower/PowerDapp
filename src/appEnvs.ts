@@ -1,8 +1,3 @@
-const NODE_ENV = import.meta.env.VITE_NODE_ENV! as
-  | 'test'
-  | 'development'
-  | 'production';
-
 const BASENAME = import.meta.env.VITE_BASENAME! as string;
 
 const OPEN_RESTY_API_URL = import.meta.env.VITE_OPEN_RESTY_API_URL!;
@@ -33,8 +28,6 @@ const HUB_THEPOWER_URL = import.meta.env.VITE_HUB_URL!;
 const FAUCET_THEPOWER_URL = import.meta.env.VITE_FAUCET!;
 
 export default {
-  NODE_ENV,
-
   BASENAME,
 
   CHAIN_ID,

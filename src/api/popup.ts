@@ -1,4 +1,5 @@
 import appEnvs from 'appEnvs';
+import { store } from 'application/store';
 import { stringToObject } from 'sso/utils';
 import { setPopupData } from 'walletSign/slices/walletSign';
 
@@ -11,7 +12,7 @@ export async function signTxWithPopup<T>({
   action: string;
   description?: string;
 }) {
-  setPopupData({ requestUrlData: data, description, action });
+  store.dispatch(setPopupData({ requestUrlData: data, description, action }));
 
   const handler = (
     ev: MessageEvent<any>,
@@ -26,7 +27,6 @@ export async function signTxWithPopup<T>({
     ) {
       resolve?.(message?.data);
     }
-
     if (message?.type === 'signAndSendMessageError') {
       reject?.(message?.data);
     }

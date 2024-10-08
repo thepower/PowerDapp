@@ -24,35 +24,35 @@ export const grantRoleThunk = createAsyncThunk<
   async ({ role, walletAddress, additionalActionOnSuccess }, { getState }) => {
     try {
       const state = getState() as RootState;
-      const myWalletAddress = getWalletAddress(state);
+      const userWalletAddress = getWalletAddress(state);
 
       const mcalls = [];
 
-      const encodedFunctionGrantRole = encodeFunction(
-        'grantRole',
-        [role, AddressApi.textAddressToEvmAddress(walletAddress)],
-        abis.profiles.abi,
-        true
-      );
+      const encodedFunctionGrantRole = encodeFunction({
+        abi: abis.profiles.abi,
+        functionName: 'grantRole',
+        args: [role, AddressApi.textAddressToEvmAddress(walletAddress)]
+      });
 
-      mcalls.push([
-        AddressApi.textAddressToEvmAddress(abis.profiles.address),
-        hexToBytes(encodedFunctionGrantRole as `0x${string}`)
-      ]);
+      mcalls.push({
+        data: encodedFunctionGrantRole,
+        to: AddressApi.textAddressToEvmAddress(abis.profiles.address)
+      });
 
-      const encodedFunction = encodeFunction(
-        'mcall',
-        [mcalls],
-        abis.multiSend.abi
-      );
+      const encodedFunction = encodeFunction({
+        abi: abis.multiSend.abi,
+        functionName: 'mcall',
+        args: [mcalls]
+      });
 
-      const encodedFunctionBuffer = Buffer.from(encodedFunction, 'hex');
+      const encodedFunctionBuffer = hexToBytes(encodedFunction);
 
       const body = {
         k: 16,
-        to: Buffer.from(AddressApi.parseTextAddress(myWalletAddress)),
+        f: Buffer.from(AddressApi.parseTextAddress(userWalletAddress)),
+        to: Buffer.from(AddressApi.parseTextAddress(userWalletAddress)),
         p: [],
-        c: ['0x0', [encodedFunctionBuffer]],
+        c: ['0x0', [Buffer.from(encodedFunctionBuffer)]],
         e: {
           vm: 'evm',
           code: Buffer.from(hexToBytes(abis.multiSend.code))
@@ -85,21 +85,24 @@ export const revokeRoleThunk = createAsyncThunk<
   AddActionOnSuccessAndErrorType<RevokeRolePayload>
 >(
   'roles/revokeRole',
-  async ({ role, walletAddress, additionalActionOnSuccess }) => {
+  async ({ role, walletAddress, additionalActionOnSuccess }, { getState }) => {
+    const state = getState() as RootState;
+    const userWalletAddress = getWalletAddress(state);
     try {
-      const encodedFunction = encodeFunction(
-        'revokeRole',
-        [role, AddressApi.textAddressToEvmAddress(walletAddress)],
-        abis.profiles.abi
-      );
+      const encodedFunction = encodeFunction({
+        abi: abis.profiles.abi,
+        functionName: 'revokeRole',
+        args: [role, AddressApi.textAddressToEvmAddress(walletAddress)]
+      });
 
-      const encodedFunctionBuffer = Buffer.from(encodedFunction, 'hex');
+      const encodedFunctionBuffer = hexToBytes(encodedFunction);
 
       const body = {
         k: 16,
+        f: Buffer.from(AddressApi.parseTextAddress(userWalletAddress)),
         to: Buffer.from(AddressApi.parseTextAddress(abis.profiles.address)),
         p: [],
-        c: ['0x0', [encodedFunctionBuffer]]
+        c: ['0x0', [Buffer.from(encodedFunctionBuffer)]]
       };
 
       const data = objectToString({
@@ -145,11 +148,13 @@ export const loadProfileRolesThunk = createAsyncThunk<UserRole[], string>(
         UserRole.LOCKED_USER
       ];
 
-      const profileRoles: boolean[] = await networkApi.executeCall(
-        AddressApi.textAddressToHex(abis.profiles.address),
-        'hasRoles',
-        [roles, AddressApi.textAddressToEvmAddress(walletAddress)],
-        abis.profiles.abi
+      const profileRoles = await networkApi.executeCall(
+        {
+          abi: abis.profiles.abi,
+          functionName: 'hasRoles',
+          args: [roles, AddressApi.textAddressToEvmAddress(walletAddress)]
+        },
+        { address: abis.profiles.address }
       );
 
       const rolesWithId = roles.filter((_, i) => profileRoles[i]);

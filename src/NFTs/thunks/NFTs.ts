@@ -4,13 +4,7 @@ import { encodeFunction } from '@thepowereco/tssdk/dist/helpers/abi.helper';
 import { compact } from 'lodash';
 import { toast } from 'react-toastify';
 import slugify from 'slugify';
-import {
-  hexToBytes,
-  hexToString,
-  numberToBytes,
-  stringToBytes,
-  toBytes
-} from 'viem';
+import { hexToBytes, hexToString, toHex } from 'viem';
 import { getWalletAddress } from 'account/selectors/accountSelectors';
 import { uploadFile } from 'api/openResty';
 import { signTxWithPopup } from 'api/popup';
@@ -54,30 +48,31 @@ export const mintNftThunk = createAsyncThunk<
       const state = getState() as RootState;
       const walletAddress = getWalletAddress(state);
 
-      const encodedFunction = encodeFunction(
-        'mint',
-        [
+      const encodedFunction = encodeFunction({
+        abi: abis.NFTs.abi,
+        functionName: 'mint',
+        args: [
           AddressApi.textAddressToEvmAddress(walletAddress),
           [
-            [NftField.language, stringToBytes(language)],
-            [NftField.theme, stringToBytes(theme)],
-            [NftField.nameOfDAOSlug, stringToBytes(nameOfDAOSlug)],
-            [NftField.category, stringToBytes(category)],
-            [NftField.description, stringToBytes(description)],
-            [NftField.walletAddress, stringToBytes(walletAddress)],
-            [NftField.createdAt, numberToBytes(Date.now())]
+            { k: BigInt(NftField.language), v: toHex(language) },
+            { k: BigInt(NftField.theme), v: toHex(theme) },
+            { k: BigInt(NftField.nameOfDAOSlug), v: toHex(nameOfDAOSlug) },
+            { k: BigInt(NftField.category), v: toHex(category) },
+            { k: BigInt(NftField.description), v: toHex(description) },
+            { k: BigInt(NftField.walletAddress), v: toHex(walletAddress) },
+            { k: BigInt(NftField.createdAt), v: toHex(Date.now()) }
           ]
-        ],
-        abis.NFTs.abi
-      );
+        ]
+      });
 
-      const encodedFunctionBuffer = Buffer.from(encodedFunction, 'hex');
+      const encodedFunctionBuffer = hexToBytes(encodedFunction);
 
       const body = {
         k: 16,
+        f: Buffer.from(AddressApi.parseTextAddress(walletAddress)),
         to: Buffer.from(AddressApi.parseTextAddress(abis.NFTs.address)),
         p: [],
-        c: ['0x0', [encodedFunctionBuffer]]
+        c: ['0x0', [Buffer.from(encodedFunctionBuffer)]]
       };
 
       const data = objectToString({
@@ -132,28 +127,30 @@ export const loadNFT = async ({
     publishedAtHex,
     originTokenIdHex
   ] = await networkApi?.executeCall(
-    AddressApi.textAddressToHex(NFTsAddress),
-    'getNftData',
-    [
-      id,
-      [
-        NftField.language,
-        NftField.theme,
-        NftField.nameOfDAOSlug,
-        NftField.category,
-        NftField.description,
-        NftField.walletAddress,
-        NftField.createdAt,
-        NftField.updatedAt,
-        NftField.imageHash,
-        NftField.isApproved,
-        NftField.isRejected,
-        NftField.publishedTokenId,
-        NftField.publishedAt,
-        NftField.originTokenId
+    {
+      abi: NFTsAbi,
+      functionName: 'getNftData',
+      args: [
+        BigInt(id),
+        [
+          NftField.language,
+          NftField.theme,
+          NftField.nameOfDAOSlug,
+          NftField.category,
+          NftField.description,
+          NftField.walletAddress,
+          NftField.createdAt,
+          NftField.updatedAt,
+          NftField.imageHash,
+          NftField.isApproved,
+          NftField.isRejected,
+          NftField.publishedTokenId,
+          NftField.publishedAt,
+          NftField.originTokenId
+        ].map(BigInt)
       ]
-    ],
-    NFTsAbi
+    },
+    { address: NFTsAddress }
   );
 
   const language = hexToString(languageHex);
@@ -230,21 +227,24 @@ export const saveNFTDataThunk = createAsyncThunk<void, SaveNFTDataPayload>(
       const imageHash = await uploadFile(image, id.toString());
 
       if (imageHash) {
-        const dataFields = [[NftField.imageHash, stringToBytes(imageHash)]];
+        const dataFields = [
+          { k: BigInt(NftField.imageHash), v: toHex(imageHash) }
+        ];
 
-        const encodedFunction = encodeFunction(
-          'setData',
-          [id, dataFields],
-          abis.NFTs.abi
-        );
+        const encodedFunction = encodeFunction({
+          abi: abis.NFTs.abi,
+          functionName: 'setData',
+          args: [BigInt(id), dataFields]
+        });
 
-        const encodedFunctionBuffer = Buffer.from(encodedFunction, 'hex');
+        const encodedFunctionBuffer = hexToBytes(encodedFunction);
 
         const body = {
           k: 16,
+          f: Buffer.from(AddressApi.parseTextAddress(walletAddress)),
           to: Buffer.from(AddressApi.parseTextAddress(abis.NFTs.address)),
           p: [],
-          c: ['0x0', [encodedFunctionBuffer]]
+          c: ['0x0', [Buffer.from(encodedFunctionBuffer)]]
         };
 
         const data = objectToString({
@@ -291,35 +291,40 @@ export const editNFTThunk = createAsyncThunk<void, EditNFTPayload>(
       walletAddress,
       navigate
     },
-    { dispatch }
+    { dispatch, getState }
   ) => {
+    const state = getState() as RootState;
+    const userWalletAddress = getWalletAddress(state);
     try {
       const imageHash = await uploadFile(image, id.toString());
 
       if (imageHash) {
         const dataFields = [
-          [NftField.language, stringToBytes(language)],
-          [NftField.theme, stringToBytes(theme)],
-          [NftField.nameOfDAOSlug, stringToBytes(nameOfDAOSlug)],
-          [NftField.category, stringToBytes(category)],
-          [NftField.description, stringToBytes(description)],
-          [NftField.updatedAt, numberToBytes(Date.now())],
-          [NftField.imageHash, stringToBytes(imageHash)]
+          { k: BigInt(NftField.language), v: toHex(language) },
+          { k: BigInt(NftField.theme), v: toHex(theme) },
+          {
+            k: BigInt(NftField.nameOfDAOSlug),
+            v: toHex(nameOfDAOSlug)
+          },
+          { k: BigInt(NftField.category), v: toHex(category) },
+          { k: BigInt(NftField.description), v: toHex(description) },
+          { k: BigInt(NftField.updatedAt), v: toHex(Date.now()) },
+          { k: BigInt(NftField.imageHash), v: toHex(imageHash) }
         ];
 
-        const encodedFunction = encodeFunction(
-          'setData',
-          [id, dataFields],
-          abis.NFTs.abi
-        );
-
-        const encodedFunctionBuffer = Buffer.from(encodedFunction, 'hex');
+        const encodedFunction = encodeFunction({
+          abi: abis.NFTs.abi,
+          functionName: 'setData',
+          args: [BigInt(id), dataFields]
+        });
+        const encodedFunctionBuffer = hexToBytes(encodedFunction);
 
         const body = {
           k: 16,
+          f: Buffer.from(AddressApi.parseTextAddress(userWalletAddress)),
           to: Buffer.from(AddressApi.parseTextAddress(abis.NFTs.address)),
           p: [],
-          c: ['0x0', [encodedFunctionBuffer]]
+          c: ['0x0', [Buffer.from(encodedFunctionBuffer)]]
         };
 
         const data = objectToString({
@@ -360,28 +365,31 @@ export const approveOrRejectNFTThunk = createAsyncThunk<
   }
 >(
   'nfts/approveOrRejectNFT',
-  async ({ id, isApproved }, { dispatch, rejectWithValue }) => {
+  async ({ id, isApproved }, { dispatch, rejectWithValue, getState }) => {
+    const state = getState() as RootState;
+    const userWalletAddress = getWalletAddress(state);
     try {
-      const encodedFunction = encodeFunction(
-        'setData',
-        [
-          id,
+      const encodedFunction = encodeFunction({
+        abi: abis.NFTs.abi,
+        functionName: 'setData',
+        args: [
+          BigInt(id),
           [
             isApproved
-              ? [NftField.isApproved, stringToBytes('1')]
-              : [NftField.isRejected, stringToBytes('1')]
+              ? { k: BigInt(NftField.isApproved), v: toHex('1') }
+              : { k: BigInt(NftField.isRejected), v: toHex('1') }
           ]
-        ],
-        abis.NFTs.abi
-      );
+        ]
+      });
 
-      const encodedFunctionBuffer = Buffer.from(encodedFunction, 'hex');
+      const encodedFunctionBuffer = hexToBytes(encodedFunction);
 
       const body = {
         k: 16,
+        f: Buffer.from(AddressApi.parseTextAddress(userWalletAddress)),
         to: Buffer.from(AddressApi.parseTextAddress(abis.NFTs.address)),
         p: [],
-        c: ['0x0', [encodedFunctionBuffer]]
+        c: ['0x0', [Buffer.from(encodedFunctionBuffer)]]
       };
 
       const data = objectToString({
@@ -418,27 +426,37 @@ export const publishNFTThunk = createAsyncThunk<void, { id: string }>(
       const walletAddress = getWalletAddress(state);
 
       const totalSupplyBigint = await networkApi.executeCall(
-        AddressApi.textAddressToHex(abis.indexNFTs.address),
-        'totalSupply',
-        [],
-        abis.indexNFTs.abi
+        {
+          abi: abis.indexNFTs.abi,
+          functionName: 'totalSupply',
+          args: []
+        },
+        { address: abis.indexNFTs.address }
       );
 
       const [newId] = await networkApi.executeCall(
-        AddressApi.textAddressToHex(abis.indexNFTs.address),
-        'grep',
-        [0, [[NftField.originTokenId, toBytes(id, { size: 32 })]], 1, false],
-        abis.indexNFTs.abi
+        {
+          abi: abis.indexNFTs.abi,
+          functionName: 'grep',
+          args: [
+            0n,
+            [{ k: BigInt(NftField.originTokenId), v: toHex(id, { size: 32 }) }],
+            1n,
+            false
+          ]
+        },
+        { address: abis.indexNFTs.address }
       );
 
       const mcalls = [];
 
-      const encodedFunctionMint = encodeFunction(
-        'mint',
-        [
+      const encodedFunctionMint = encodeFunction({
+        abi: abis.indexNFTs.abi,
+        functionName: 'mint',
+        args: [
           newId,
           AddressApi.textAddressToEvmAddress(abis.NFTs.address),
-          id,
+          BigInt(id),
           [
             NftField.language,
             NftField.theme,
@@ -451,55 +469,52 @@ export const publishNFTThunk = createAsyncThunk<void, { id: string }>(
             NftField.imageHash,
             NftField.isApproved,
             NftField.isRejected
-          ]
-        ],
-        abis.indexNFTs.abi,
-        true
-      );
-
-      mcalls.push([
-        AddressApi.textAddressToEvmAddress(abis.indexNFTs.address),
-        hexToBytes(encodedFunctionMint as `0x${string}`)
-      ]);
+          ].map(BigInt)
+        ]
+      });
+      mcalls.push({
+        to: AddressApi.textAddressToEvmAddress(abis.indexNFTs.address),
+        data: encodedFunctionMint
+      });
 
       if (!newId) {
-        const encodedFunctionSetData = encodeFunction(
-          'setData',
-          [
-            id,
+        const encodedFunctionSetData = encodeFunction({
+          abi: abis.NFTs.abi,
+          functionName: 'setData',
+          args: [
+            BigInt(id),
             [
-              [
-                NftField.publishedContractAddress,
-                AddressApi.textAddressToEvmAddress(abis.NFTs.address)
-              ],
-              [
-                NftField.publishedTokenId,
-                numberToBytes(totalSupplyBigint + 1n, { size: 32 })
-              ]
+              {
+                k: BigInt(NftField.publishedContractAddress),
+                v: AddressApi.textAddressToEvmAddress(abis.NFTs.address)
+              },
+              {
+                k: BigInt(NftField.publishedTokenId),
+                v: toHex(totalSupplyBigint + 1n, { size: 32 })
+              }
             ]
-          ],
-          abis.NFTs.abi,
-          true
-        );
-        mcalls.push([
-          AddressApi.textAddressToEvmAddress(abis.NFTs.address),
-          hexToBytes(encodedFunctionSetData as `0x${string}`)
-        ]);
+          ]
+        });
+        mcalls.push({
+          to: AddressApi.textAddressToEvmAddress(abis.NFTs.address),
+          data: encodedFunctionSetData
+        });
       }
 
-      const encodedFunction = encodeFunction(
-        'mcall',
-        [mcalls],
-        abis.multiSend.abi
-      );
+      const encodedFunction = encodeFunction({
+        abi: abis.multiSend.abi,
+        functionName: 'mcall',
+        args: [mcalls]
+      });
 
-      const encodedFunctionBuffer = Buffer.from(encodedFunction, 'hex');
+      const encodedFunctionBuffer = hexToBytes(encodedFunction);
 
       const body = {
         k: 16,
+        f: Buffer.from(AddressApi.parseTextAddress(walletAddress)),
         to: Buffer.from(AddressApi.parseTextAddress(walletAddress)),
         p: [],
-        c: ['0x0', [encodedFunctionBuffer]],
+        c: ['0x0', [Buffer.from(encodedFunctionBuffer)]],
         e: {
           vm: 'evm',
           code: Buffer.from(hexToBytes(abis.multiSend.code))
@@ -556,27 +571,36 @@ export const loadNFTsThunk = createAsyncThunk<void, LoadNFTsPayload>(
     const filters = [];
 
     if (category !== 'all')
-      filters.push([NftField.category, toBytes(category)]);
+      filters.push({ k: BigInt(NftField.category), v: toHex(category) });
 
     if (nameOfDAOSlug && nameOfDAOSlug !== 'all') {
-      filters.push([NftField.nameOfDAOSlug, toBytes(nameOfDAOSlug)]);
+      filters.push({
+        k: BigInt(NftField.nameOfDAOSlug),
+        v: toHex(nameOfDAOSlug)
+      });
     }
 
     if (status === 'approved')
-      filters.push([NftField.isApproved, toBytes('1')]);
+      filters.push({ k: BigInt(NftField.isApproved), v: toHex('1') });
+
     if (status === 'notApproved')
-      filters.push([NftField.isApproved, toBytes('')]);
+      filters.push({ k: BigInt(NftField.isApproved), v: toHex('') });
 
     if (status === 'rejected')
-      filters.push([NftField.isRejected, toBytes('1')]);
+      filters.push({ k: BigInt(NftField.isRejected), v: toHex('1') });
     if (walletAddress)
-      filters.push([NftField.walletAddress, toBytes(walletAddress)]);
+      filters.push({
+        k: BigInt(NftField.walletAddress),
+        v: toHex(walletAddress)
+      });
 
     const estimateBigint = await networkApi?.executeCall(
-      AddressApi.textAddressToHex(NFTsAddress),
-      'grep_estimate',
-      [filters],
-      NFTsAbi
+      {
+        abi: NFTsAbi,
+        functionName: 'grep_estimate',
+        args: [filters]
+      },
+      { address: NFTsAddress }
     );
 
     const estimate = Number(estimateBigint);
@@ -584,19 +608,23 @@ export const loadNFTsThunk = createAsyncThunk<void, LoadNFTsPayload>(
 
     if (!isLoadDraftNFTs) {
       const maxIdBigint = await networkApi?.executeCall(
-        AddressApi.textAddressToHex(NFTsAddress),
-        'maxId',
-        [],
-        NFTsAbi
+        {
+          abi: NFTsAbi,
+          functionName: 'maxId',
+          args: []
+        },
+        { address: NFTsAddress }
       );
       const maxId = Number(maxIdBigint);
       maxIdOrEstimateOrTotalSupply = maxId;
     } else if (isReversed) {
       const totalSupplyBigint = await networkApi?.executeCall(
-        AddressApi.textAddressToHex(NFTsAddress),
-        'totalSupply',
-        [],
-        NFTsAbi
+        {
+          abi: NFTsAbi,
+          functionName: 'totalSupply',
+          args: []
+        },
+        { address: NFTsAddress }
       );
       const totalSupply = Number(totalSupplyBigint);
       maxIdOrEstimateOrTotalSupply = totalSupply;
@@ -609,11 +637,13 @@ export const loadNFTsThunk = createAsyncThunk<void, LoadNFTsPayload>(
 
     dispatch(setNFTsCount(estimate));
 
-    const NFTsIds: bigint[] = await networkApi?.executeCall(
-      AddressApi.textAddressToHex(NFTsAddress),
-      'grep',
-      [start, filters, amount, isReversed],
-      NFTsAbi
+    const NFTsIds = await networkApi?.executeCall(
+      {
+        abi: NFTsAbi,
+        functionName: 'grep',
+        args: [BigInt(start), filters, BigInt(amount), isReversed]
+      },
+      { address: NFTsAddress }
     );
 
     const ids = compact(NFTsIds);
