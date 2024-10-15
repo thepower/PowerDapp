@@ -286,8 +286,10 @@ const NFTPageComponent: React.FC<NFTPageComponentProps> = ({
           return (
             <div key={key} className={styles.message}>
               <div className={styles.firstRow}>
-                <div className={styles.messageIcon} />
-                <Jdenticon size='36' value={hashedValue} />
+                <div className={styles.messageIcon}>
+                  <Jdenticon size='36' value={hashedValue} />
+                </div>
+
                 <div>
                   <div className={styles.messageWalletAddress}>
                     {message.walletAddress}

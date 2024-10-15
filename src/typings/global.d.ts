@@ -1,5 +1,3 @@
-declare module '@thepowereco/msgpack';
-
 declare module '*.svg' {
   import * as React from 'react';
 

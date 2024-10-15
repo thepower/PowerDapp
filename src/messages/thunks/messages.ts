@@ -1,10 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { NetworkApi, LStoreApi, AddressApi } from '@thepowereco/tssdk';
-
 import { encodeFunction } from '@thepowereco/tssdk/dist/helpers/abi.helper';
 import { toBeHex } from 'ethers';
 import { entries, omit } from 'lodash';
-import * as msgPack from 'msgpackr';
 import { hexToBytes } from 'viem';
 import { getWalletAddress } from 'account/selectors/accountSelectors';
 import { signTxWithPopup } from 'api/popup';
@@ -30,15 +28,18 @@ export const getUserMessagesAndCountThunk = createAsyncThunk(
       const res: ArrayBuffer = await getLStore(
         abis.chat.address,
         toBeHex(nftID),
-        '.mp?bin=raw',
+        '',
         networkApi
       );
       const resBuffer = Buffer.from(res);
-      const decodedRes = msgPack.decode(resBuffer);
-      const messagesWithoutCount = omit(decodedRes, 'count');
+      const messagesObject = JSON.parse(resBuffer.toString('utf-8'));
+
+      const messagesWithoutCount = omit(messagesObject, 'count');
+
       const messages = entries(messagesWithoutCount).map(([key, value]) => {
-        const walletAddress = AddressApi.encodeAddress(value.acc.slice(-8)).txt;
-        const message = stringToObject(new TextDecoder().decode(value.msg));
+        const walletAddress = AddressApi.hexToTextAddress(value.acc.slice(2));
+        const message = stringToObject(value.msg);
+
         return {
           id: key === '' ? '\x00' : key,
           walletAddress,

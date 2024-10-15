@@ -9,9 +9,13 @@
     "lint": "eslint --ext js,ts,tsx src",
     "start": "vite dev --mode dev",
     "start-test": "vite dev --mode test",
+    "start-test-1-chain": "vite dev --mode test-1-chain",
+    "start-test-1402-chain": "vite dev --mode test-1402-chain",
     "start-prod": "vite dev --mode prod",
     "build": "vite build --mode dev",
     "build-test": "vite build --mode test",
+    "build-test-1-chain": "vite build --mode test-1-chain",
+    "build-test-1402-chain": "vite build --mode test-1402-chain",
     "build-prod": "vite build --mode prod",
     "preview": "vite preview",
     "buildsc": "yarn solcjs ./contracts/*.sol -o buildsc --bin --optimize --abi"

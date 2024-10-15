@@ -164,9 +164,7 @@ export const createOrEditProfileThunk = createAsyncThunk<
         returnUrl: window.location.href,
         body
       });
-      console.log(encodedFunctionBuffer.length);
-      console.log({ encodedFunctionBuffer });
-      console.log({ data });
+
       const createProfileResponse = await signTxWithPopup({
         data,
         action: createOrEditProfileThunk.typePrefix,
@@ -223,7 +221,6 @@ export const loadProfile = async ({
     }
 
     let res;
-    console.log({ walletAddressOrId, isById });
 
     if (isById) {
       res = await networkApi.executeCall(
@@ -512,17 +509,7 @@ export const loadProfilesThunk = createAsyncThunk(
       const amount = pageSize;
 
       dispatch(setProfilesCount(estimate));
-      console.log({
-        estimateOrTotalSupply,
-        args: [
-          BigInt(start),
-          [],
-          requiredRoles,
-          deniedRoles,
-          BigInt(amount),
-          isReversed
-        ]
-      });
+
       const profilesIds = await networkApi.executeCall(
         {
           abi: abis.profiles.abi,
@@ -538,7 +525,7 @@ export const loadProfilesThunk = createAsyncThunk(
         },
         { address: abis.profiles.address }
       );
-      console.log({ profilesIds });
+
       const ids = compact(profilesIds);
 
       const profiles = await Promise.all(

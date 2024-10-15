@@ -59,7 +59,7 @@ export const initApplicationThunk = createAsyncThunk<void, NavigateFunction>(
       );
 
       const roles = await dispatch(loadProfileRolesThunk(address)).unwrap();
-      console.log(roles);
+
       const isRegistered = roles.includes(UserRole.REGISTERED);
 
       if (isRegistered) {

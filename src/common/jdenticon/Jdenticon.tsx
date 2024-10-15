@@ -16,6 +16,7 @@ export const Jdenticon: React.FC<JdenticonComponentProps> = ({
   useEffect(() => {
     configure({ padding: 0, ...config });
   }, [config]);
+
   useEffect(() => {
     if (icon.current) {
       update(icon.current, value);

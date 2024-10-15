@@ -163,6 +163,7 @@ export const loadProfileRolesThunk = createAsyncThunk<UserRole[], string>(
 
       return rolesWithId;
     } catch (error: any) {
+      console.log(error);
       throw new Error(
         error.message || 'An error occurred while loading profile roles'
       );
