@@ -3,7 +3,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { initApplicationThunk } from 'application/thunks/initApplication';
 import { FullScreenLoader } from 'common';
 
-import { LogInPage } from 'login/components/pages/LogInPage';
+// import { LogInPage } from 'login/components/pages/LogInPage';
 import { checkIfLoading } from 'network/selectors';
 
 import AddOrEditNFTPage from 'NFTs/components/pages/addNFT/AddOrEditNFTPage';
@@ -14,7 +14,7 @@ import DAONFTsPage from 'NFTs/components/pages/orgNFTs/DAONFTsPage';
 import EditProfilePage from 'profiles/components/pages/editProfilePage/EditProfilePage';
 import ProfilesPage from 'profiles/components/pages/profilesPage/ProfilesPage';
 import { getIsModerator } from 'profiles/selectors/rolesSelectors';
-import SSOPage from 'sso/components/pages/SSOPage';
+import SSOPage from 'sso/pages/SSOPage';
 import AboutPage from './pages/about/AboutPage';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { RoutesEnum } from '../typings/routes';
@@ -49,7 +49,7 @@ const AppRoutesComponent: React.FC = () => {
 
         {/*  // Login or register via SSO */}
         <Route path={`${RoutesEnum.sso}/:data`} Component={SSOPage} />
-        <Route path={RoutesEnum.login} Component={LogInPage} />
+        {/* <Route path={RoutesEnum.login} Component={LogInPage} /> */}
 
         {/* Edit profile by wallet address or current user (without address) */}
         <Route

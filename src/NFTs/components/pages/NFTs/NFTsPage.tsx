@@ -167,7 +167,7 @@ const NFTsPageComponent: React.FC<NFTsPageComponentProps> = ({
 
   const onClickCreateNFT = useCallback(() => {
     if (isAuthor) {
-      navigate(walletAddress ? RoutesEnum.add : RoutesEnum.login);
+      navigate(walletAddress ? RoutesEnum.add : RoutesEnum.root);
     } else {
       toast.warn(t('profileOnModeration'));
     }

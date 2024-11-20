@@ -11,11 +11,16 @@ import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { getWalletAddress } from 'account/selectors/accountSelectors';
+import { setWalletData } from 'account/slice/accountSlice';
 import { resetAccountThunk } from 'account/thunks/account';
 import { getLoadDataUrl } from 'api/openResty';
+import { authenticateWithPopup } from 'api/popup';
 import appEnvs from 'appEnvs';
 import { useAppSelector, useAppDispatch } from 'application/hooks';
+import { defaultChain } from 'application/thunks/initApplication';
 import { RoutesEnum } from 'application/typings/routes';
+import { setKeyToApplicationStorage } from 'application/utils/localStorageUtils';
+import { openPopupCenter } from 'application/utils/popup';
 import { UserIcon, LogInIcon, CoinsStackedIcon } from 'assets/icons';
 
 import { getWalletNativeTokensAmountByID } from 'myAssets/selectors/walletSelectors';
@@ -23,6 +28,7 @@ import { loadBalanceThunk } from 'myAssets/thunks/wallet';
 import { getUserProfile } from 'profiles/selectors/profilesSelectors';
 import { getIsVerified } from 'profiles/selectors/rolesSelectors';
 import { loadUserProfileThunk } from 'profiles/thunks/profiles';
+import { objectToString, stringToObject } from 'sso/utils';
 import styles from './AccountDropdown.module.scss';
 
 type AccountDropdownProps = {
@@ -67,8 +73,28 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({
     setDropdown(null);
   };
 
-  const onClickLogin = () => {
-    navigate(RoutesEnum.login);
+  const onClickLogin = async () => {
+    const stringData = objectToString({
+      callbackUrl: `${window.location.origin}/`,
+      returnUrl: window.location.href,
+      chainID: defaultChain
+    });
+    openPopupCenter({
+      height: 600,
+      width: 357,
+      title: 'Wallet',
+      url: `${appEnvs.WALLET_THEPOWER_URL}${RoutesEnum.sso}/${stringData}`
+    });
+    const response = await authenticateWithPopup();
+    const data = stringToObject(response);
+    setKeyToApplicationStorage('address', data?.address);
+    dispatch(setWalletData({ address: data?.address, logged: true }));
+
+    if (data.returnUrl) {
+      window.location.replace(data.returnUrl);
+    } else {
+      navigate(RoutesEnum.root);
+    }
   };
 
   const onClickPowerLogOut = () => {
@@ -140,8 +166,12 @@ export const AccountDropdown: React.FC<AccountDropdownProps> = ({
                   </ListItemIcon>
                 )}
                 <div className={styles.profileInfo}>
-                  {`${userProfile?.firstName} ${userProfile?.lastName}`}
-                  <br />
+                  {userProfile?.firstName && userProfile?.lastName && (
+                    <>
+                      {userProfile?.firstName} {userProfile?.lastName}
+                      <br />
+                    </>
+                  )}
                   <span>{walletAddress}</span>
                 </div>
               </ListItemButton>

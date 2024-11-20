@@ -46,20 +46,20 @@ export const mintNftThunk = createAsyncThunk<
   ) => {
     try {
       const state = getState() as RootState;
-      const walletAddress = getWalletAddress(state);
+      const userWalletAddress = getWalletAddress(state);
 
       const encodedFunction = encodeFunction({
         abi: abis.NFTs.abi,
         functionName: 'mint',
         args: [
-          AddressApi.textAddressToEvmAddress(walletAddress),
+          AddressApi.textAddressToEvmAddress(userWalletAddress),
           [
             { k: BigInt(NftField.language), v: toHex(language) },
             { k: BigInt(NftField.theme), v: toHex(theme) },
             { k: BigInt(NftField.nameOfDAOSlug), v: toHex(nameOfDAOSlug) },
             { k: BigInt(NftField.category), v: toHex(category) },
             { k: BigInt(NftField.description), v: toHex(description) },
-            { k: BigInt(NftField.walletAddress), v: toHex(walletAddress) },
+            { k: BigInt(NftField.walletAddress), v: toHex(userWalletAddress) },
             { k: BigInt(NftField.createdAt), v: toHex(Date.now()) }
           ]
         ]
@@ -69,7 +69,7 @@ export const mintNftThunk = createAsyncThunk<
 
       const body = {
         k: 16,
-        f: Buffer.from(AddressApi.parseTextAddress(walletAddress)),
+        f: Buffer.from(AddressApi.parseTextAddress(userWalletAddress)),
         to: Buffer.from(AddressApi.parseTextAddress(abis.NFTs.address)),
         p: [],
         c: ['0x0', [Buffer.from(encodedFunctionBuffer)]]
@@ -222,7 +222,7 @@ export const saveNFTDataThunk = createAsyncThunk<void, SaveNFTDataPayload>(
   async ({ id, image, theme, navigate }, { dispatch, getState }) => {
     try {
       const state = getState() as RootState;
-      const walletAddress = getWalletAddress(state);
+      const userWalletAddress = getWalletAddress(state);
 
       const imageHash = await uploadFile(image, id.toString());
 
@@ -241,7 +241,7 @@ export const saveNFTDataThunk = createAsyncThunk<void, SaveNFTDataPayload>(
 
         const body = {
           k: 16,
-          f: Buffer.from(AddressApi.parseTextAddress(walletAddress)),
+          f: Buffer.from(AddressApi.parseTextAddress(userWalletAddress)),
           to: Buffer.from(AddressApi.parseTextAddress(abis.NFTs.address)),
           p: [],
           c: ['0x0', [Buffer.from(encodedFunctionBuffer)]]
@@ -267,7 +267,7 @@ export const saveNFTDataThunk = createAsyncThunk<void, SaveNFTDataPayload>(
 
         await dispatch(loadNFTThunk({ id: id.toString(), isDraft: true }));
 
-        navigate(`/${walletAddress}/draft/${id}_${sluggedTheme}`);
+        navigate(`/${userWalletAddress}/draft/${id}_${sluggedTheme}`);
       }
     } catch (error: any) {
       console.error(error);
