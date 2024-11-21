@@ -28,6 +28,8 @@ Attributes
 
  */
 
+/// @title IndexArticles2 Contract
+/// @notice Manages indexed articles as ERC721 tokens
 contract IndexArticles2 is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
     mapping (uint256 => mapping(uint256 => bytes)) public nftData;
 
@@ -45,6 +47,9 @@ contract IndexArticles2 is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
     string public data_storage;
     uint256 public maxId;
 
+    /// @notice Constructor sets the roles contract and admin role
+    /// @param roles The address of the Profiles contract
+    /// @param newAdminRole The admin role identifier
     constructor(address roles, bytes32 newAdminRole) ERC721("Article index", "Aidx") {
         rolesContract = Profiles(roles);
         adminRole = newAdminRole;
@@ -53,6 +58,13 @@ contract IndexArticles2 is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
         uint256 k;
         bytes v;
     }
+
+    /// @notice Mints a new indexed article token
+    /// @param newToken The new token ID (0 to auto-increment)
+    /// @param originERC721 The original ERC721 contract address
+    /// @param rTokenId The token ID in the original contract
+    /// @param keys The data keys to copy
+    /// @return The new token ID
     function mint(uint256 newToken, address originERC721, uint256 rTokenId, uint256[] calldata keys) public returns (uint256) {
         require(rolesContract.hasRole(adminRole, msg.sender), "Permission denied");
         Article origin=Article(originERC721);
@@ -115,6 +127,12 @@ contract IndexArticles2 is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
             return found;
     }
 
+    /// @notice Greps tokens matching specific filters
+    /// @param start The starting token ID
+    /// @param filters Key-value filters to match
+    /// @param amount The maximum number of results
+    /// @param reverse Whether to search in reverse
+    /// @return An array of matching token IDs
     function grep(uint256 start,
                   kv[] calldata filters,
                   uint256 amount,
@@ -151,6 +169,8 @@ contract IndexArticles2 is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
     }
 }
 
+/// @title Article Contract
+/// @notice Manages articles as ERC721 tokens
 contract Article is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
     mapping (uint256 => mapping(uint256 => bytes)) public nftData;
 
@@ -168,6 +188,8 @@ contract Article is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
 
     string public data_storage;
 
+    /// @notice Constructor sets the roles contract
+    /// @param roles The address of the Profiles contract
     constructor(address roles) ERC721("Article", "ATCL") {
         rolesContract = Profiles(roles);
     }
@@ -181,6 +203,11 @@ contract Article is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
         uint256 k;
         bytes v;
     }
+
+    /// @notice Mints a new article token
+    /// @param player The address to receive the token
+    /// @param args Key-value pairs of article data
+    /// @return The new token ID
     function mint(address player, kv[] calldata args) public returns (uint256) {
         //require(rolesContract.hasRole(VERIFIED_USER, msg.sender), "User not verified");
         uint256 tokenId = ++_nextTokenId;
@@ -191,6 +218,11 @@ contract Article is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
         emit MetadataUpdate(tokenId);
         return tokenId;
     }
+
+    /// @notice Sets data fields for an existing token
+    /// @param tokenId The token ID
+    /// @param args Key-value pairs of data to set
+    /// @return The token ID
     function setData(uint256 tokenId, kv[] calldata args) public returns (uint256) {
         require(
             _isAuthorized(_ownerOf(tokenId), msg.sender, tokenId) ||
@@ -235,6 +267,13 @@ contract Article is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
             }
             return found;
     }
+
+    /// @notice Greps tokens matching specific filters
+    /// @param start The starting token ID
+    /// @param filters Key-value filters to match
+    /// @param amount The maximum number of results
+    /// @param reverse Whether to search in reverse
+    /// @return An array of matching token IDs
     function grep(uint256 start,
                   kv[] calldata filters,
                   uint256 amount,

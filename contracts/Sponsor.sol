@@ -4,11 +4,16 @@ pragma solidity ^0.8.0;
 import { ERC165 } from 'contracts/utils/introspection/ERC165.sol';
 import 'contracts/GetTx.sol';
 
+/// @title Sponsor Contract
+/// @notice Provides functionality to sponsor transactions and manage sponsorship permissions
 contract Sponsor is ERC165 {
+  /// @notice Structure representing a third-party call
   struct tpCall {
     string func;
     uint256[] args;
   }
+
+  /// @notice Structure representing a signature
   struct tpSig {
     bytes raw;
     uint256 timestamp;
@@ -16,6 +21,8 @@ contract Sponsor is ERC165 {
     bytes rawkey;
     bytes signature;
   }
+
+  /// @notice Structure representing a transaction (Version 1)
   struct tpTx1 {
     uint256 kind;
     address from;
@@ -26,6 +33,8 @@ contract Sponsor is ERC165 {
     tpPayload[] payload;
     tpSig[] signatures;
   }
+
+  /// @notice Structure representing a transaction
   struct tpTx {
     uint256 kind;
     address from;
@@ -37,6 +46,8 @@ contract Sponsor is ERC165 {
     tpPayload[] payload;
     tpSig[] signatures;
   }
+
+  /// @notice Structure representing a transaction payload
   struct tpPayload {
     uint256 purpose;
     string cur;
@@ -50,12 +61,16 @@ contract Sponsor is ERC165 {
   address public owner;
   mapping(address => uint) public allowed;
 
+  /// @notice Constructor initializes the contract owner
   constructor() {
     //INTERFACE_ID = this.areYouSponsor.selector ^ this.wouldYouLikeToPayTx.selector;
     //INTERFACE_ID = this.wouldYouLikeToPayTx.selector; =  0x1B97712B
     owner = msg.sender;
   }
 
+  /// @notice Checks if the contract supports a specific interface
+  /// @param interfaceId The interface identifier
+  /// @return True if the interface is supported
   function supportsInterface(
     bytes4 interfaceId
   ) public view virtual override(ERC165) returns (bool) {
@@ -65,10 +80,15 @@ contract Sponsor is ERC165 {
       super.supportsInterface(interfaceId);
   }
 
+  /// @notice Checks if the contract is a sponsor
+  /// @return Tuple containing sponsor status, sponsor key, and amount
   function areYouSponsor() public pure returns (bool, bytes memory, uint256) {
     return (true, 'SK', 10000000);
   }
 
+  /// @notice Grants admin permission to an address
+  /// @param to The address to grant permission
+  /// @return The updated permission value
   function allowAdmin(address to) public returns (uint256) {
     require(
       msg.sender == owner || (allowed[msg.sender] & 0x100000000) == 0x100000000,
@@ -77,6 +97,11 @@ contract Sponsor is ERC165 {
     return allowed[to] = allowed[to] | 0x100000000;
   }
 
+  /// @notice Grants or revokes permissions for an address
+  /// @param to The address to modify permissions for
+  /// @param add Permissions to add
+  /// @param del Permissions to remove
+  /// @return The updated permission value
   function allow(address to, uint32 add, uint32 del) public returns (uint256) {
     require(
       msg.sender == owner || (allowed[msg.sender] & 0x100000000) == 0x100000000,
@@ -85,7 +110,9 @@ contract Sponsor is ERC165 {
     return allowed[to] = (allowed[to] & ~(uint(del))) | uint(add);
   }
 
-  //new interface
+  /// @notice Sponsors a transaction (New Interface)
+  /// @param utx The transaction to sponsor
+  /// @return Tuple indicating sponsorship status and payloads
   function sponsor_tx(
     GetTx.tpTx calldata utx
   ) public view returns (bool, GetTx.tpPayload[] memory pay) {
@@ -129,7 +156,9 @@ contract Sponsor is ERC165 {
     return (true, payload1);
   }
 
-  //This is old interface
+  /// @notice Determines if the contract would like to pay for a transaction (Old Interface)
+  /// @param utx The transaction to evaluate
+  /// @return Tuple containing response string and payloads
   function wouldYouLikeToPayTx(
     tpTx1 calldata utx
   ) public view returns (string memory iWillPay, tpPayload[] memory pay) {
@@ -168,6 +197,9 @@ contract Sponsor is ERC165 {
     return ('i will pay', payload1);
   }
 
+  /// @notice Determines if the contract would like to pay for a transaction
+  /// @param utx The transaction to evaluate
+  /// @return Tuple containing response string and payloads
   function wouldYouLikeToPayTx(
     tpTx calldata utx
   ) public view returns (string memory iWillPay, tpPayload[] memory pay) {

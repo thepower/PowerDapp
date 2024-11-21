@@ -41,6 +41,8 @@ contract UserProfile {
   }
 }
 
+/// @title Profiles Contract
+/// @notice Manages user profiles, roles, and access control
 contract Profiles is UserProfile, AccessControl {
   bytes32 public constant VERIFIED_USER = keccak256('VERIFIED_USER');
   bytes32 public constant LOCKED_USER = keccak256('LOCKED_USER');
@@ -66,6 +68,7 @@ contract Profiles is UserProfile, AccessControl {
 
   //struct kv { uint256 k; bytes v; }
 
+  /// @notice Constructor initializes roles and role hierarchies
   constructor() {
     _grantRole(ROOT_ADMIN_ROLE, msg.sender);
     _setRoleAdmin(ROOT_ADMIN_ROLE, ROOT_ADMIN_ROLE);
@@ -85,6 +88,7 @@ contract Profiles is UserProfile, AccessControl {
     _setRoleAdmin(ACC_ROLE, ACC_ADMIN_ROLE);
   }
 
+  /// @notice Allows a user to register and grants them the verified role
   function register() public {
     require(
       false == hasRole(REGISTERED, msg.sender),
@@ -95,6 +99,10 @@ contract Profiles is UserProfile, AccessControl {
     registeredUsers.push(msg.sender);
   }
 
+  /// @notice Checks if a user has specific roles
+  /// @param roles An array of role identifiers
+  /// @param user The address of the user
+  /// @return An array of booleans indicating whether the user has each role
   function hasRoles(
     bytes32[] memory roles,
     address user
@@ -137,6 +145,10 @@ contract Profiles is UserProfile, AccessControl {
     return x;
   }
 
+  /// @notice Retrieves profile data for a user
+  /// @param userId The user ID (offset by 1)
+  /// @param keys An array of profile field keys
+  /// @return An array of profile field values
   function getProfileData(
     uint256 userId,
     uint256[] memory keys
@@ -150,6 +162,8 @@ contract Profiles is UserProfile, AccessControl {
     return registeredUsers[userId - 1];
   }
 
+  /// @notice Retrieves the total number of registered users
+  /// @return The total number of users
   function totalSupply() public view returns (uint256) {
     return registeredUsers.length;
   }
@@ -174,6 +188,14 @@ contract Profiles is UserProfile, AccessControl {
     return found;
   }
 
+  /// @notice Greps users matching specific filters and roles
+  /// @param start The starting index
+  /// @param filters Key-value filters to match
+  /// @param requiredroles Required roles
+  /// @param deniedroles Excluded roles
+  /// @param amount The maximum number of results
+  /// @param reverse Whether to search in reverse
+  /// @return An array of user IDs
   function grep(
     uint256 start,
     kv[] calldata filters,
@@ -214,12 +236,18 @@ contract Profiles is UserProfile, AccessControl {
     _setRoleAdmin(role, adminRole);
   }
 
+  /// @notice Sets a profile field for the sender
+  /// @param key The profile field key
+  /// @param value The new value
   function setProfileField(uint256 key, bytes calldata value) public {
     //require(hasRole(VERIFIED_USER, msg.sender)==false, "Profile verified");
     require(hasRole(REGISTERED, msg.sender), 'Unknown user');
     _setUserField(msg.sender, key, value);
   }
 
+  /// @notice Sets multiple profile fields for the sender
+  /// @param args An array of key-value pairs
+  /// @return A status code
   function setProfileFields(kv[] calldata args) public returns (uint256) {
     //require(hasRole(VERIFIED_USER, msg.sender)==false, "Profile verified");
     require(hasRole(REGISTERED, msg.sender), 'Unknown user');
@@ -248,6 +276,9 @@ contract Profiles is UserProfile, AccessControl {
     }
   }
 
+  /// @notice Quickly registers a user and sets profile fields
+  /// @param args An array of key-value pairs
+  /// @return A status code
   function quickReg(kv[] calldata args) public returns (uint256) {
     register();
     for (uint i = 0; i < args.length; i++) {

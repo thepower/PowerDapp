@@ -8,8 +8,8 @@ import {Profiles} from "contracts/Profiles.sol";
 import {ERC721Enumerable} from "contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import {ERC721Burnable} from "contracts/token/ERC721/extensions/ERC721Burnable.sol";
 
-
-
+/// @title Membership Contract
+/// @notice Manages membership tokens with subscription levels
 contract Membership is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
     mapping (uint256 => address) public minter;
     mapping (uint256 => mapping(uint8 => uint256)) public subscription;
@@ -27,12 +27,19 @@ contract Membership is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
     bytes32 public ACCOUNTANT_ROLE;
     bytes32 public constant VERIFIED_USER = keccak256("VERIFIED_USER");
 
+    /// @notice Constructor sets the roles contract and accountant role
+    /// @param roles The address of the Profiles contract
+    /// @param br_role The accountant role identifier
     constructor(address roles, bytes32 br_role) ERC721("Membership", "ISM") {
         rolesContract = Profiles(roles);
         levels=2;
         ACCOUNTANT_ROLE=br_role;
     }
 
+    /// @notice Processes payment for a subscription
+    /// @param tokenId The token ID
+    /// @param level The subscription level
+    /// @param period The subscription duration
     function payment_gw(uint256 tokenId, uint8 level, uint256 period) public {
         require(rolesContract.hasRole(ACCOUNTANT_ROLE, msg.sender), "permission denied");
         require(levels>=level, "bad level");
@@ -45,6 +52,10 @@ contract Membership is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
         }
     }
 
+    /// @notice Retrieves the membership level and expiration for a token
+    /// @param tokenId The token ID
+    /// @return level The current membership level
+    /// @return expire The expiration timestamp
     function token_level(uint256 tokenId) public view returns (uint8 level,
                                                                uint256 expire) {
         if(tokenId>_nextTokenId)
@@ -57,6 +68,11 @@ contract Membership is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
         return (0,0);
     }
 
+    /// @notice Retrieves the highest membership level and expiration for a user
+    /// @param account The user's address
+    /// @return foundLevel The highest membership level
+    /// @return foundExpire The expiration timestamp
+    /// @return foundTokenId The token ID with the highest level
     function user_level(address account) public view returns (uint8 foundLevel,
                                                              uint256 foundExpire,
                                                              uint256 foundTokenId) {
@@ -78,6 +94,9 @@ contract Membership is IERC4906, ERC721, ERC721Enumerable, ERC721Burnable {
         return(bestLevel,bestTime,bestTokenId);
     }
 
+    /// @notice Mints a new membership token for a user
+    /// @param account The address to receive the token
+    /// @return newTokenId The new token ID
     function mint(address account) public returns (uint256 newTokenId) {
         require(rolesContract.hasRole(VERIFIED_USER, msg.sender), "User not verified");
         uint256 tokenId = ++_nextTokenId;

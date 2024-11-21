@@ -4,6 +4,9 @@ pragma solidity ^0.8.0;
 contract LStore {
 	function setByPath(bytes[] calldata,uint256,bytes calldata) public virtual returns (uint256) {}
 }
+
+/// @title Chat Contract
+/// @notice Allows users to register messages in a chat system
 contract Chat {
 	mapping(uint => uint) public chatCounters;
 	LStore private lstore=LStore(address(0xAFFFFFFFFF000005));
@@ -13,6 +16,9 @@ contract Chat {
 	constructor() {
 	}
 
+	/// @notice Registers a message in the chat
+	/// @param id The chat ID
+	/// @param message The message content
 	function registerMessage(uint256 id, string memory message) public  {
 		bytes[] memory path = new bytes[](3);
 		path[0] = toBytes(id);//id
@@ -35,7 +41,9 @@ contract Chat {
 		require(lstore.setByPath(path,1,message_bin)==1,"can't set lstore");
 	}
 
-
+	/// @notice Converts a uint256 to bytes
+	/// @param x The uint256 value
+	/// @return b The bytes representation
 	function toBytes(uint256 x) public pure returns (bytes memory b) {
 		if (x==0) {
 			return new bytes (1);	
@@ -54,6 +62,9 @@ contract Chat {
 		assembly { mstore(add(b, 32), x) }
 	}
 
+	/// @notice Retrieves the message count for a chat
+	/// @param id The chat ID
+	/// @return counter The number of messages
 	function getChatCounters(uint id) public view returns(uint counter) {
 		return chatCounters[id];
 	}
